@@ -3,1279 +3,559 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Projeto Kauan — Rota por Endereços</title>
-  <link rel="preconnect" href="https://unpkg.com" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <title>Extrator DANFE</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.min.js"></script>
   <style>
-    :root {
-      --bg: #0b1220;
-      --card: rgba(18, 28, 48, 0.92);
-      --card-2: rgba(23, 35, 61, 0.98);
-      --line: rgba(255,255,255,0.08);
-      --text: #e8eefc;
-      --muted: #9db0d3;
-      --accent: #4f8cff;
-      --accent-2: #72c7ff;
-      --success: #20c997;
-      --warning: #ffcc66;
-      --danger: #ff6b6b;
-      --shadow: 0 18px 50px rgba(0,0,0,.28);
-      --radius: 20px;
+    :root{
+      --bg:#0f172a;
+      --card:#111827;
+      --card-2:#1f2937;
+      --line:#334155;
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --accent:#facc15;
+      --accent-2:#fde68a;
+      --ok:#22c55e;
+      --danger:#ef4444;
+      --white:#ffffff;
     }
-
-    * { box-sizing: border-box; }
-    html, body {
-      margin: 0;
-      padding: 0;
-      font-family: Inter, Arial, Helvetica, sans-serif;
-      background: radial-gradient(circle at top, #12213f 0%, var(--bg) 48%, #070d18 100%);
-      color: var(--text);
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:linear-gradient(180deg,#0b1220 0%, #111827 100%);
+      color:var(--text);
     }
-    body { min-height: 100vh; }
-
-    .wrap {
-      max-width: 1500px;
-      margin: 0 auto;
-      padding: 22px;
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:24px;
     }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 18px;
-      margin-bottom: 18px;
+    .hero{
+      background:linear-gradient(135deg, rgba(250,204,21,.18), rgba(250,204,21,.05));
+      border:1px solid rgba(250,204,21,.25);
+      border-radius:22px;
+      padding:24px;
+      box-shadow:0 20px 45px rgba(0,0,0,.22);
+      margin-bottom:18px;
     }
-
-    .hero-card, .panel, .map-card, .table-card, .route-card {
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(12px);
+    .hero h1{
+      margin:0 0 8px;
+      font-size:30px;
+      color:var(--white);
     }
-
-    .hero-card {
-      padding: 24px;
-      position: relative;
-      overflow: hidden;
+    .hero p{
+      margin:0;
+      color:var(--accent-2);
+      line-height:1.5;
     }
-
-    .hero-card::after {
-      content: "";
-      position: absolute;
-      width: 260px;
-      height: 260px;
-      right: -50px;
-      top: -50px;
-      background: radial-gradient(circle, rgba(79,140,255,.22), transparent 70%);
-      pointer-events: none;
+    .grid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:18px;
     }
-
-    .title {
-      font-size: 34px;
-      line-height: 1.05;
-      font-weight: 800;
-      margin: 0 0 10px;
-      letter-spacing: -.02em;
+    .card{
+      background:rgba(17,24,39,.92);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:18px;
+      box-shadow:0 16px 35px rgba(0,0,0,.20);
+      backdrop-filter: blur(8px);
     }
-
-    .subtitle {
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.55;
-      max-width: 760px;
-      margin: 0;
+    .card h2{
+      margin:0 0 14px;
+      font-size:20px;
+      color:var(--white);
     }
-
-    .hero-side {
-      padding: 18px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      align-content: stretch;
+    .dropzone{
+      border:2px dashed rgba(250,204,21,.45);
+      border-radius:18px;
+      padding:28px;
+      text-align:center;
+      background:rgba(250,204,21,.05);
+      transition:.2s ease;
+      cursor:pointer;
     }
-
-    .metric {
-      background: var(--card-2);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 16px;
-      min-height: 104px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+    .dropzone.dragover{
+      transform:scale(1.01);
+      border-color:var(--accent);
+      background:rgba(250,204,21,.10);
     }
-
-    .metric .k {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 6px;
+    .dropzone strong{
+      display:block;
+      font-size:18px;
+      color:var(--white);
+      margin-bottom:8px;
     }
-
-    .metric .v {
-      font-weight: 800;
-      font-size: 28px;
-      line-height: 1.1;
+    .dropzone span{
+      color:var(--muted);
+      font-size:14px;
     }
-
-    .metric .s {
-      color: #b9c8e3;
-      font-size: 12px;
-      margin-top: 6px;
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:14px;
     }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 480px 1fr;
-      gap: 18px;
+    button, .btn{
+      border:none;
+      border-radius:12px;
+      padding:12px 16px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.2s ease;
     }
-
-    .panel {
-      padding: 18px;
-      background: rgba(10, 17, 31, 0.9);
-      position: sticky;
-      top: 16px;
-      height: fit-content;
+    .btn-primary{
+      background:var(--accent);
+      color:#111827;
     }
-
-    .section-title {
-      font-size: 18px;
-      font-weight: 800;
-      margin: 0 0 14px;
+    .btn-primary:hover{ filter:brightness(1.04); }
+    .btn-secondary{
+      background:#273449;
+      color:var(--text);
+      border:1px solid #374151;
     }
-
-    .mini {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-      margin-bottom: 14px;
+    .btn-secondary:hover{ background:#314158; }
+    input[type="file"]{ display:none; }
+    .status{
+      margin-top:12px;
+      font-size:14px;
+      color:var(--muted);
+      min-height:20px;
     }
-
-    .field { margin-bottom: 14px; }
-
-    .field label {
-      display: block;
-      margin-bottom: 8px;
-      color: #d9e4ff;
-      font-size: 13px;
-      font-weight: 700;
+    .tips{
+      margin:0;
+      padding-left:18px;
+      color:var(--muted);
+      line-height:1.6;
     }
-
-    .input, .textarea {
-      width: 100%;
-      border: 1px solid rgba(255,255,255,.1);
-      background: #0f182b;
-      color: var(--text);
-      border-radius: 14px;
-      padding: 12px 14px;
-      font-size: 14px;
-      outline: none;
-      transition: .2s ease;
+    .results-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:12px;
+      flex-wrap:wrap;
     }
-
-    .input:focus, .textarea:focus {
-      border-color: rgba(79,140,255,.7);
-      box-shadow: 0 0 0 4px rgba(79,140,255,.12);
+    .badge{
+      background:rgba(34,197,94,.12);
+      border:1px solid rgba(34,197,94,.35);
+      color:#86efac;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:700;
     }
-
-    .textarea {
-      min-height: 270px;
-      resize: vertical;
-      line-height: 1.45;
+    .empty{
+      border:1px dashed var(--line);
+      border-radius:16px;
+      padding:24px;
+      color:var(--muted);
+      text-align:center;
+      background:rgba(255,255,255,.02);
     }
-
-    .small-textarea { min-height: 90px; }
-
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+    .item{
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      margin-bottom:12px;
     }
-
-    .btns {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 14px;
+    .item-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:12px;
+      flex-wrap:wrap;
     }
-
-    .btns-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
+    .filename{
+      font-weight:700;
+      color:var(--white);
+      word-break:break-word;
     }
-
-    button {
-      border: 0;
-      border-radius: 14px;
-      padding: 13px 14px;
-      font-size: 14px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform .15s ease, opacity .2s ease, box-shadow .2s ease;
+    .ok{ color:#86efac; font-weight:700; }
+    .fail{ color:#fca5a5; font-weight:700; }
+    .fields{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
     }
-
-    button:hover { transform: translateY(-1px); }
-    button:disabled { opacity: .65; cursor: not-allowed; transform: none; }
-
-    .primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: white;
-      box-shadow: 0 10px 25px rgba(79,140,255,.24);
+    .field{
+      background:rgba(255,255,255,.03);
+      border:1px solid #2f3b4d;
+      border-radius:14px;
+      padding:12px;
     }
-
-    .secondary {
-      background: #18243f;
-      color: #dbe6ff;
-      border: 1px solid rgba(255,255,255,.08);
+    .field label{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      margin-bottom:6px;
+      text-transform:uppercase;
+      letter-spacing:.4px;
     }
-
-    .success-btn {
-      background: linear-gradient(135deg, #1fbf8f, #39d1a1);
-      color: white;
-      box-shadow: 0 10px 25px rgba(31,191,143,.22);
+    .field div{
+      font-size:18px;
+      font-weight:700;
+      color:var(--white);
+      word-break:break-word;
     }
-
-    .note {
-      margin-top: 14px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: rgba(255,255,255,.04);
-      color: #c8d5ef;
-      font-size: 12px;
-      line-height: 1.5;
-      border: 1px solid rgba(255,255,255,.06);
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:14px;
+      overflow:hidden;
+      border-radius:16px;
+      border:1px solid var(--line);
     }
-
-    .right {
-      display: grid;
-      gap: 18px;
+    th, td{
+      padding:12px 10px;
+      border-bottom:1px solid #243041;
+      text-align:left;
+      font-size:14px;
     }
-
-    .map-card, .route-card, .table-card { padding: 16px; }
-
-    .head-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
+    th{
+      background:#162132;
+      color:var(--accent-2);
     }
-
-    .head-row h3 {
-      margin: 0;
-      font-size: 18px;
+    td{
+      background:#101827;
     }
-
-    .pill {
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(79,140,255,.12);
-      color: #d7e5ff;
-      font-size: 12px;
-      border: 1px solid rgba(79,140,255,.22);
-      font-weight: 700;
+    tr:hover td{ background:#132033; }
+    .footer-note{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
     }
-
-    #map {
-      width: 100%;
-      height: 520px;
-      border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,.08);
-    }
-
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .summary .box {
-      background: #101a2f;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-    }
-
-    .summary .box .label {
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 6px;
-    }
-
-    .summary .box .value {
-      font-size: 24px;
-      font-weight: 800;
-      line-height: 1.1;
-    }
-
-    .summary .box .sub {
-      margin-top: 6px;
-      color: #c7d4ee;
-      font-size: 12px;
-    }
-
-    .route-list { display: grid; gap: 10px; }
-
-    .step {
-      display: grid;
-      grid-template-columns: 52px 1fr auto;
-      gap: 12px;
-      align-items: center;
-      padding: 12px;
-      border-radius: 16px;
-      background: #0f182b;
-      border: 1px solid rgba(255,255,255,.07);
-    }
-
-    .badge {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, rgba(79,140,255,.24), rgba(114,199,255,.15));
-      border: 1px solid rgba(79,140,255,.24);
-      font-weight: 900;
-      color: #fff;
-    }
-
-    .step .city {
-      font-weight: 800;
-      font-size: 15px;
-    }
-
-    .step .meta {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 4px;
-      line-height: 1.45;
-    }
-
-    .leg {
-      text-align: right;
-      font-size: 13px;
-      color: #dbe6ff;
-      font-weight: 700;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      overflow: hidden;
-      border-radius: 16px;
-      background: #0f182b;
-      border: 1px solid rgba(255,255,255,.07);
-    }
-
-    th, td {
-      padding: 12px 10px;
-      text-align: left;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-      font-size: 13px;
-      vertical-align: top;
-    }
-
-    th {
-      color: #d8e4ff;
-      background: rgba(255,255,255,.03);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .04em;
-    }
-
-    tr:last-child td { border-bottom: 0; }
-
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.05);
-      font-size: 12px;
-      color: #d8e4ff;
-      border: 1px solid rgba(255,255,255,.06);
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--warning);
-      box-shadow: 0 0 14px rgba(255, 204, 102, .5);
-    }
-
-    .ok { background: var(--success); box-shadow: 0 0 14px rgba(32, 201, 151, .45); }
-    .err { background: var(--danger); box-shadow: 0 0 14px rgba(255, 107, 107, .45); }
-
-    .footer-tip {
-      color: #9fb3d7;
-      font-size: 12px;
-      margin-top: 10px;
-      line-height: 1.5;
-    }
-
-    .link-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      padding: 7px 10px;
-      border-radius: 10px;
-      background: rgba(79,140,255,.12);
-      color: #d7e5ff;
-      border: 1px solid rgba(79,140,255,.22);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .print-only { display: none; }
-
-    @media (max-width: 1120px) {
-      .hero, .grid { grid-template-columns: 1fr; }
-      .panel { position: static; }
-      .summary { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (max-width: 700px) {
-      .wrap { padding: 14px; }
-      .title { font-size: 28px; }
-      .hero-side, .row, .btns, .btns-2, .summary { grid-template-columns: 1fr; }
-      #map { height: 380px; }
-      .step { grid-template-columns: 48px 1fr; }
-      .leg { grid-column: 2; text-align: left; }
-    }
-
-    @media print {
-      html, body {
-        background: #fff !important;
-        color: #111 !important;
-      }
-
-      body { min-height: auto; }
-      .wrap { max-width: 100%; padding: 0; }
-      .hero, .panel, .footer-tip, .status { display: none !important; }
-      .right { display: block; }
-
-      .map-card, .route-card, .table-card {
-        background: #fff !important;
-        color: #111 !important;
-        border: 1px solid #d9d9d9 !important;
-        box-shadow: none !important;
-        backdrop-filter: none !important;
-        border-radius: 10px !important;
-        page-break-inside: avoid;
-        break-inside: avoid;
-        margin-bottom: 14px;
-        padding: 12px !important;
-      }
-
-      .print-only { display: block !important; }
-
-      .print-header {
-        margin-bottom: 14px;
-        border: 1px solid #d9d9d9;
-        border-radius: 10px;
-        padding: 12px;
-        page-break-inside: avoid;
-      }
-
-      .print-title {
-        font-size: 22px;
-        font-weight: 800;
-        color: #111;
-        margin-bottom: 6px;
-      }
-
-      .print-subtitle {
-        font-size: 12px;
-        color: #666;
-        margin-bottom: 10px;
-      }
-
-      .print-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
-      }
-
-      .print-box {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 8px;
-      }
-
-      .print-box .k {
-        font-size: 10px;
-        color: #666;
-        margin-bottom: 4px;
-        text-transform: uppercase;
-      }
-
-      .print-box .v {
-        font-size: 13px;
-        font-weight: 700;
-        color: #111;
-      }
-
-      .head-row h3,
-      .step .city,
-      th,
-      td,
-      .summary .box .value,
-      .leg {
-        color: #111 !important;
-      }
-
-      .pill,
-      .summary .box,
-      .step,
-      table,
-      .link-btn {
-        background: #fff !important;
-        color: #111 !important;
-        border: 1px solid #d9d9d9 !important;
-        box-shadow: none !important;
-      }
-
-      .summary { grid-template-columns: repeat(2, 1fr); }
-
-      .summary .box .label,
-      .summary .box .sub,
-      .step .meta {
-        color: #666 !important;
-      }
-
-      .badge {
-        background: #f3f3f3 !important;
-        color: #111 !important;
-        border: 1px solid #d0d0d0 !important;
-      }
-
-      #map {
-        height: 260px !important;
-        border: 1px solid #d9d9d9 !important;
-        page-break-inside: avoid;
-      }
-
-      table { font-size: 11px; }
-      th, td { padding: 8px 6px; }
+    @media (max-width: 900px){
+      .grid{ grid-template-columns:1fr; }
+      .fields{ grid-template-columns:1fr; }
+      .hero h1{ font-size:24px; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <section class="hero">
-      <div class="hero-card">
-        <h1 class="title">Projeto Kauan — Rota por Endereços</h1>
-        <p class="subtitle">
-          Essa versão foi pensada para trabalhar dentro da cidade, com foco no endereço exato de cada cliente. Cole os pedidos com endereço completo, filtre por uma cidade específica e gere uma sequência de entrega mais precisa para o motorista.
-        </p>
+    <div class="hero">
+      <h1>Extrator de DANFE</h1>
+      <p>Jogue os PDFs das notas aqui e o sistema tenta extrair automaticamente o <strong>número da NF</strong>, a <strong>data de emissão</strong> e o <strong>valor total da nota</strong>. Tudo roda no próprio navegador.</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Enviar PDFs</h2>
+        <label class="dropzone" id="dropzone" for="pdfInput">
+          <strong>Clique aqui ou arraste os arquivos PDF</strong>
+          <span>Você pode selecionar várias DANFEs de uma vez</span>
+        </label>
+        <input type="file" id="pdfInput" accept="application/pdf" multiple />
+
+        <div class="actions">
+          <button class="btn-primary" id="btnSelect">Selecionar PDFs</button>
+          <button class="btn-secondary" id="btnExportCsv">Exportar CSV</button>
+          <button class="btn-secondary" id="btnClear">Limpar tudo</button>
+        </div>
+
+        <div class="status" id="status">Aguardando arquivos...</div>
       </div>
-      <div class="hero-card hero-side">
-        <div class="metric">
-          <div class="k">Modo</div>
-          <div class="v" id="metricMode">Endereços</div>
-          <div class="s">Rota detalhada dentro da cidade</div>
-        </div>
-        <div class="metric">
-          <div class="k">Cidade foco</div>
-          <div class="v" id="metricCity">-</div>
-          <div class="s">Filtre a cidade antes de calcular</div>
-        </div>
-        <div class="metric">
-          <div class="k">Pedidos válidos</div>
-          <div class="v" id="metricOrders">0</div>
-          <div class="s">Endereços encontrados no mapa</div>
-        </div>
-        <div class="metric">
-          <div class="k">Mapa</div>
-          <div class="v">Ao vivo</div>
-          <div class="s">Rota ponto a ponto por endereço</div>
+
+      <div class="card">
+        <h2>Como ele identifica</h2>
+        <ul class="tips">
+          <li>Procura por padrões comuns de DANFE/NF-e.</li>
+          <li>Lê o texto do PDF pela biblioteca PDF.js.</li>
+          <li>Extrai: <strong>Número</strong>, <strong>Data de emissão</strong> e <strong>Valor total</strong>.</li>
+          <li>Se o PDF vier muito “escaneado como imagem”, pode não achar o texto.</li>
+          <li>Nesse caso, o ideal é usar um PDF que tenha texto selecionável.</li>
+        </ul>
+        <div class="footer-note">
+          Dica: para uso interno na Grilazer, depois você pode hospedar isso no GitHub Pages sem problema.
         </div>
       </div>
-    </section>
+    </div>
 
-    <section class="grid">
-      <aside class="panel">
-        <h2 class="section-title">Entrada dos pedidos</h2>
-        <div class="mini">
-          Nesta versão você deve colar os pedidos com o máximo de detalhe possível: cliente, rua, número, bairro, cidade e estado. Assim a ferramenta consegue montar uma rota mais exata dentro da cidade.
-        </div>
-
-        <div class="field">
-          <label for="cityFilter">Cidade da rota</label>
-          <input id="cityFilter" class="input" value="Cascavel, PR" placeholder="Ex.: Cascavel, PR" />
-        </div>
-
-        <div class="row">
-          <div class="field">
-            <label for="driverName">Motorista</label>
-            <input id="driverName" class="input" placeholder="Ex.: João da Silva" />
-          </div>
-          <div class="field">
-            <label for="plate">Placa</label>
-            <input id="plate" class="input" placeholder="Ex.: ABC-1D23" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="field">
-            <label for="vehicleKml">Consumo do veículo (km/L)</label>
-            <input id="vehicleKml" class="input" type="number" min="1" step="0.1" value="8.5" />
-          </div>
-          <div class="field">
-            <label for="dieselPrice">Diesel (R$/L)</label>
-            <input id="dieselPrice" class="input" type="number" min="0" step="0.01" value="6.19" />
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="notes">Observações da rota</label>
-          <textarea id="notes" class="textarea small-textarea" placeholder="Ex.: começar pelo centro, cliente da Rua Paraná recebe até 11h, ligar antes de chegar..."></textarea>
-        </div>
-
-        <div class="field">
-          <label for="orders">Pedidos / endereços completos</label>
-          <textarea id="orders" class="textarea" placeholder="Exemplo:
-Pedido 101 | Cliente: Loja Alfa | Rua Paraná, 1200 - Centro - Cascavel, PR
-Pedido 102 | Cliente: Auto Peças Beta | Av. Brasil, 5400 - Centro - Cascavel, PR
-Pedido 103 | Cliente: Mercado Gama | Rua São Paulo, 800 - Centro - Cascavel, PR
-Pedido 104 | Cliente: Cliente Delta | Rua Pio XII, 1550 - Neva - Cascavel, PR"></textarea>
-        </div>
-
-        <div class="btns">
-          <button class="primary" id="calcBtn">Calcular rota por endereço</button>
-          <button class="secondary" id="demoBtn">Carregar exemplo</button>
-          <button class="secondary" id="clearBtn">Limpar</button>
-          <button class="secondary" id="copyBtn">Copiar sequência</button>
-        </div>
-
-        <div class="btns-2">
-          <button class="success-btn" id="printBtn">Imprimir rota</button>
-          <button class="secondary" id="resetMapBtn">Recentralizar mapa</button>
-        </div>
-
-        <div class="note">
-          <strong>Dica:</strong> para essa versão, quanto mais completo o endereço, melhor. O ideal é usar: <em>Rua + número + bairro + cidade + UF</em>. Essa ferramenta foi feita para você colocar em outro repositório focado só na entrega dentro da cidade.
-        </div>
-      </aside>
-
-      <div class="right">
-        <div class="print-only print-header">
-          <div class="print-title">Rota por Endereços — Projeto Kauan</div>
-          <div class="print-subtitle">Resumo pronto para impressão</div>
-          <div class="print-grid">
-            <div class="print-box"><div class="k">Cidade</div><div class="v" id="printCity">-</div></div>
-            <div class="print-box"><div class="k">Motorista</div><div class="v" id="printDriver">-</div></div>
-            <div class="print-box"><div class="k">Placa</div><div class="v" id="printPlate">-</div></div>
-            <div class="print-box"><div class="k">Observações</div><div class="v" id="printNotes">-</div></div>
-          </div>
-        </div>
-
-        <section class="map-card">
-          <div class="head-row">
-            <h3>Mapa da rota detalhada</h3>
-            <div class="status"><span class="dot" id="statusDot"></span><span id="statusText">Aguardando cálculo</span></div>
-          </div>
-          <div id="map"></div>
-          <div class="footer-tip">
-            A ferramenta tenta localizar cada endereço completo. Se a rota online falhar, ela usa uma sequência por proximidade para não travar.
-          </div>
-        </section>
-
-        <section class="route-card">
-          <div class="head-row">
-            <h3>Resumo da rota sugerida</h3>
-            <span class="pill" id="pillMode">Sequência otimizada</span>
-          </div>
-
-          <div class="summary">
-            <div class="box">
-              <div class="label">Paradas</div>
-              <div class="value" id="sumStops">0</div>
-              <div class="sub">Endereços válidos na rota</div>
-            </div>
-            <div class="box">
-              <div class="label">Distância</div>
-              <div class="value" id="sumDistance">0 km</div>
-              <div class="sub">Soma aproximada do trajeto</div>
-            </div>
-            <div class="box">
-              <div class="label">Tempo</div>
-              <div class="value" id="sumTime">0h</div>
-              <div class="sub">Estimativa de deslocamento</div>
-            </div>
-            <div class="box">
-              <div class="label">Custo diesel</div>
-              <div class="value" id="sumFuelCost">R$ 0,00</div>
-              <div class="sub">Conforme km/L informado</div>
-            </div>
-          </div>
-
-          <div class="route-list" id="routeList">
-            <div class="step">
-              <div class="badge">•</div>
-              <div>
-                <div class="city">Nenhuma rota calculada ainda</div>
-                <div class="meta">Cole os endereços e clique em “Calcular rota por endereço”.</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="table-card">
-          <div class="head-row">
-            <h3>Endereços localizados</h3>
-            <span class="pill" id="addressCountPill">0 endereços</span>
-          </div>
-
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Pedido / cliente</th>
-                <th>Endereço localizado</th>
-                <th>Status</th>
-                <th>Ação</th>
-              </tr>
-            </thead>
-            <tbody id="addressTableBody">
-              <tr>
-                <td colspan="5">Nenhum dado por enquanto.</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
+    <div class="card" style="margin-top:18px;">
+      <div class="results-head">
+        <h2 style="margin:0;">Resultados</h2>
+        <div class="badge" id="countBadge">0 notas processadas</div>
       </div>
-    </section>
+
+      <div id="resultsContainer" class="empty">Nenhuma nota processada ainda.</div>
+
+      <div id="tableWrap" style="display:none;">
+        <table>
+          <thead>
+            <tr>
+              <th>Arquivo</th>
+              <th>Número NF</th>
+              <th>Data de emissão</th>
+              <th>Valor total</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    const map = L.map('map', { zoomControl: true }).setView([-24.96, -53.46], 12);
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.min.js';
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+    const pdfInput = document.getElementById('pdfInput');
+    const dropzone = document.getElementById('dropzone');
+    const btnSelect = document.getElementById('btnSelect');
+    const btnExportCsv = document.getElementById('btnExportCsv');
+    const btnClear = document.getElementById('btnClear');
+    const statusEl = document.getElementById('status');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const tableWrap = document.getElementById('tableWrap');
+    const tableBody = document.getElementById('tableBody');
+    const countBadge = document.getElementById('countBadge');
 
-    const els = {
-      cityFilter: document.getElementById('cityFilter'),
-      driverName: document.getElementById('driverName'),
-      plate: document.getElementById('plate'),
-      notes: document.getElementById('notes'),
-      orders: document.getElementById('orders'),
-      vehicleKml: document.getElementById('vehicleKml'),
-      dieselPrice: document.getElementById('dieselPrice'),
-      calcBtn: document.getElementById('calcBtn'),
-      demoBtn: document.getElementById('demoBtn'),
-      clearBtn: document.getElementById('clearBtn'),
-      copyBtn: document.getElementById('copyBtn'),
-      printBtn: document.getElementById('printBtn'),
-      resetMapBtn: document.getElementById('resetMapBtn'),
-      metricMode: document.getElementById('metricMode'),
-      metricCity: document.getElementById('metricCity'),
-      metricOrders: document.getElementById('metricOrders'),
-      statusText: document.getElementById('statusText'),
-      statusDot: document.getElementById('statusDot'),
-      sumStops: document.getElementById('sumStops'),
-      sumDistance: document.getElementById('sumDistance'),
-      sumTime: document.getElementById('sumTime'),
-      sumFuelCost: document.getElementById('sumFuelCost'),
-      routeList: document.getElementById('routeList'),
-      addressTableBody: document.getElementById('addressTableBody'),
-      addressCountPill: document.getElementById('addressCountPill'),
-      pillMode: document.getElementById('pillMode'),
-      printCity: document.getElementById('printCity'),
-      printDriver: document.getElementById('printDriver'),
-      printPlate: document.getElementById('printPlate'),
-      printNotes: document.getElementById('printNotes')
-    };
+    let extractedData = [];
 
-    let currentMarkers = [];
-    let currentRouteLayer = null;
-    let lastRouteText = '';
-    let lastValidPoints = [];
+    btnSelect.addEventListener('click', () => pdfInput.click());
+    pdfInput.addEventListener('change', (e) => handleFiles(e.target.files));
+    btnClear.addEventListener('click', clearAll);
+    btnExportCsv.addEventListener('click', exportCSV);
 
-    function normalizeText(text) {
-      return String(text || '')
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .toLowerCase()
-        .replace(/[^a-z0-9\s,-]/g, ' ')
+    ['dragenter', 'dragover'].forEach(evt => {
+      dropzone.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.classList.add('dragover');
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(evt => {
+      dropzone.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.classList.remove('dragover');
+      });
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      handleFiles(files);
+    });
+
+    function normalizeSpaces(text) {
+      return text
         .replace(/\s+/g, ' ')
+        .replace(/\u00A0/g, ' ')
         .trim();
     }
 
-    function extractLines(raw) {
-      return String(raw || '')
-        .split(/\n+/)
-        .map(line => line.trim())
-        .filter(Boolean);
-    }
+    function extractFields(rawText) {
+      const text = normalizeSpaces(rawText);
 
-    function setStatus(text, type = 'loading') {
-      els.statusText.textContent = text;
-      els.statusDot.className = 'dot';
-      if (type === 'ok') els.statusDot.classList.add('ok');
-      if (type === 'err') els.statusDot.classList.add('err');
-    }
+      const patterns = {
+        numeroNF: [
+          /N[ºo°]?\s*(?:[:\-]\s*)?(\d{3}\.\d{3}\.\d{3}|\d{3}\.\d{3}|\d{6,9})/i,
+          /NF-e\s*N[ºo°]?\s*(\d{3}\.\d{3}\.\d{3}|\d{3}\.\d{3}|\d{6,9})/i,
+          /DANFE.*?N[ºo°]?\s*(\d{3}\.\d{3}\.\d{3}|\d{3}\.\d{3}|\d{6,9})/i
+        ],
+        dataEmissao: [
+          /DATA DA EMISS[ÃA]O\s*(\d{2}\/\d{2}\/\d{4})/i,
+          /EMISS[ÃA]O\s*(\d{2}\/\d{2}\/\d{4})/i
+        ],
+        valorTotal: [
+          /VALOR TOTAL DA NOTA\s*([\d\.]+,\d{2})/i,
+          /VALOR TOTAL\s*DA\s*NOTA\s*([\d\.]+,\d{2})/i
+        ]
+      };
 
-    function escapeHtml(str = '') {
-      return String(str)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
-    }
+      const result = {
+        numeroNF: '',
+        dataEmissao: '',
+        valorTotal: ''
+      };
 
-    function updatePrintInfo() {
-      els.printCity.textContent = els.cityFilter.value.trim() || '-';
-      els.printDriver.textContent = els.driverName.value.trim() || '-';
-      els.printPlate.textContent = els.plate.value.trim() || '-';
-      els.printNotes.textContent = els.notes.value.trim() || '-';
-    }
-
-    async function geocodeAddress(query, cityFilter) {
-      const tries = [query];
-      if (cityFilter && !normalizeText(query).includes(normalizeText(cityFilter))) {
-        tries.push(`${query}, ${cityFilter}`);
+      for (const regex of patterns.numeroNF) {
+        const m = text.match(regex);
+        if (m && m[1]) {
+          result.numeroNF = m[1];
+          break;
+        }
       }
-      tries.push(`${query}, Brasil`);
 
-      for (const attempt of tries) {
-        const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&addressdetails=1&countrycodes=br&q=${encodeURIComponent(attempt)}`;
-        const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
-        if (!res.ok) continue;
-        const data = await res.json();
-        if (!data.length) continue;
-
-        const item = data[0];
-        const addr = item.address || {};
-        const city = addr.city || addr.town || addr.village || addr.municipality || cityFilter || '';
-        const stateCode = addr.state_code || '';
-        const displayCity = stateCode ? `${city}, ${stateCode}` : city;
-        return {
-          query,
-          label: item.display_name,
-          lat: Number(item.lat),
-          lon: Number(item.lon),
-          displayCity,
-          street: [addr.road, addr.house_number].filter(Boolean).join(', ') || query,
-          neighborhood: addr.suburb || addr.neighbourhood || addr.city_district || '',
-          city: displayCity || cityFilter || ''
-        };
+      for (const regex of patterns.dataEmissao) {
+        const m = text.match(regex);
+        if (m && m[1]) {
+          result.dataEmissao = m[1];
+          break;
+        }
       }
-      return null;
-    }
 
-    async function buildOptimizedRoute(points) {
-      const coords = points.map(p => `${p.lon},${p.lat}`).join(';');
-      const url = `https://router.project-osrm.org/trip/v1/driving/${coords}?roundtrip=false&source=first&steps=true&geometries=geojson&overview=full`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('Falha ao calcular rota online.');
-      const data = await res.json();
-      if (!data.trips || !data.trips.length || !data.waypoints || !data.waypoints.length) {
-        throw new Error('Rota online não encontrada.');
+      for (const regex of patterns.valorTotal) {
+        const m = text.match(regex);
+        if (m && m[1]) {
+          result.valorTotal = 'R$ ' + m[1];
+          break;
+        }
       }
-      return data;
-    }
 
-    function haversineKm(a, b) {
-      const R = 6371;
-      const dLat = (b.lat - a.lat) * Math.PI / 180;
-      const dLon = (b.lon - a.lon) * Math.PI / 180;
-      const lat1 = a.lat * Math.PI / 180;
-      const lat2 = b.lat * Math.PI / 180;
-      const x = Math.sin(dLat / 2) ** 2 + Math.sin(dLon / 2) ** 2 * Math.cos(lat1) * Math.cos(lat2);
-      const c = 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
-      return R * c;
-    }
-
-    function buildFallbackRoute(points) {
-      const remaining = points.slice(1);
-      const ordered = [points[0]];
-      let current = points[0];
-
-      while (remaining.length) {
-        let bestIdx = 0;
-        let bestDist = Infinity;
-        for (let i = 0; i < remaining.length; i++) {
-          const d = haversineKm(current, remaining[i]);
-          if (d < bestDist) {
-            bestDist = d;
-            bestIdx = i;
+      if (!result.numeroNF) {
+        const lines = rawText.split(/\n+/).map(l => l.trim()).filter(Boolean);
+        for (let i = 0; i < lines.length; i++) {
+          if (/^N[ºo°]?$/i.test(lines[i]) && lines[i + 2]) {
+            const maybe = lines[i + 2].match(/(\d{3}\.\d{3}\.\d{3}|\d{3}\.\d{3}|\d{6,9})/);
+            if (maybe) {
+              result.numeroNF = maybe[1];
+              break;
+            }
           }
         }
-        const next = remaining.splice(bestIdx, 1)[0];
-        ordered.push(next);
-        current = next;
       }
 
-      const legs = [];
-      let totalDistance = 0;
-      let totalDuration = 0;
-      for (let i = 1; i < ordered.length; i++) {
-        const km = haversineKm(ordered[i - 1], ordered[i]) * 1.18;
-        const meters = km * 1000;
-        const seconds = (km / 28) * 3600;
-        legs.push({ distance: meters, duration: seconds });
-        totalDistance += meters;
-        totalDuration += seconds;
+      return result;
+    }
+
+    async function extractTextFromPDF(file) {
+      const buffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+      let fullText = '';
+
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const content = await page.getTextContent();
+        const strings = content.items.map(item => item.str);
+        fullText += strings.join(' ') + '\n';
       }
 
-      return {
-        orderedPoints: ordered,
-        legs,
-        totalDistance,
-        totalDuration,
-        geojson: {
-          type: 'Feature',
-          geometry: { type: 'LineString', coordinates: ordered.map(p => [p.lon, p.lat]) },
-          properties: {}
-        },
-        fallback: true
-      };
+      return fullText;
     }
 
-    function formatKm(meters) {
-      return `${(meters / 1000).toFixed(1).replace('.', ',')} km`;
-    }
-
-    function formatDuration(seconds) {
-      const h = Math.floor(seconds / 3600);
-      const m = Math.round((seconds % 3600) / 60);
-      if (h <= 0) return `${m} min`;
-      return `${h}h ${m.toString().padStart(2, '0')}min`;
-    }
-
-    function formatMoney(value) {
-      return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    }
-
-    function clearMap() {
-      currentMarkers.forEach(m => map.removeLayer(m));
-      currentMarkers = [];
-      if (currentRouteLayer) {
-        map.removeLayer(currentRouteLayer);
-        currentRouteLayer = null;
-      }
-    }
-
-    function googleMapsLink(point) {
-      return `https://www.google.com/maps/search/?api=1&query=${point.lat},${point.lon}`;
-    }
-
-    function renderMarkers(orderedPoints) {
-      orderedPoints.forEach((p, idx) => {
-        const marker = L.marker([p.lat, p.lon]).addTo(map);
-        marker.bindPopup(`<strong>${idx === 0 ? 'Saída' : 'Parada ' + idx}</strong><br>${escapeHtml(p.client || p.original)}<br><small>${escapeHtml(p.label || '')}</small>`);
-        currentMarkers.push(marker);
-      });
-    }
-
-    function renderRoute(geojson) {
-      currentRouteLayer = L.geoJSON(geojson, {
-        style: {
-          color: '#4f8cff',
-          weight: 5,
-          opacity: 0.95
-        }
-      }).addTo(map);
-
-      try {
-        map.fitBounds(currentRouteLayer.getBounds(), { padding: [30, 30] });
-      } catch {}
-    }
-
-    function renderTable(rows) {
-      if (!rows.length) {
-        els.addressTableBody.innerHTML = '<tr><td colspan="5">Nenhum dado por enquanto.</td></tr>';
-        els.addressCountPill.textContent = '0 endereços';
-        els.metricOrders.textContent = '0';
+    async function handleFiles(fileList) {
+      const files = Array.from(fileList).filter(file => file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'));
+      if (!files.length) {
+        statusEl.textContent = 'Nenhum PDF válido selecionado.';
         return;
       }
 
-      els.addressTableBody.innerHTML = rows.map((r, i) => `
-        <tr>
-          <td>${i + 1}</td>
-          <td>${escapeHtml(r.original)}</td>
-          <td>${escapeHtml(r.label || r.query)}</td>
-          <td>${r.error ? 'Não localizado' : 'OK'}</td>
-          <td>${r.error ? '-' : `<a class="link-btn" target="_blank" rel="noopener noreferrer" href="${googleMapsLink(r)}">Abrir mapa</a>`}</td>
-        </tr>
+      statusEl.textContent = `Processando ${files.length} arquivo(s)...`;
+
+      for (const file of files) {
+        try {
+          const text = await extractTextFromPDF(file);
+          const fields = extractFields(text);
+          const ok = fields.numeroNF || fields.dataEmissao || fields.valorTotal;
+
+          extractedData.push({
+            arquivo: file.name,
+            numeroNF: fields.numeroNF || 'Não encontrado',
+            dataEmissao: fields.dataEmissao || 'Não encontrado',
+            valorTotal: fields.valorTotal || 'Não encontrado',
+            sucesso: !!ok
+          });
+        } catch (error) {
+          extractedData.push({
+            arquivo: file.name,
+            numeroNF: 'Erro ao ler PDF',
+            dataEmissao: 'Erro ao ler PDF',
+            valorTotal: 'Erro ao ler PDF',
+            sucesso: false
+          });
+          console.error(error);
+        }
+      }
+
+      renderResults();
+      statusEl.textContent = `Concluído. ${files.length} arquivo(s) processado(s).`;
+      pdfInput.value = '';
+    }
+
+    function renderResults() {
+      countBadge.textContent = `${extractedData.length} nota(s) processada(s)`;
+
+      if (!extractedData.length) {
+        resultsContainer.style.display = 'block';
+        resultsContainer.className = 'empty';
+        resultsContainer.textContent = 'Nenhuma nota processada ainda.';
+        tableWrap.style.display = 'none';
+        return;
+      }
+
+      resultsContainer.className = '';
+      resultsContainer.style.display = 'block';
+      resultsContainer.innerHTML = extractedData.map(item => `
+        <div class="item">
+          <div class="item-top">
+            <div class="filename">${escapeHtml(item.arquivo)}</div>
+            <div class="${item.sucesso ? 'ok' : 'fail'}">${item.sucesso ? 'Leitura realizada' : 'Leitura parcial/erro'}</div>
+          </div>
+          <div class="fields">
+            <div class="field">
+              <label>Número da NF</label>
+              <div>${escapeHtml(item.numeroNF)}</div>
+            </div>
+            <div class="field">
+              <label>Data de emissão</label>
+              <div>${escapeHtml(item.dataEmissao)}</div>
+            </div>
+            <div class="field">
+              <label>Valor total</label>
+              <div>${escapeHtml(item.valorTotal)}</div>
+            </div>
+          </div>
+        </div>
       `).join('');
 
-      els.addressCountPill.textContent = `${rows.length} endereços`;
-      els.metricOrders.textContent = String(rows.length);
+      tableWrap.style.display = 'block';
+      tableBody.innerHTML = extractedData.map(item => `
+        <tr>
+          <td>${escapeHtml(item.arquivo)}</td>
+          <td>${escapeHtml(item.numeroNF)}</td>
+          <td>${escapeHtml(item.dataEmissao)}</td>
+          <td>${escapeHtml(item.valorTotal)}</td>
+        </tr>
+      `).join('');
     }
 
-    function extractClientName(line, index) {
-      const match = line.match(/cliente\s*:\s*([^|\-]+)/i);
-      if (match && match[1]) return match[1].trim();
-      return `Entrega ${index + 1}`;
-    }
-
-    function renderRouteSteps(ordered, legs, totalDistance, totalDuration, fuelCost, fallback = false) {
-      els.sumStops.textContent = Math.max(ordered.length - 1, 0);
-      els.sumDistance.textContent = formatKm(totalDistance);
-      els.sumTime.textContent = formatDuration(totalDuration);
-      els.sumFuelCost.textContent = formatMoney(fuelCost);
-      els.pillMode.textContent = fallback ? 'Estimativa por proximidade' : 'Sequência otimizada';
-      els.metricMode.textContent = fallback ? 'Fallback local' : 'Endereços';
-
-      let html = '';
-      let copyLines = [];
-
-      for (let i = 0; i < ordered.length; i++) {
-        const p = ordered[i];
-        const prevLeg = i === 0 ? null : legs[i - 1];
-        const title = i === 0 ? 'Saída' : `Parada ${i}`;
-        const mainName = i === 0 ? (p.city || p.displayCity || p.query) : (p.client || `Entrega ${i}`);
-
-        copyLines.push(`${i === 0 ? 'Saída' : i + 'ª parada'}: ${mainName} - ${p.street || p.query}`);
-
-        html += `
-          <div class="step">
-            <div class="badge">${i === 0 ? 'S' : i}</div>
-            <div>
-              <div class="city">${title} — ${escapeHtml(mainName)}</div>
-              <div class="meta">${escapeHtml(i === 0 ? (p.city || p.displayCity || p.query) : (p.street || p.query))}${p.neighborhood ? ` • ${escapeHtml(p.neighborhood)}` : ''}${fallback ? ' • estimativa por proximidade' : ''}</div>
-            </div>
-            <div class="leg">${prevLeg ? `${formatKm(prevLeg.distance)}<br><span style="color:#9db0d3;font-weight:600">${formatDuration(prevLeg.duration)}</span>` : 'Início'}</div>
-          </div>
-        `;
-      }
-
-      els.routeList.innerHTML = html;
-      lastRouteText = copyLines.join('\n');
-    }
-
-    async function calculateRoute() {
-      try {
-        const cityFilter = els.cityFilter.value.trim();
-        const rawOrders = els.orders.value.trim();
-        els.metricCity.textContent = cityFilter || '-';
-        updatePrintInfo();
-
-        if (!cityFilter) {
-          setStatus('Informe a cidade da rota', 'err');
-          alert('Informe a cidade da rota.');
-          return;
-        }
-
-        const lines = extractLines(rawOrders);
-        if (!lines.length) {
-          setStatus('Cole ao menos 1 endereço', 'err');
-          alert('Cole ao menos 1 endereço.');
-          return;
-        }
-
-        els.calcBtn.disabled = true;
-        setStatus('Localizando endereços e calculando rota...');
-        clearMap();
-
-        const geocodedRows = [];
-        const cityGeo = await geocodeAddress(cityFilter, cityFilter);
-        if (!cityGeo) throw new Error('Não foi possível localizar a cidade base.');
-
-        for (let i = 0; i < lines.length; i++) {
-          const line = lines[i];
-          const client = extractClientName(line, i);
-          try {
-            const geo = await geocodeAddress(line, cityFilter);
-            if (!geo) {
-              geocodedRows.push({ original: line, query: line, client, error: true });
-            } else {
-              geocodedRows.push({ original: line, query: line, client, ...geo });
-            }
-          } catch {
-            geocodedRows.push({ original: line, query: line, client, error: true });
-          }
-        }
-
-        renderTable(geocodedRows.filter(r => !r.error));
-
-        const validPoints = geocodedRows.filter(r => !r.error);
-        lastValidPoints = validPoints;
-        if (!validPoints.length) throw new Error('Nenhum endereço válido foi localizado.');
-
-        const pointsForRoute = [
-          {
-            original: cityFilter,
-            query: cityFilter,
-            client: 'Ponto de saída',
-            street: cityFilter,
-            neighborhood: '',
-            city: cityFilter,
-            ...cityGeo
-          },
-          ...validPoints
-        ];
-
-        let orderedPoints = [];
-        let legs = [];
-        let totalDistance = 0;
-        let totalDuration = 0;
-        let routeGeometry = null;
-        let fallback = false;
-
-        try {
-          const routeData = await buildOptimizedRoute(pointsForRoute);
-          const trip = routeData.trips[0];
-          const waypoints = routeData.waypoints || [];
-
-          orderedPoints = waypoints
-            .map((w, index) => ({ waypointIndex: w.waypoint_index, point: pointsForRoute[index] }))
-            .sort((a, b) => a.waypointIndex - b.waypointIndex)
-            .map(item => item.point)
-            .filter(Boolean);
-
-          if (orderedPoints.length !== pointsForRoute.length) {
-            throw new Error('A rota online retornou uma sequência incompleta.');
-          }
-
-          legs = trip.legs || [];
-          totalDistance = trip.distance || legs.reduce((acc, leg) => acc + (leg.distance || 0), 0);
-          totalDuration = trip.duration || legs.reduce((acc, leg) => acc + (leg.duration || 0), 0);
-          routeGeometry = trip.geometry;
-        } catch (onlineError) {
-          console.warn('Falha na rota online, usando fallback local:', onlineError);
-          const fallbackData = buildFallbackRoute(pointsForRoute);
-          orderedPoints = fallbackData.orderedPoints;
-          legs = fallbackData.legs;
-          totalDistance = fallbackData.totalDistance;
-          totalDuration = fallbackData.totalDuration;
-          routeGeometry = fallbackData.geojson;
-          fallback = true;
-        }
-
-        if (!orderedPoints.length) throw new Error('Não foi possível ordenar os endereços da rota.');
-
-        clearMap();
-        renderMarkers(orderedPoints);
-        renderRoute(routeGeometry);
-
-        const vehicleKml = Math.max(Number(els.vehicleKml.value || 0), 0.1);
-        const dieselPrice = Math.max(Number(els.dieselPrice.value || 0), 0);
-        const liters = (totalDistance / 1000) / vehicleKml;
-        const fuelCost = liters * dieselPrice;
-
-        renderRouteSteps(orderedPoints, legs, totalDistance, totalDuration, fuelCost, fallback);
-        setStatus(fallback ? 'Rota estimada por proximidade (fallback)' : 'Rota calculada com sucesso', 'ok');
-      } catch (error) {
-        console.error(error);
-        setStatus(error.message || 'Erro ao calcular rota', 'err');
-        alert(error.message || 'Erro ao calcular rota.');
-      } finally {
-        els.calcBtn.disabled = false;
-      }
-    }
-
-    els.calcBtn.addEventListener('click', calculateRoute);
-
-    els.demoBtn.addEventListener('click', () => {
-      els.cityFilter.value = 'Cascavel, PR';
-      els.driverName.value = 'Kauan';
-      els.plate.value = 'ABC-1D23';
-      els.notes.value = 'Começar pelo Centro e deixar a região da Neva por último.';
-      els.orders.value = [
-        'Pedido 101 | Cliente: Loja Alfa | Rua Paraná, 1200 - Centro - Cascavel, PR',
-        'Pedido 102 | Cliente: Auto Peças Beta | Av. Brasil, 5400 - Centro - Cascavel, PR',
-        'Pedido 103 | Cliente: Mercado Gama | Rua São Paulo, 800 - Centro - Cascavel, PR',
-        'Pedido 104 | Cliente: Cliente Delta | Rua Pio XII, 1550 - Neva - Cascavel, PR',
-        'Pedido 105 | Cliente: Cliente Ômega | Rua Vitória, 2210 - Ciro Nardi - Cascavel, PR'
-      ].join('\n');
-      els.metricCity.textContent = 'Cascavel, PR';
-      updatePrintInfo();
-      setStatus('Exemplo carregado');
-    });
-
-    els.clearBtn.addEventListener('click', () => {
-      els.driverName.value = '';
-      els.plate.value = '';
-      els.notes.value = '';
-      els.orders.value = '';
-      els.addressTableBody.innerHTML = '<tr><td colspan="5">Nenhum dado por enquanto.</td></tr>';
-      els.addressCountPill.textContent = '0 endereços';
-      els.metricOrders.textContent = '0';
-      els.routeList.innerHTML = `
-        <div class="step">
-          <div class="badge">•</div>
-          <div>
-            <div class="city">Nenhuma rota calculada ainda</div>
-            <div class="meta">Cole os endereços e clique em “Calcular rota por endereço”.</div>
-          </div>
-        </div>`;
-      els.sumStops.textContent = '0';
-      els.sumDistance.textContent = '0 km';
-      els.sumTime.textContent = '0h';
-      els.sumFuelCost.textContent = 'R$ 0,00';
-      els.pillMode.textContent = 'Sequência otimizada';
-      els.metricMode.textContent = 'Endereços';
-      els.metricCity.textContent = '-';
-      clearMap();
-      map.setView([-24.96, -53.46], 12);
-      setStatus('Tela limpa');
-      lastRouteText = '';
-      lastValidPoints = [];
-      updatePrintInfo();
-    });
-
-    els.copyBtn.addEventListener('click', async () => {
-      if (!lastRouteText) {
-        alert('Calcule uma rota primeiro para copiar a sequência.');
+    function exportCSV() {
+      if (!extractedData.length) {
+        alert('Não há dados para exportar.');
         return;
       }
-      try {
-        await navigator.clipboard.writeText(lastRouteText);
-        setStatus('Sequência copiada para a área de transferência', 'ok');
-      } catch {
-        alert('Não foi possível copiar automaticamente.');
-      }
-    });
 
-    els.printBtn.addEventListener('click', () => {
-      updatePrintInfo();
-      if (!lastRouteText) {
-        alert('Calcule uma rota antes de imprimir.');
-        return;
-      }
-      setTimeout(() => {
-        map.invalidateSize();
-        window.print();
-      }, 150);
-    });
+      const headers = ['Arquivo', 'Numero NF', 'Data de Emissao', 'Valor Total'];
+      const rows = extractedData.map(item => [
+        item.arquivo,
+        item.numeroNF,
+        item.dataEmissao,
+        item.valorTotal
+      ]);
 
-    els.resetMapBtn.addEventListener('click', () => {
-      if (currentRouteLayer) {
-        try {
-          map.fitBounds(currentRouteLayer.getBounds(), { padding: [30, 30] });
-        } catch {
-          map.setView([-24.96, -53.46], 12);
-        }
-      } else {
-        map.setView([-24.96, -53.46], 12);
-      }
-    });
+      const csv = [headers, ...rows]
+        .map(row => row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(';'))
+        .join('\n');
 
-    els.driverName.addEventListener('input', updatePrintInfo);
-    els.plate.addEventListener('input', updatePrintInfo);
-    els.notes.addEventListener('input', updatePrintInfo);
-    els.cityFilter.addEventListener('input', () => {
-      els.metricCity.textContent = els.cityFilter.value.trim() || '-';
-      updatePrintInfo();
-    });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'extracao_danfe.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
 
-    updatePrintInfo();
-    els.metricCity.textContent = els.cityFilter.value.trim() || '-';
+    function clearAll() {
+      extractedData = [];
+      renderResults();
+      statusEl.textContent = 'Aguardando arquivos...';
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
   </script>
 </body>
 </html>
