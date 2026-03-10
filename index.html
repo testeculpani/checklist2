@@ -9,7 +9,6 @@
     :root{
       --bg:#0b1220;
       --card:#121a2b;
-      --card2:#182338;
       --line:#2a3956;
       --text:#e8edf7;
       --muted:#9fb0cf;
@@ -25,7 +24,7 @@
       background:linear-gradient(180deg,#0a1020 0%, #121a2b 100%);
       color:var(--text);
     }
-    .wrap{max-width:1180px;margin:0 auto;padding:22px}
+    .wrap{max-width:1240px;margin:0 auto;padding:22px}
     .hero{
       background:linear-gradient(135deg, rgba(250,204,21,.18), rgba(250,204,21,.05));
       border:1px solid rgba(250,204,21,.30);
@@ -84,7 +83,7 @@
     .filename{font-weight:700;color:#fff;word-break:break-word}
     .ok{color:#97f0b2;font-weight:700}
     .fail{color:#fcb2b2;font-weight:700}
-    .fields{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .fields{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
     .field{border:1px solid #2d3e5c;border-radius:14px;padding:12px;background:rgba(255,255,255,.03)}
     .field label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin-bottom:6px}
     .field div{font-size:18px;font-weight:700;color:#fff;word-break:break-word}
@@ -94,6 +93,9 @@
     td{background:#101829}
     tr:hover td{background:#13203a}
     .small{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.55}
+    .search-box{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .search-box input{flex:1;min-width:220px;background:#0f172a;color:#fff;border:1px solid #31425f;border-radius:12px;padding:12px 14px;outline:none}
+    .search-result{margin-top:12px;padding:12px;border:1px solid #31425f;border-radius:14px;background:rgba(255,255,255,.03);color:#dce7ff;display:none}
     .debug{
       margin-top:14px;
       border:1px solid #334155;
@@ -103,13 +105,7 @@
       display:none;
     }
     .debug textarea{
-      width:100%;
-      min-height:220px;
-      background:#08101d;
-      color:#dce7ff;
-      border:1px solid #30425f;
-      border-radius:10px;
-      padding:10px;
+      width:100%;min-height:220px;background:#08101d;color:#dce7ff;border:1px solid #30425f;border-radius:10px;padding:10px;
     }
     @media (max-width:900px){
       .grid{grid-template-columns:1fr}
@@ -122,7 +118,7 @@
   <div class="wrap">
     <div class="hero">
       <h1>Extrator de DANFE</h1>
-      <p>Selecione os PDFs das notas fiscais e o sistema tenta puxar automaticamente <strong>número da NF</strong>, <strong>data de emissão</strong> e <strong>valor total da nota</strong>.</p>
+      <p>Selecione os PDFs das notas fiscais e o sistema tenta puxar automaticamente <strong>razão social</strong>, <strong>número da NF</strong>, <strong>data de emissão</strong> e <strong>valor total da nota</strong>. Também tem busca por valor para localizar a NF.</p>
     </div>
 
     <div class="grid">
@@ -147,15 +143,19 @@
       </div>
 
       <div class="card">
-        <h2>Observações</h2>
+        <h2>Buscar NF pelo valor</h2>
         <ul class="hint">
-          <li>Esta versão usa uma leitura mais estável do PDF com ordenação por linhas.</li>
-          <li>Se a nota for PDF escaneado como imagem pura, pode não extrair bem.</li>
-          <li>Nesse caso será preciso OCR depois.</li>
-          <li>Para DANFE comum de fornecedor, normalmente funciona melhor.</li>
-          <li>O botão <strong>Mostrar texto lido</strong> ajuda a enxergar o que o sistema conseguiu capturar.</li>
+          <li>Digite um valor como <strong>1513,52</strong> ou <strong>78,90</strong>.</li>
+          <li>Se houver mais de uma nota com o mesmo valor, ele lista todas.</li>
+          <li>O botão <strong>Mostrar texto lido</strong> ajuda a enxergar o que o sistema capturou do PDF.</li>
         </ul>
-        <div class="small">Depois dá para adaptar também para fornecedor, CNPJ, produto e chave de acesso.</div>
+        <div class="small">Depois dá para adaptar também para CNPJ, produto e chave de acesso.</div>
+
+        <div class="search-box">
+          <input type="text" id="searchValueInput" placeholder="Digite o valor. Ex: 1513,52 ou 78,90">
+          <button class="secondary" id="btnSearchValue">Buscar NF pelo valor</button>
+        </div>
+        <div class="search-result" id="searchResult"></div>
       </div>
     </div>
 
@@ -170,6 +170,7 @@
           <thead>
             <tr>
               <th>Arquivo</th>
+              <th>Razão Social</th>
               <th>Número NF</th>
               <th>Data de emissão</th>
               <th>Valor total</th>
@@ -182,80 +183,122 @@
   </div>
 
   <script>
-    if (window["pdfjsLib"]) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    if (window['pdfjsLib']) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     }
 
-    const pdfInput = document.getElementById("pdfInput");
-    const dropzone = document.getElementById("dropzone");
-    const btnSelect = document.getElementById("btnSelect");
-    const btnExport = document.getElementById("btnExport");
-    const btnClear = document.getElementById("btnClear");
-    const btnDebug = document.getElementById("btnDebug");
-    const statusEl = document.getElementById("status");
-    const resultsContainer = document.getElementById("resultsContainer");
-    const tableWrap = document.getElementById("tableWrap");
-    const tableBody = document.getElementById("tableBody");
-    const countBadge = document.getElementById("countBadge");
-    const debugBox = document.getElementById("debugBox");
-    const debugText = document.getElementById("debugText");
+    const pdfInput = document.getElementById('pdfInput');
+    const dropzone = document.getElementById('dropzone');
+    const btnSelect = document.getElementById('btnSelect');
+    const btnExport = document.getElementById('btnExport');
+    const btnClear = document.getElementById('btnClear');
+    const btnDebug = document.getElementById('btnDebug');
+    const statusEl = document.getElementById('status');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const tableWrap = document.getElementById('tableWrap');
+    const tableBody = document.getElementById('tableBody');
+    const countBadge = document.getElementById('countBadge');
+    const debugBox = document.getElementById('debugBox');
+    const debugText = document.getElementById('debugText');
+    const searchValueInput = document.getElementById('searchValueInput');
+    const btnSearchValue = document.getElementById('btnSearchValue');
+    const searchResult = document.getElementById('searchResult');
 
     let extractedData = [];
 
-    btnSelect.addEventListener("click", () => pdfInput.click());
-    pdfInput.addEventListener("change", (e) => handleFiles(e.target.files));
-    btnExport.addEventListener("click", exportCSV);
-    btnClear.addEventListener("click", clearAll);
-    btnDebug.addEventListener("click", () => {
-      debugBox.style.display = debugBox.style.display === "block" ? "none" : "block";
+    btnSelect.addEventListener('click', () => pdfInput.click());
+    pdfInput.addEventListener('change', (e) => handleFiles(e.target.files));
+    btnExport.addEventListener('click', exportCSV);
+    btnClear.addEventListener('click', clearAll);
+    btnDebug.addEventListener('click', () => {
+      debugBox.style.display = debugBox.style.display === 'block' ? 'none' : 'block';
+    });
+    btnSearchValue.addEventListener('click', buscarPorValor);
+    searchValueInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') buscarPorValor();
     });
 
-    ["dragenter", "dragover"].forEach(evt => {
+    ['dragenter','dragover'].forEach(evt => {
       dropzone.addEventListener(evt, e => {
         e.preventDefault();
         e.stopPropagation();
-        dropzone.classList.add("dragover");
+        dropzone.classList.add('dragover');
       });
     });
 
-    ["dragleave", "drop"].forEach(evt => {
+    ['dragleave','drop'].forEach(evt => {
       dropzone.addEventListener(evt, e => {
         e.preventDefault();
         e.stopPropagation();
-        dropzone.classList.remove("dragover");
+        dropzone.classList.remove('dragover');
       });
     });
 
-    dropzone.addEventListener("drop", e => {
+    dropzone.addEventListener('drop', e => {
       handleFiles(e.dataTransfer.files);
     });
 
     function normalizeText(text) {
       return text
-        .replace(/\u00A0/g, " ")
-        .replace(/[ \t]+/g, " ")
-        .replace(/\n{2,}/g, "\n")
+        .replace(/\u00A0/g, ' ')
+        .replace(/[ \t]+/g, ' ')
+        .replace(/\n{2,}/g, '\n')
         .trim();
     }
 
     function moneyToBR(v) {
-      if (!v) return "";
-      v = v.replace(/\./g, "").replace(",", ".");
+      if (!v) return '';
+      v = String(v).replace(/\./g,'').replace(',', '.');
       const n = Number(v);
-      if (Number.isNaN(n)) return "";
-      return "R$ " + n.toLocaleString("pt-BR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
+      if (Number.isNaN(n)) return '';
+      return 'R$ ' + n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function normalizarValorBusca(valor) {
+      return String(valor)
+        .replace(/R\$/gi, '')
+        .replace(/\s+/g, '')
+        .replace(/\./g, '')
+        .replace(',', '.')
+        .trim();
+    }
+
+    function extractRazaoSocial(text) {
+      const razaoPatterns = [
+        /RECEBEMOS DE\s+(.+?)\s+OS PRODUTOS CONSTANTES/i,
+        /NOME\s*\/\s*RAZ[ÃA]O\s*SOCIAL\s+([^\n]+)/i,
+        /NOME\/RAZ[ÃA]O SOCIAL\s+([^\n]+)/i
+      ];
+
+      for (const rgx of razaoPatterns) {
+        const m = text.match(rgx);
+        if (m && m[1]) {
+          const valor = m[1].replace(/\s{2,}/g, ' ').trim();
+          if (valor.length > 3) return valor;
+        }
+      }
+
+      const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+      for (let i = 0; i < lines.length; i++) {
+        if (/DANFE/i.test(lines[i]) && i > 0) {
+          const anterior = lines[i - 1].trim();
+          if (anterior.length > 3 && !/CNPJ|CHAVE DE ACESSO|NF-e/i.test(anterior)) {
+            return anterior;
+          }
+        }
+      }
+
+      return 'Não encontrado';
     }
 
     function extractFields(rawText) {
       const text = normalizeText(rawText);
-      const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
+      const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
 
-      let numeroNF = "";
-      let dataEmissao = "";
-      let valorTotal = "";
+      let razaoSocial = extractRazaoSocial(text);
+      let numeroNF = '';
+      let dataEmissao = '';
+      let valorTotal = '';
 
       const numeroPatterns = [
         /N[º°o]?\s*[:\-]?\s*(\d{3}\.\d{3}\.\d{3})/i,
@@ -276,7 +319,7 @@
         for (let i = 0; i < lines.length; i++) {
           const line = lines[i];
           if (/^\d{3}\.\d{3}\.\d{3}$/.test(line) || /^\d{3}\.\d{3}$/.test(line)) {
-            const prev = (lines[i - 1] || "") + " " + (lines[i - 2] || "");
+            const prev = (lines[i - 1] || '') + ' ' + (lines[i - 2] || '');
             if (/NF-e|N[º°o]?|S[ÉE]RIE/i.test(prev)) {
               numeroNF = line;
               break;
@@ -286,9 +329,9 @@
       }
 
       for (let i = 0; i < lines.length; i++) {
-        const joined = [lines[i], lines[i + 1], lines[i + 2], lines[i + 3], lines[i + 4]]
+        const joined = [lines[i], lines[i + 1], lines[i + 2], lines[i + 3], lines[i + 4], lines[i + 5], lines[i + 6], lines[i + 7]]
           .filter(Boolean)
-          .join(" ");
+          .join(' ');
 
         if (!dataEmissao) {
           const m = joined.match(/DATA DA EMISS[ÃA]O\s*(\d{2}\/\d{2}\/\d{4})/i);
@@ -311,7 +354,7 @@
       if (!dataEmissao) {
         const idx = lines.findIndex(l => /DATA DA EMISS[ÃA]O/i.test(l));
         if (idx >= 0) {
-          const nearby = lines.slice(idx, idx + 6).join(" ");
+          const nearby = lines.slice(idx, idx + 6).join(' ');
           const m = nearby.match(/(\d{2}\/\d{2}\/\d{4})/);
           if (m) dataEmissao = m[1];
         }
@@ -320,7 +363,7 @@
       if (!valorTotal) {
         const idx = lines.findIndex(l => /VALOR TOTAL DA NOTA/i.test(l));
         if (idx >= 0) {
-          const nearby = lines.slice(idx, idx + 8).join(" ");
+          const nearby = lines.slice(idx, idx + 12).join(' ');
           const matches = nearby.match(/[\d\.]+,\d{2}/g);
           if (matches && matches.length) {
             valorTotal = moneyToBR(matches[matches.length - 1]);
@@ -331,9 +374,8 @@
       if (!valorTotal) {
         const idxImposto = lines.findIndex(l => /C[ÁA]LCULO DO IMPOSTO/i.test(l));
         if (idxImposto >= 0) {
-          const nearby = lines.slice(idxImposto, idxImposto + 15).join(" ");
+          const nearby = lines.slice(idxImposto, idxImposto + 20).join(' ');
           const nums = nearby.match(/[\d\.]+,\d{2}/g);
-
           if (nums && nums.length) {
             const nonZero = nums.filter(v => !/^0,00$/.test(v));
             const chosen = nonZero.length ? nonZero[nonZero.length - 1] : nums[nums.length - 1];
@@ -352,21 +394,18 @@
       }
 
       return {
-        numeroNF: numeroNF || "Não encontrado",
-        dataEmissao: dataEmissao || "Não encontrado",
-        valorTotal: valorTotal || "Não encontrado"
+        razaoSocial: razaoSocial || 'Não encontrado',
+        numeroNF: numeroNF || 'Não encontrado',
+        dataEmissao: dataEmissao || 'Não encontrado',
+        valorTotal: valorTotal || 'Não encontrado'
       };
     }
 
     async function extractTextFromPDF(file) {
       const buffer = await file.arrayBuffer();
-      const loadingTask = pdfjsLib.getDocument({
-        data: buffer,
-        useWorkerFetch: true,
-        isEvalSupported: false
-      });
+      const loadingTask = pdfjsLib.getDocument({ data: buffer, useWorkerFetch: true, isEvalSupported: false });
       const pdf = await loadingTask.promise;
-      let fullText = "";
+      let fullText = '';
 
       for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
         const page = await pdf.getPage(pageNum);
@@ -378,7 +417,7 @@
           return { str: item.str, x, y };
         });
 
-        items.sort((a, b) => {
+        items.sort((a,b) => {
           if (Math.abs(b.y - a.y) > 2) return b.y - a.y;
           return a.x - b.x;
         });
@@ -389,34 +428,32 @@
 
         for (const item of items) {
           if (!item.str || !item.str.trim()) continue;
-
           if (currentY === null || Math.abs(item.y - currentY) <= 2) {
             currentLine.push(item);
             currentY = currentY === null ? item.y : currentY;
           } else {
-            currentLine.sort((a, b) => a.x - b.x);
-            lines.push(currentLine.map(i => i.str).join(" "));
+            currentLine.sort((a,b) => a.x - b.x);
+            lines.push(currentLine.map(i => i.str).join(' '));
             currentLine = [item];
             currentY = item.y;
           }
         }
 
         if (currentLine.length) {
-          currentLine.sort((a, b) => a.x - b.x);
-          lines.push(currentLine.map(i => i.str).join(" "));
+          currentLine.sort((a,b) => a.x - b.x);
+          lines.push(currentLine.map(i => i.str).join(' '));
         }
 
-        fullText += lines.join("\n") + "\n\n";
+        fullText += lines.join('\n') + '\n\n';
       }
 
       return normalizeText(fullText);
     }
 
     async function handleFiles(fileList) {
-      const files = Array.from(fileList).filter(file => file.name.toLowerCase().endsWith(".pdf"));
-
+      const files = Array.from(fileList).filter(file => file.name.toLowerCase().endsWith('.pdf'));
       if (!files.length) {
-        statusEl.textContent = "Nenhum PDF válido selecionado.";
+        statusEl.textContent = 'Nenhum PDF válido selecionado.';
         return;
       }
 
@@ -428,11 +465,11 @@
           debugText.value = rawText;
 
           const fields = extractFields(rawText);
-          const sucesso = [fields.numeroNF, fields.dataEmissao, fields.valorTotal]
-            .some(v => v !== "Não encontrado");
+          const sucesso = [fields.numeroNF, fields.dataEmissao, fields.valorTotal].some(v => v !== 'Não encontrado');
 
           extractedData.push({
             arquivo: file.name,
+            razaoSocial: fields.razaoSocial,
             numeroNF: fields.numeroNF,
             dataEmissao: fields.dataEmissao,
             valorTotal: fields.valorTotal,
@@ -442,79 +479,76 @@
           console.error(error);
           extractedData.push({
             arquivo: file.name,
-            numeroNF: "Erro ao ler PDF",
-            dataEmissao: "Erro ao ler PDF",
-            valorTotal: "Erro ao ler PDF",
+            razaoSocial: 'Erro ao ler PDF',
+            numeroNF: 'Erro ao ler PDF',
+            dataEmissao: 'Erro ao ler PDF',
+            valorTotal: 'Erro ao ler PDF',
             sucesso: false
           });
-          debugText.value = "Erro ao ler este PDF: " + error.message;
+          debugText.value = 'Erro ao ler este PDF: ' + error.message;
         }
       }
 
       renderResults();
       statusEl.textContent = `Concluído. ${files.length} arquivo(s) processado(s).`;
-      pdfInput.value = "";
+      pdfInput.value = '';
     }
 
     function renderResults() {
       countBadge.textContent = `${extractedData.length} nota(s) processada(s)`;
 
       if (!extractedData.length) {
-        resultsContainer.className = "empty";
-        resultsContainer.innerHTML = "Nenhuma nota processada ainda.";
-        tableWrap.style.display = "none";
+        resultsContainer.className = 'empty';
+        resultsContainer.innerHTML = 'Nenhuma nota processada ainda.';
+        tableWrap.style.display = 'none';
         return;
       }
 
-      resultsContainer.className = "";
+      resultsContainer.className = '';
       resultsContainer.innerHTML = extractedData.map(item => `
         <div class="item">
           <div class="item-top">
             <div class="filename">${escapeHtml(item.arquivo)}</div>
-            <div class="${item.sucesso ? "ok" : "fail"}">${item.sucesso ? "Leitura realizada" : "Falhou"}</div>
+            <div class="${item.sucesso ? 'ok' : 'fail'}">${item.sucesso ? 'Leitura realizada' : 'Falhou'}</div>
           </div>
           <div class="fields">
+            <div class="field"><label>Razão Social</label><div>${escapeHtml(item.razaoSocial)}</div></div>
             <div class="field"><label>Número da NF</label><div>${escapeHtml(item.numeroNF)}</div></div>
             <div class="field"><label>Data de emissão</label><div>${escapeHtml(item.dataEmissao)}</div></div>
             <div class="field"><label>Valor total</label><div>${escapeHtml(item.valorTotal)}</div></div>
           </div>
         </div>
-      `).join("");
+      `).join('');
 
-      tableWrap.style.display = "block";
+      tableWrap.style.display = 'block';
       tableBody.innerHTML = extractedData.map(item => `
         <tr>
           <td>${escapeHtml(item.arquivo)}</td>
+          <td>${escapeHtml(item.razaoSocial)}</td>
           <td>${escapeHtml(item.numeroNF)}</td>
           <td>${escapeHtml(item.dataEmissao)}</td>
           <td>${escapeHtml(item.valorTotal)}</td>
         </tr>
-      `).join("");
+      `).join('');
     }
 
     function exportCSV() {
       if (!extractedData.length) {
-        alert("Não há dados para exportar.");
+        alert('Não há dados para exportar.');
         return;
       }
 
-      const headers = ["Arquivo", "Numero NF", "Data de Emissao", "Valor Total"];
-      const rows = extractedData.map(item => [
-        item.arquivo,
-        item.numeroNF,
-        item.dataEmissao,
-        item.valorTotal
-      ]);
-
+      const headers = ['Arquivo', 'Razao Social', 'Numero NF', 'Data de Emissao', 'Valor Total'];
+      const rows = extractedData.map(item => [item.arquivo, item.razaoSocial, item.numeroNF, item.dataEmissao, item.valorTotal]);
       const csv = [headers, ...rows]
-        .map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(";"))
-        .join("\n");
+        .map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(';'))
+        .join('\n');
 
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
+      const a = document.createElement('a');
       a.href = url;
-      a.download = "extracao_danfe.csv";
+      a.download = 'extracao_danfe.csv';
       a.click();
       URL.revokeObjectURL(url);
     }
@@ -522,17 +556,58 @@
     function clearAll() {
       extractedData = [];
       renderResults();
-      debugText.value = "";
-      statusEl.textContent = "Aguardando arquivos...";
+      debugText.value = '';
+      searchValueInput.value = '';
+      searchResult.style.display = 'none';
+      searchResult.innerHTML = '';
+      statusEl.textContent = 'Aguardando arquivos...';
+    }
+
+    function buscarPorValor() {
+      const valorDigitado = searchValueInput.value.trim();
+
+      if (!valorDigitado) {
+        searchResult.style.display = 'block';
+        searchResult.innerHTML = 'Digite um valor para buscar.';
+        return;
+      }
+
+      if (!extractedData.length) {
+        searchResult.style.display = 'block';
+        searchResult.innerHTML = 'Nenhuma nota foi processada ainda.';
+        return;
+      }
+
+      const alvo = normalizarValorBusca(valorDigitado);
+      const encontrados = extractedData.filter(item => {
+        const valorItem = normalizarValorBusca(item.valorTotal || '');
+        return valorItem && valorItem === alvo;
+      });
+
+      searchResult.style.display = 'block';
+
+      if (!encontrados.length) {
+        searchResult.innerHTML = 'Nenhuma NF encontrada para o valor <strong>' + escapeHtml(valorDigitado) + '</strong>.';
+        return;
+      }
+
+      searchResult.innerHTML = encontrados.map(item =>
+        '<div style="margin-bottom:10px;">' +
+        '<strong>NF:</strong> ' + escapeHtml(item.numeroNF) + '<br>' +
+        '<strong>Valor:</strong> ' + escapeHtml(item.valorTotal) + '<br>' +
+        '<strong>Razão Social:</strong> ' + escapeHtml(item.razaoSocial) + '<br>' +
+        '<strong>Arquivo:</strong> ' + escapeHtml(item.arquivo) +
+        '</div>'
+      ).join('');
     }
 
     function escapeHtml(text) {
       return String(text)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
   </script>
 </body>
