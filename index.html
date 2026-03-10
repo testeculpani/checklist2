@@ -4,100 +4,66 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Extrator DANFE</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
     :root{
-      --bg:#0f172a;
-      --card:#111827;
-      --card-2:#1f2937;
-      --line:#334155;
-      --text:#e5e7eb;
-      --muted:#94a3b8;
-      --accent:#facc15;
-      --accent-2:#fde68a;
-      --ok:#22c55e;
-      --danger:#ef4444;
-      --white:#ffffff;
+      --bg:#0b1220;
+      --card:#121a2b;
+      --card2:#182338;
+      --line:#2a3956;
+      --text:#e8edf7;
+      --muted:#9fb0cf;
+      --yellow:#facc15;
+      --yellow-soft:#fde68a;
+      --green:#22c55e;
+      --red:#ef4444;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family:Arial, Helvetica, sans-serif;
-      background:linear-gradient(180deg,#0b1220 0%, #111827 100%);
+      background:linear-gradient(180deg,#0a1020 0%, #121a2b 100%);
       color:var(--text);
     }
-    .wrap{
-      max-width:1100px;
-      margin:0 auto;
-      padding:24px;
-    }
+    .wrap{max-width:1180px;margin:0 auto;padding:22px}
     .hero{
       background:linear-gradient(135deg, rgba(250,204,21,.18), rgba(250,204,21,.05));
-      border:1px solid rgba(250,204,21,.25);
+      border:1px solid rgba(250,204,21,.30);
       border-radius:22px;
-      padding:24px;
-      box-shadow:0 20px 45px rgba(0,0,0,.22);
+      padding:22px;
       margin-bottom:18px;
+      box-shadow:0 20px 40px rgba(0,0,0,.25);
     }
-    .hero h1{
-      margin:0 0 8px;
-      font-size:30px;
-      color:var(--white);
-    }
-    .hero p{
-      margin:0;
-      color:var(--accent-2);
-      line-height:1.5;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns:1.1fr .9fr;
-      gap:18px;
-    }
+    .hero h1{margin:0 0 8px;font-size:30px;color:#fff}
+    .hero p{margin:0;color:var(--yellow-soft);line-height:1.55}
+    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
     .card{
-      background:rgba(17,24,39,.92);
+      background:rgba(18,26,43,.95);
       border:1px solid var(--line);
       border-radius:20px;
       padding:18px;
-      box-shadow:0 16px 35px rgba(0,0,0,.20);
-      backdrop-filter: blur(8px);
+      box-shadow:0 14px 30px rgba(0,0,0,.22);
     }
-    .card h2{
-      margin:0 0 14px;
-      font-size:20px;
-      color:var(--white);
-    }
+    .card h2{margin:0 0 14px;color:#fff;font-size:20px}
     .dropzone{
       border:2px dashed rgba(250,204,21,.45);
       border-radius:18px;
-      padding:28px;
+      padding:30px 18px;
       text-align:center;
-      background:rgba(250,204,21,.05);
-      transition:.2s ease;
+      background:rgba(250,204,21,.06);
       cursor:pointer;
+      transition:.2s ease;
     }
     .dropzone.dragover{
-      transform:scale(1.01);
-      border-color:var(--accent);
+      border-color:var(--yellow);
       background:rgba(250,204,21,.10);
+      transform:scale(1.01);
     }
-    .dropzone strong{
-      display:block;
-      font-size:18px;
-      color:var(--white);
-      margin-bottom:8px;
-    }
-    .dropzone span{
-      color:var(--muted);
-      font-size:14px;
-    }
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:14px;
-    }
-    button, .btn{
+    .dropzone strong{display:block;font-size:18px;color:#fff;margin-bottom:8px}
+    .dropzone span{color:var(--muted);font-size:14px}
+    input[type=file]{display:none}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    button{
       border:none;
       border-radius:12px;
       padding:12px 16px;
@@ -105,134 +71,44 @@
       cursor:pointer;
       transition:.2s ease;
     }
-    .btn-primary{
-      background:var(--accent);
-      color:#111827;
-    }
-    .btn-primary:hover{ filter:brightness(1.04); }
-    .btn-secondary{
-      background:#273449;
-      color:var(--text);
-      border:1px solid #374151;
-    }
-    .btn-secondary:hover{ background:#314158; }
-    input[type="file"]{ display:none; }
-    .status{
-      margin-top:12px;
-      font-size:14px;
-      color:var(--muted);
-      min-height:20px;
-    }
-    .tips{
-      margin:0;
-      padding-left:18px;
-      color:var(--muted);
-      line-height:1.6;
-    }
-    .results-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin-bottom:12px;
-      flex-wrap:wrap;
-    }
-    .badge{
-      background:rgba(34,197,94,.12);
-      border:1px solid rgba(34,197,94,.35);
-      color:#86efac;
-      padding:8px 12px;
-      border-radius:999px;
-      font-size:13px;
-      font-weight:700;
-    }
-    .empty{
-      border:1px dashed var(--line);
-      border-radius:16px;
-      padding:24px;
-      color:var(--muted);
-      text-align:center;
-      background:rgba(255,255,255,.02);
-    }
-    .item{
-      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:16px;
-      margin-bottom:12px;
-    }
-    .item-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      margin-bottom:12px;
-      flex-wrap:wrap;
-    }
-    .filename{
-      font-weight:700;
-      color:var(--white);
-      word-break:break-word;
-    }
-    .ok{ color:#86efac; font-weight:700; }
-    .fail{ color:#fca5a5; font-weight:700; }
-    .fields{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:10px;
-    }
-    .field{
-      background:rgba(255,255,255,.03);
-      border:1px solid #2f3b4d;
+    .primary{background:var(--yellow);color:#111827}
+    .secondary{background:#22304a;color:var(--text);border:1px solid #31425f}
+    .primary:hover,.secondary:hover{filter:brightness(1.05)}
+    .status{margin-top:12px;color:var(--muted);font-size:14px;min-height:20px}
+    .hint{margin:0;padding-left:18px;color:var(--muted);line-height:1.65}
+    .topline{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+    .badge{padding:8px 12px;border-radius:999px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.35);color:#97f0b2;font-size:13px;font-weight:700}
+    .empty{border:1px dashed var(--line);border-radius:16px;padding:22px;text-align:center;color:var(--muted);background:rgba(255,255,255,.02)}
+    .item{border:1px solid var(--line);border-radius:18px;padding:16px;background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));margin-bottom:12px}
+    .item-top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+    .filename{font-weight:700;color:#fff;word-break:break-word}
+    .ok{color:#97f0b2;font-weight:700}
+    .fail{color:#fcb2b2;font-weight:700}
+    .fields{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .field{border:1px solid #2d3e5c;border-radius:14px;padding:12px;background:rgba(255,255,255,.03)}
+    .field label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin-bottom:6px}
+    .field div{font-size:18px;font-weight:700;color:#fff;word-break:break-word}
+    table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-top:14px}
+    th,td{padding:12px 10px;text-align:left;border-bottom:1px solid #26344d;font-size:14px}
+    th{background:#162135;color:var(--yellow-soft)}
+    td{background:#101829}
+    tr:hover td{background:#13203a}
+    .small{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.55}
+    .debug{
+      margin-top:14px;
+      border:1px solid #334155;
+      background:#0d1524;
       border-radius:14px;
       padding:12px;
+      display:none;
     }
-    .field label{
-      display:block;
-      color:var(--muted);
-      font-size:12px;
-      margin-bottom:6px;
-      text-transform:uppercase;
-      letter-spacing:.4px;
+    .debug textarea{
+      width:100%;min-height:180px;background:#08101d;color:#dce7ff;border:1px solid #30425f;border-radius:10px;padding:10px;
     }
-    .field div{
-      font-size:18px;
-      font-weight:700;
-      color:var(--white);
-      word-break:break-word;
-    }
-    table{
-      width:100%;
-      border-collapse:collapse;
-      margin-top:14px;
-      overflow:hidden;
-      border-radius:16px;
-      border:1px solid var(--line);
-    }
-    th, td{
-      padding:12px 10px;
-      border-bottom:1px solid #243041;
-      text-align:left;
-      font-size:14px;
-    }
-    th{
-      background:#162132;
-      color:var(--accent-2);
-    }
-    td{
-      background:#101827;
-    }
-    tr:hover td{ background:#132033; }
-    .footer-note{
-      margin-top:10px;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.5;
-    }
-    @media (max-width: 900px){
-      .grid{ grid-template-columns:1fr; }
-      .fields{ grid-template-columns:1fr; }
-      .hero h1{ font-size:24px; }
+    @media (max-width:900px){
+      .grid{grid-template-columns:1fr}
+      .fields{grid-template-columns:1fr}
+      .hero h1{font-size:24px}
     }
   </style>
 </head>
@@ -240,50 +116,49 @@
   <div class="wrap">
     <div class="hero">
       <h1>Extrator de DANFE</h1>
-      <p>Jogue os PDFs das notas aqui e o sistema tenta extrair automaticamente o <strong>número da NF</strong>, a <strong>data de emissão</strong> e o <strong>valor total da nota</strong>. Tudo roda no próprio navegador.</p>
+      <p>Selecione os PDFs das notas fiscais e o sistema tenta puxar automaticamente <strong>número da NF</strong>, <strong>data de emissão</strong> e <strong>valor total da nota</strong>. Esta versão foi refeita para melhorar a leitura real do PDF.</p>
     </div>
 
     <div class="grid">
       <div class="card">
         <h2>Enviar PDFs</h2>
         <label class="dropzone" id="dropzone" for="pdfInput">
-          <strong>Clique aqui ou arraste os arquivos PDF</strong>
-          <span>Você pode selecionar várias DANFEs de uma vez</span>
+          <strong>Clique aqui ou arraste os PDFs</strong>
+          <span>Pode selecionar várias DANFEs de uma vez</span>
         </label>
-        <input type="file" id="pdfInput" accept="application/pdf" multiple />
-
+        <input type="file" id="pdfInput" accept="application/pdf" multiple>
         <div class="actions">
-          <button class="btn-primary" id="btnSelect">Selecionar PDFs</button>
-          <button class="btn-secondary" id="btnExportCsv">Exportar CSV</button>
-          <button class="btn-secondary" id="btnClear">Limpar tudo</button>
+          <button class="primary" id="btnSelect">Selecionar PDFs</button>
+          <button class="secondary" id="btnExport">Exportar CSV</button>
+          <button class="secondary" id="btnClear">Limpar</button>
+          <button class="secondary" id="btnDebug">Mostrar texto lido</button>
         </div>
-
         <div class="status" id="status">Aguardando arquivos...</div>
+        <div class="debug" id="debugBox">
+          <div style="margin-bottom:8px;color:#fff;font-weight:700;">Texto extraído do último PDF</div>
+          <textarea id="debugText" readonly></textarea>
+        </div>
       </div>
 
       <div class="card">
-        <h2>Como ele identifica</h2>
-        <ul class="tips">
-          <li>Procura por padrões comuns de DANFE/NF-e.</li>
-          <li>Lê o texto do PDF pela biblioteca PDF.js.</li>
-          <li>Extrai: <strong>Número</strong>, <strong>Data de emissão</strong> e <strong>Valor total</strong>.</li>
-          <li>Se o PDF vier muito “escaneado como imagem”, pode não achar o texto.</li>
-          <li>Nesse caso, o ideal é usar um PDF que tenha texto selecionável.</li>
+        <h2>Observações</h2>
+        <ul class="hint">
+          <li>Esta versão usa uma leitura mais estável do PDF com ordenação por linhas.</li>
+          <li>Se a nota for PDF escaneado como imagem pura, pode não extrair bem.</li>
+          <li>Nesse caso será preciso OCR depois.</li>
+          <li>Para DANFE comum de fornecedor, normalmente funciona.</li>
+          <li>O botão <strong>Mostrar texto lido</strong> ajuda a enxergar o que o sistema conseguiu capturar.</li>
         </ul>
-        <div class="footer-note">
-          Dica: para uso interno na Grilazer, depois você pode hospedar isso no GitHub Pages sem problema.
-        </div>
+        <div class="small">Se quiser, depois eu adapto para puxar também fornecedor, CNPJ, produto e chave de acesso.</div>
       </div>
     </div>
 
     <div class="card" style="margin-top:18px;">
-      <div class="results-head">
+      <div class="topline">
         <h2 style="margin:0;">Resultados</h2>
         <div class="badge" id="countBadge">0 notas processadas</div>
       </div>
-
       <div id="resultsContainer" class="empty">Nenhuma nota processada ainda.</div>
-
       <div id="tableWrap" style="display:none;">
         <table>
           <thead>
@@ -301,136 +176,190 @@
   </div>
 
   <script>
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.min.js';
+    if (window['pdfjsLib']) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
 
     const pdfInput = document.getElementById('pdfInput');
     const dropzone = document.getElementById('dropzone');
     const btnSelect = document.getElementById('btnSelect');
-    const btnExportCsv = document.getElementById('btnExportCsv');
+    const btnExport = document.getElementById('btnExport');
     const btnClear = document.getElementById('btnClear');
+    const btnDebug = document.getElementById('btnDebug');
     const statusEl = document.getElementById('status');
     const resultsContainer = document.getElementById('resultsContainer');
     const tableWrap = document.getElementById('tableWrap');
     const tableBody = document.getElementById('tableBody');
     const countBadge = document.getElementById('countBadge');
+    const debugBox = document.getElementById('debugBox');
+    const debugText = document.getElementById('debugText');
 
     let extractedData = [];
+    let lastRawText = '';
 
     btnSelect.addEventListener('click', () => pdfInput.click());
     pdfInput.addEventListener('change', (e) => handleFiles(e.target.files));
+    btnExport.addEventListener('click', exportCSV);
     btnClear.addEventListener('click', clearAll);
-    btnExportCsv.addEventListener('click', exportCSV);
+    btnDebug.addEventListener('click', () => {
+      debugBox.style.display = debugBox.style.display === 'block' ? 'none' : 'block';
+    });
 
-    ['dragenter', 'dragover'].forEach(evt => {
-      dropzone.addEventListener(evt, (e) => {
+    ['dragenter','dragover'].forEach(evt => {
+      dropzone.addEventListener(evt, e => {
         e.preventDefault();
         e.stopPropagation();
         dropzone.classList.add('dragover');
       });
     });
 
-    ['dragleave', 'drop'].forEach(evt => {
-      dropzone.addEventListener(evt, (e) => {
+    ['dragleave','drop'].forEach(evt => {
+      dropzone.addEventListener(evt, e => {
         e.preventDefault();
         e.stopPropagation();
         dropzone.classList.remove('dragover');
       });
     });
 
-    dropzone.addEventListener('drop', (e) => {
-      const files = e.dataTransfer.files;
-      handleFiles(files);
+    dropzone.addEventListener('drop', e => {
+      handleFiles(e.dataTransfer.files);
     });
 
-    function normalizeSpaces(text) {
+    function normalizeText(text) {
       return text
-        .replace(/\s+/g, ' ')
         .replace(/\u00A0/g, ' ')
+        .replace(/[ \t]+/g, ' ')
+        .replace(/\n{2,}/g, '\n')
         .trim();
     }
 
+    function moneyToBR(v) {
+      if (!v) return '';
+      v = v.replace(/\./g,'').replace(',', '.');
+      const n = Number(v);
+      if (Number.isNaN(n)) return '';
+      return 'R$ ' + n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
     function extractFields(rawText) {
-      const text = normalizeSpaces(rawText);
+      const text = normalizeText(rawText);
 
-      const patterns = {
-        numeroNF: [
-          /N[ºo°]?\s*(?:[:\-]\s*)?(\d{3}\.\d{3}\.\d{3}|\d{3}\.\d{3}|\d{6,9})/i,
-          /NF-e\s*N[ºo°]?\s*(\d{3}\.\d{3}\.\d{3}|\d{3}\.\d{3}|\d{6,9})/i,
-          /DANFE.*?N[ºo°]?\s*(\d{3}\.\d{3}\.\d{3}|\d{3}\.\d{3}|\d{6,9})/i
-        ],
-        dataEmissao: [
-          /DATA DA EMISS[ÃA]O\s*(\d{2}\/\d{2}\/\d{4})/i,
-          /EMISS[ÃA]O\s*(\d{2}\/\d{2}\/\d{4})/i
-        ],
-        valorTotal: [
-          /VALOR TOTAL DA NOTA\s*([\d\.]+,\d{2})/i,
-          /VALOR TOTAL\s*DA\s*NOTA\s*([\d\.]+,\d{2})/i
-        ]
-      };
+      let numeroNF = '';
+      let dataEmissao = '';
+      let valorTotal = '';
 
-      const result = {
-        numeroNF: '',
-        dataEmissao: '',
-        valorTotal: ''
-      };
+      const numeroPatterns = [
+        /N[º°o]?\s*[:\-]?\s*(\d{3}\.\d{3}\.\d{3})/i,
+        /N[º°o]?\s*[:\-]?\s*(\d{3}\.\d{3})/i,
+        /NF-e\s*[\s\S]{0,80}?N[º°o]?\s*[:\-]?\s*(\d{3}\.\d{3}\.\d{3}|\d{3}\.\d{3}|\d{6,9})/i,
+        /(?:N[úu]mero|Numero)\s*(?:da)?\s*(?:NF|Nota)?\s*[:\-]?\s*(\d{3}\.\d{3}\.\d{3}|\d{3}\.\d{3}|\d{6,9})/i
+      ];
 
-      for (const regex of patterns.numeroNF) {
-        const m = text.match(regex);
+      for (const rgx of numeroPatterns) {
+        const m = text.match(rgx);
         if (m && m[1]) {
-          result.numeroNF = m[1];
+          numeroNF = m[1];
           break;
         }
       }
 
-      for (const regex of patterns.dataEmissao) {
-        const m = text.match(regex);
-        if (m && m[1]) {
-          result.dataEmissao = m[1];
-          break;
-        }
-      }
-
-      for (const regex of patterns.valorTotal) {
-        const m = text.match(regex);
-        if (m && m[1]) {
-          result.valorTotal = 'R$ ' + m[1];
-          break;
-        }
-      }
-
-      if (!result.numeroNF) {
-        const lines = rawText.split(/\n+/).map(l => l.trim()).filter(Boolean);
+      if (!numeroNF) {
+        const lines = text.split('\n');
         for (let i = 0; i < lines.length; i++) {
-          if (/^N[ºo°]?$/i.test(lines[i]) && lines[i + 2]) {
-            const maybe = lines[i + 2].match(/(\d{3}\.\d{3}\.\d{3}|\d{3}\.\d{3}|\d{6,9})/);
-            if (maybe) {
-              result.numeroNF = maybe[1];
+          const line = lines[i].trim();
+          if (/^\d{3}\.\d{3}\.\d{3}$/.test(line) || /^\d{3}\.\d{3}$/.test(line)) {
+            const prev = (lines[i-1] || '') + ' ' + (lines[i-2] || '');
+            if (/NF-e|N[º°o]?|S[ÉE]RIE/i.test(prev)) {
+              numeroNF = line;
               break;
             }
           }
         }
       }
 
-      return result;
+      const dataPatterns = [
+        /DATA DA EMISS[ÃA]O\s*(\d{2}\/\d{2}\/\d{4})/i,
+        /EMISS[ÃA]O\s*(\d{2}\/\d{2}\/\d{4})/i
+      ];
+      for (const rgx of dataPatterns) {
+        const m = text.match(rgx);
+        if (m && m[1]) {
+          dataEmissao = m[1];
+          break;
+        }
+      }
+
+      const valorPatterns = [
+        /VALOR TOTAL DA NOTA\s*([\d\.]+,\d{2})/i,
+        /VALOR TOTAL\s+DA\s+NOTA\s*([\d\.]+,\d{2})/i,
+        /VALOR TOTAL DOS PRODUTOS[\s\S]{0,80}?VALOR TOTAL DA NOTA\s*([\d\.]+,\d{2})/i
+      ];
+      for (const rgx of valorPatterns) {
+        const m = text.match(rgx);
+        if (m && m[1]) {
+          valorTotal = moneyToBR(m[1]);
+          break;
+        }
+      }
+
+      return {
+        numeroNF: numeroNF || 'Não encontrado',
+        dataEmissao: dataEmissao || 'Não encontrado',
+        valorTotal: valorTotal || 'Não encontrado'
+      };
     }
 
     async function extractTextFromPDF(file) {
       const buffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+      const loadingTask = pdfjsLib.getDocument({ data: buffer, useWorkerFetch: true, isEvalSupported: false });
+      const pdf = await loadingTask.promise;
       let fullText = '';
 
       for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
         const page = await pdf.getPage(pageNum);
         const content = await page.getTextContent();
-        const strings = content.items.map(item => item.str);
-        fullText += strings.join(' ') + '\n';
+
+        const items = content.items.map(item => {
+          const y = Math.round(item.transform[5]);
+          const x = Math.round(item.transform[4]);
+          return { str: item.str, x, y };
+        });
+
+        items.sort((a,b) => {
+          if (Math.abs(b.y - a.y) > 2) return b.y - a.y;
+          return a.x - b.x;
+        });
+
+        const lines = [];
+        let currentLine = [];
+        let currentY = null;
+
+        for (const item of items) {
+          if (!item.str || !item.str.trim()) continue;
+          if (currentY === null || Math.abs(item.y - currentY) <= 2) {
+            currentLine.push(item);
+            currentY = currentY === null ? item.y : currentY;
+          } else {
+            currentLine.sort((a,b) => a.x - b.x);
+            lines.push(currentLine.map(i => i.str).join(' '));
+            currentLine = [item];
+            currentY = item.y;
+          }
+        }
+
+        if (currentLine.length) {
+          currentLine.sort((a,b) => a.x - b.x);
+          lines.push(currentLine.map(i => i.str).join(' '));
+        }
+
+        fullText += lines.join('\n') + '\n\n';
       }
 
-      return fullText;
+      return normalizeText(fullText);
     }
 
     async function handleFiles(fileList) {
-      const files = Array.from(fileList).filter(file => file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'));
+      const files = Array.from(fileList).filter(file => file.name.toLowerCase().endsWith('.pdf'));
       if (!files.length) {
         statusEl.textContent = 'Nenhum PDF válido selecionado.';
         return;
@@ -440,18 +369,22 @@
 
       for (const file of files) {
         try {
-          const text = await extractTextFromPDF(file);
-          const fields = extractFields(text);
-          const ok = fields.numeroNF || fields.dataEmissao || fields.valorTotal;
+          const rawText = await extractTextFromPDF(file);
+          lastRawText = rawText;
+          debugText.value = rawText;
+
+          const fields = extractFields(rawText);
+          const sucesso = [fields.numeroNF, fields.dataEmissao, fields.valorTotal].some(v => v !== 'Não encontrado');
 
           extractedData.push({
             arquivo: file.name,
-            numeroNF: fields.numeroNF || 'Não encontrado',
-            dataEmissao: fields.dataEmissao || 'Não encontrado',
-            valorTotal: fields.valorTotal || 'Não encontrado',
-            sucesso: !!ok
+            numeroNF: fields.numeroNF,
+            dataEmissao: fields.dataEmissao,
+            valorTotal: fields.valorTotal,
+            sucesso
           });
         } catch (error) {
+          console.error(error);
           extractedData.push({
             arquivo: file.name,
             numeroNF: 'Erro ao ler PDF',
@@ -459,7 +392,7 @@
             valorTotal: 'Erro ao ler PDF',
             sucesso: false
           });
-          console.error(error);
+          debugText.value = 'Erro ao ler este PDF: ' + error.message;
         }
       }
 
@@ -472,34 +405,23 @@
       countBadge.textContent = `${extractedData.length} nota(s) processada(s)`;
 
       if (!extractedData.length) {
-        resultsContainer.style.display = 'block';
         resultsContainer.className = 'empty';
-        resultsContainer.textContent = 'Nenhuma nota processada ainda.';
+        resultsContainer.innerHTML = 'Nenhuma nota processada ainda.';
         tableWrap.style.display = 'none';
         return;
       }
 
       resultsContainer.className = '';
-      resultsContainer.style.display = 'block';
       resultsContainer.innerHTML = extractedData.map(item => `
         <div class="item">
           <div class="item-top">
             <div class="filename">${escapeHtml(item.arquivo)}</div>
-            <div class="${item.sucesso ? 'ok' : 'fail'}">${item.sucesso ? 'Leitura realizada' : 'Leitura parcial/erro'}</div>
+            <div class="${item.sucesso ? 'ok' : 'fail'}">${item.sucesso ? 'Leitura realizada' : 'Falhou'}</div>
           </div>
           <div class="fields">
-            <div class="field">
-              <label>Número da NF</label>
-              <div>${escapeHtml(item.numeroNF)}</div>
-            </div>
-            <div class="field">
-              <label>Data de emissão</label>
-              <div>${escapeHtml(item.dataEmissao)}</div>
-            </div>
-            <div class="field">
-              <label>Valor total</label>
-              <div>${escapeHtml(item.valorTotal)}</div>
-            </div>
+            <div class="field"><label>Número da NF</label><div>${escapeHtml(item.numeroNF)}</div></div>
+            <div class="field"><label>Data de emissão</label><div>${escapeHtml(item.dataEmissao)}</div></div>
+            <div class="field"><label>Valor total</label><div>${escapeHtml(item.valorTotal)}</div></div>
           </div>
         </div>
       `).join('');
@@ -522,15 +444,9 @@
       }
 
       const headers = ['Arquivo', 'Numero NF', 'Data de Emissao', 'Valor Total'];
-      const rows = extractedData.map(item => [
-        item.arquivo,
-        item.numeroNF,
-        item.dataEmissao,
-        item.valorTotal
-      ]);
-
+      const rows = extractedData.map(item => [item.arquivo, item.numeroNF, item.dataEmissao, item.valorTotal]);
       const csv = [headers, ...rows]
-        .map(row => row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(';'))
+        .map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(';'))
         .join('\n');
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -545,6 +461,7 @@
     function clearAll() {
       extractedData = [];
       renderResults();
+      debugText.value = '';
       statusEl.textContent = 'Aguardando arquivos...';
     }
 
