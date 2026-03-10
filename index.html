@@ -103,13 +103,7 @@
       display:none;
     }
     .debug textarea{
-      width:100%;
-      min-height:180px;
-      background:#08101d;
-      color:#dce7ff;
-      border:1px solid #30425f;
-      border-radius:10px;
-      padding:10px;
+      width:100%;min-height:180px;background:#08101d;color:#dce7ff;border:1px solid #30425f;border-radius:10px;padding:10px;
     }
     @media (max-width:900px){
       .grid{grid-template-columns:1fr}
@@ -122,7 +116,7 @@
   <div class="wrap">
     <div class="hero">
       <h1>Extrator de DANFE</h1>
-      <p>Selecione os PDFs das notas fiscais e o sistema tenta puxar automaticamente <strong>número da NF</strong>, <strong>data de emissão</strong> e <strong>valor total da nota</strong>.</p>
+      <p>Selecione os PDFs das notas fiscais e o sistema tenta puxar automaticamente <strong>número da NF</strong>, <strong>data de emissão</strong> e <strong>valor total da nota</strong>. Esta versão foi refeita para melhorar a leitura real do PDF.</p>
     </div>
 
     <div class="grid">
@@ -152,10 +146,10 @@
           <li>Esta versão usa uma leitura mais estável do PDF com ordenação por linhas.</li>
           <li>Se a nota for PDF escaneado como imagem pura, pode não extrair bem.</li>
           <li>Nesse caso será preciso OCR depois.</li>
-          <li>Para DANFE comum de fornecedor, normalmente funciona melhor.</li>
+          <li>Para DANFE comum de fornecedor, normalmente funciona.</li>
           <li>O botão <strong>Mostrar texto lido</strong> ajuda a enxergar o que o sistema conseguiu capturar.</li>
         </ul>
-        <div class="small">Depois dá para adaptar também para fornecedor, CNPJ, produto e chave de acesso.</div>
+        <div class="small">Se quiser, depois eu adapto para puxar também fornecedor, CNPJ, produto e chave de acesso.</div>
       </div>
     </div>
 
@@ -182,85 +176,82 @@
   </div>
 
   <script>
-    if (window["pdfjsLib"]) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    if (window['pdfjsLib']) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     }
 
-    const pdfInput = document.getElementById("pdfInput");
-    const dropzone = document.getElementById("dropzone");
-    const btnSelect = document.getElementById("btnSelect");
-    const btnExport = document.getElementById("btnExport");
-    const btnClear = document.getElementById("btnClear");
-    const btnDebug = document.getElementById("btnDebug");
-    const statusEl = document.getElementById("status");
-    const resultsContainer = document.getElementById("resultsContainer");
-    const tableWrap = document.getElementById("tableWrap");
-    const tableBody = document.getElementById("tableBody");
-    const countBadge = document.getElementById("countBadge");
-    const debugBox = document.getElementById("debugBox");
-    const debugText = document.getElementById("debugText");
+    const pdfInput = document.getElementById('pdfInput');
+    const dropzone = document.getElementById('dropzone');
+    const btnSelect = document.getElementById('btnSelect');
+    const btnExport = document.getElementById('btnExport');
+    const btnClear = document.getElementById('btnClear');
+    const btnDebug = document.getElementById('btnDebug');
+    const statusEl = document.getElementById('status');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const tableWrap = document.getElementById('tableWrap');
+    const tableBody = document.getElementById('tableBody');
+    const countBadge = document.getElementById('countBadge');
+    const debugBox = document.getElementById('debugBox');
+    const debugText = document.getElementById('debugText');
 
     let extractedData = [];
+    let lastRawText = '';
 
-    btnSelect.addEventListener("click", () => pdfInput.click());
-    pdfInput.addEventListener("change", (e) => handleFiles(e.target.files));
-    btnExport.addEventListener("click", exportCSV);
-    btnClear.addEventListener("click", clearAll);
-    btnDebug.addEventListener("click", () => {
-      debugBox.style.display = debugBox.style.display === "block" ? "none" : "block";
+    btnSelect.addEventListener('click', () => pdfInput.click());
+    pdfInput.addEventListener('change', (e) => handleFiles(e.target.files));
+    btnExport.addEventListener('click', exportCSV);
+    btnClear.addEventListener('click', clearAll);
+    btnDebug.addEventListener('click', () => {
+      debugBox.style.display = debugBox.style.display === 'block' ? 'none' : 'block';
     });
 
-    ["dragenter", "dragover"].forEach(evt => {
+    ['dragenter','dragover'].forEach(evt => {
       dropzone.addEventListener(evt, e => {
         e.preventDefault();
         e.stopPropagation();
-        dropzone.classList.add("dragover");
+        dropzone.classList.add('dragover');
       });
     });
 
-    ["dragleave", "drop"].forEach(evt => {
+    ['dragleave','drop'].forEach(evt => {
       dropzone.addEventListener(evt, e => {
         e.preventDefault();
         e.stopPropagation();
-        dropzone.classList.remove("dragover");
+        dropzone.classList.remove('dragover');
       });
     });
 
-    dropzone.addEventListener("drop", e => {
+    dropzone.addEventListener('drop', e => {
       handleFiles(e.dataTransfer.files);
     });
 
     function normalizeText(text) {
       return text
-        .replace(/\u00A0/g, " ")
-        .replace(/[ \t]+/g, " ")
-        .replace(/\n{2,}/g, "\n")
+        .replace(/\u00A0/g, ' ')
+        .replace(/[ \t]+/g, ' ')
+        .replace(/\n{2,}/g, '\n')
         .trim();
     }
 
     function moneyToBR(v) {
-      if (!v) return "";
-      v = v.replace(/\./g, "").replace(",", ".");
+      if (!v) return '';
+      v = v.replace(/\./g,'').replace(',', '.');
       const n = Number(v);
-      if (Number.isNaN(n)) return "";
-      return "R$ " + n.toLocaleString("pt-BR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
+      if (Number.isNaN(n)) return '';
+      return 'R$ ' + n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
     function extractFields(rawText) {
       const text = normalizeText(rawText);
-      const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
 
-      let numeroNF = "";
-      let dataEmissao = "";
-      let valorTotal = "";
+      let numeroNF = '';
+      let dataEmissao = '';
+      let valorTotal = '';
 
       const numeroPatterns = [
         /N[º°o]?\s*[:\-]?\s*(\d{3}\.\d{3}\.\d{3})/i,
         /N[º°o]?\s*[:\-]?\s*(\d{3}\.\d{3})/i,
-        /NF-e[\s\S]{0,120}?N[º°o]?\s*[:\-]?\s*(\d{3}\.\d{3}\.\d{3}|\d{3}\.\d{3}|\d{6,9})/i,
+        /NF-e\s*[\s\S]{0,80}?N[º°o]?\s*[:\-]?\s*(\d{3}\.\d{3}\.\d{3}|\d{3}\.\d{3}|\d{6,9})/i,
         /(?:N[úu]mero|Numero)\s*(?:da)?\s*(?:NF|Nota)?\s*[:\-]?\s*(\d{3}\.\d{3}\.\d{3}|\d{3}\.\d{3}|\d{6,9})/i
       ];
 
@@ -273,10 +264,11 @@
       }
 
       if (!numeroNF) {
+        const lines = text.split('\n');
         for (let i = 0; i < lines.length; i++) {
-          const line = lines[i];
+          const line = lines[i].trim();
           if (/^\d{3}\.\d{3}\.\d{3}$/.test(line) || /^\d{3}\.\d{3}$/.test(line)) {
-            const prev = (lines[i - 1] || "") + " " + (lines[i - 2] || "");
+            const prev = (lines[i-1] || '') + ' ' + (lines[i-2] || '');
             if (/NF-e|N[º°o]?|S[ÉE]RIE/i.test(prev)) {
               numeroNF = line;
               break;
@@ -285,73 +277,43 @@
         }
       }
 
-      for (let i = 0; i < lines.length; i++) {
-        const joined = (lines[i] || "") + " " + (lines[i + 1] || "") + " " + (lines[i + 2] || "");
-
-        if (!dataEmissao) {
-          const m = joined.match(/DATA DA EMISS[ÃA]O\s*(\d{2}\/\d{2}\/\d{4})/i);
-          if (m) dataEmissao = m[1];
-        }
-
-        if (!valorTotal) {
-          const m = joined.match(/VALOR TOTAL DA NOTA\s*([\d\.]+,\d{2})/i);
-          if (m) valorTotal = moneyToBR(m[1]);
+      const dataPatterns = [
+        /DATA DA EMISS[ÃA]O\s*(\d{2}\/\d{2}\/\d{4})/i,
+        /EMISS[ÃA]O\s*(\d{2}\/\d{2}\/\d{4})/i
+      ];
+      for (const rgx of dataPatterns) {
+        const m = text.match(rgx);
+        if (m && m[1]) {
+          dataEmissao = m[1];
+          break;
         }
       }
 
-      if (!dataEmissao) {
-        const idx = lines.findIndex(l => /DATA DA EMISS[ÃA]O/i.test(l));
-        if (idx >= 0) {
-          const nearby = [lines[idx], lines[idx + 1], lines[idx + 2], lines[idx + 3]].join(" ");
-          const m = nearby.match(/(\d{2}\/\d{2}\/\d{4})/);
-          if (m) dataEmissao = m[1];
-        }
-      }
-
-      if (!valorTotal) {
-        const idx = lines.findIndex(l => /VALOR TOTAL DA NOTA/i.test(l));
-        if (idx >= 0) {
-          const nearby = [lines[idx], lines[idx + 1], lines[idx + 2], lines[idx + 3], lines[idx + 4]].join(" ");
-          const matches = nearby.match(/[\d\.]+,\d{2}/g);
-          if (matches && matches.length) {
-            valorTotal = moneyToBR(matches[matches.length - 1]);
-          }
-        }
-      }
-
-      if (!dataEmissao) {
-        const allDates = text.match(/\d{2}\/\d{2}\/\d{4}/g);
-        if (allDates && allDates.length) {
-          dataEmissao = allDates[0];
-        }
-      }
-
-      if (!valorTotal) {
-        const blocoImposto = text.match(/C[ÁA]LCULO DO IMPOSTO[\s\S]{0,500}/i);
-        if (blocoImposto) {
-          const nums = blocoImposto[0].match(/[\d\.]+,\d{2}/g);
-          if (nums && nums.length) {
-            valorTotal = moneyToBR(nums[nums.length - 1]);
-          }
+      const valorPatterns = [
+        /VALOR\s*TOTAL\s*DA\s*NOTA[\s\S]{0,50}?([\d\.]+,\d{2})/i,
+        /VALOR\s*TOTAL\s*DOS\s*PRODUTOS[\s\S]{0,120}?([\d\.]+,\d{2})/i,
+        /C[ÁA]LCULO\s*DO\s*IMPOSTO[\s\S]{0,200}?([\d\.]+,\d{2})/i
+      ];
+      for (const rgx of valorPatterns) {
+        const m = text.match(rgx);
+        if (m && m[1]) {
+          valorTotal = moneyToBR(m[1]);
+          break;
         }
       }
 
       return {
-        numeroNF: numeroNF || "Não encontrado",
-        dataEmissao: dataEmissao || "Não encontrado",
-        valorTotal: valorTotal || "Não encontrado"
+        numeroNF: numeroNF || 'Não encontrado',
+        dataEmissao: dataEmissao || 'Não encontrado',
+        valorTotal: valorTotal || 'Não encontrado'
       };
     }
 
     async function extractTextFromPDF(file) {
       const buffer = await file.arrayBuffer();
-      const loadingTask = pdfjsLib.getDocument({
-        data: buffer,
-        useWorkerFetch: true,
-        isEvalSupported: false
-      });
+      const loadingTask = pdfjsLib.getDocument({ data: buffer, useWorkerFetch: true, isEvalSupported: false });
       const pdf = await loadingTask.promise;
-      let fullText = "";
+      let fullText = '';
 
       for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
         const page = await pdf.getPage(pageNum);
@@ -363,7 +325,7 @@
           return { str: item.str, x, y };
         });
 
-        items.sort((a, b) => {
+        items.sort((a,b) => {
           if (Math.abs(b.y - a.y) > 2) return b.y - a.y;
           return a.x - b.x;
         });
@@ -374,36 +336,32 @@
 
         for (const item of items) {
           if (!item.str || !item.str.trim()) continue;
-
           if (currentY === null || Math.abs(item.y - currentY) <= 2) {
             currentLine.push(item);
             currentY = currentY === null ? item.y : currentY;
           } else {
-            currentLine.sort((a, b) => a.x - b.x);
-            lines.push(currentLine.map(i => i.str).join(" "));
+            currentLine.sort((a,b) => a.x - b.x);
+            lines.push(currentLine.map(i => i.str).join(' '));
             currentLine = [item];
             currentY = item.y;
           }
         }
 
         if (currentLine.length) {
-          currentLine.sort((a, b) => a.x - b.x);
-          lines.push(currentLine.map(i => i.str).join(" "));
+          currentLine.sort((a,b) => a.x - b.x);
+          lines.push(currentLine.map(i => i.str).join(' '));
         }
 
-        fullText += lines.join("\n") + "\n\n";
+        fullText += lines.join('\n') + '\n\n';
       }
 
       return normalizeText(fullText);
     }
 
     async function handleFiles(fileList) {
-      const files = Array.from(fileList).filter(file =>
-        file.name.toLowerCase().endsWith(".pdf")
-      );
-
+      const files = Array.from(fileList).filter(file => file.name.toLowerCase().endsWith('.pdf'));
       if (!files.length) {
-        statusEl.textContent = "Nenhum PDF válido selecionado.";
+        statusEl.textContent = 'Nenhum PDF válido selecionado.';
         return;
       }
 
@@ -412,11 +370,11 @@
       for (const file of files) {
         try {
           const rawText = await extractTextFromPDF(file);
+          lastRawText = rawText;
           debugText.value = rawText;
 
           const fields = extractFields(rawText);
-          const sucesso = [fields.numeroNF, fields.dataEmissao, fields.valorTotal]
-            .some(v => v !== "Não encontrado");
+          const sucesso = [fields.numeroNF, fields.dataEmissao, fields.valorTotal].some(v => v !== 'Não encontrado');
 
           extractedData.push({
             arquivo: file.name,
@@ -429,36 +387,36 @@
           console.error(error);
           extractedData.push({
             arquivo: file.name,
-            numeroNF: "Erro ao ler PDF",
-            dataEmissao: "Erro ao ler PDF",
-            valorTotal: "Erro ao ler PDF",
+            numeroNF: 'Erro ao ler PDF',
+            dataEmissao: 'Erro ao ler PDF',
+            valorTotal: 'Erro ao ler PDF',
             sucesso: false
           });
-          debugText.value = "Erro ao ler este PDF: " + error.message;
+          debugText.value = 'Erro ao ler este PDF: ' + error.message;
         }
       }
 
       renderResults();
       statusEl.textContent = `Concluído. ${files.length} arquivo(s) processado(s).`;
-      pdfInput.value = "";
+      pdfInput.value = '';
     }
 
     function renderResults() {
       countBadge.textContent = `${extractedData.length} nota(s) processada(s)`;
 
       if (!extractedData.length) {
-        resultsContainer.className = "empty";
-        resultsContainer.innerHTML = "Nenhuma nota processada ainda.";
-        tableWrap.style.display = "none";
+        resultsContainer.className = 'empty';
+        resultsContainer.innerHTML = 'Nenhuma nota processada ainda.';
+        tableWrap.style.display = 'none';
         return;
       }
 
-      resultsContainer.className = "";
+      resultsContainer.className = '';
       resultsContainer.innerHTML = extractedData.map(item => `
         <div class="item">
           <div class="item-top">
             <div class="filename">${escapeHtml(item.arquivo)}</div>
-            <div class="${item.sucesso ? "ok" : "fail"}">${item.sucesso ? "Leitura realizada" : "Falhou"}</div>
+            <div class="${item.sucesso ? 'ok' : 'fail'}">${item.sucesso ? 'Leitura realizada' : 'Falhou'}</div>
           </div>
           <div class="fields">
             <div class="field"><label>Número da NF</label><div>${escapeHtml(item.numeroNF)}</div></div>
@@ -466,9 +424,9 @@
             <div class="field"><label>Valor total</label><div>${escapeHtml(item.valorTotal)}</div></div>
           </div>
         </div>
-      `).join("");
+      `).join('');
 
-      tableWrap.style.display = "block";
+      tableWrap.style.display = 'block';
       tableBody.innerHTML = extractedData.map(item => `
         <tr>
           <td>${escapeHtml(item.arquivo)}</td>
@@ -476,32 +434,26 @@
           <td>${escapeHtml(item.dataEmissao)}</td>
           <td>${escapeHtml(item.valorTotal)}</td>
         </tr>
-      `).join("");
+      `).join('');
     }
 
     function exportCSV() {
       if (!extractedData.length) {
-        alert("Não há dados para exportar.");
+        alert('Não há dados para exportar.');
         return;
       }
 
-      const headers = ["Arquivo", "Numero NF", "Data de Emissao", "Valor Total"];
-      const rows = extractedData.map(item => [
-        item.arquivo,
-        item.numeroNF,
-        item.dataEmissao,
-        item.valorTotal
-      ]);
-
+      const headers = ['Arquivo', 'Numero NF', 'Data de Emissao', 'Valor Total'];
+      const rows = extractedData.map(item => [item.arquivo, item.numeroNF, item.dataEmissao, item.valorTotal]);
       const csv = [headers, ...rows]
-        .map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(";"))
-        .join("\n");
+        .map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(';'))
+        .join('\n');
 
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
+      const a = document.createElement('a');
       a.href = url;
-      a.download = "extracao_danfe.csv";
+      a.download = 'extracao_danfe.csv';
       a.click();
       URL.revokeObjectURL(url);
     }
@@ -509,17 +461,17 @@
     function clearAll() {
       extractedData = [];
       renderResults();
-      debugText.value = "";
-      statusEl.textContent = "Aguardando arquivos...";
+      debugText.value = '';
+      statusEl.textContent = 'Aguardando arquivos...';
     }
 
     function escapeHtml(text) {
       return String(text)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
   </script>
 </body>
