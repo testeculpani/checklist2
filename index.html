@@ -184,6 +184,39 @@ body{
   .details-grid{grid-template-columns:1fr 1fr}
 }
 
+
+/* ===== OBSERVAÇÕES DE AGENDAMENTO ===== */
+.booking-note-field{grid-column:1/-1}
+.booking-note-field textarea{
+  width:100%;min-height:82px;resize:vertical;border:1px solid var(--line);
+  border-radius:12px;padding:11px 12px;background:#fff;outline:none;line-height:1.35
+}
+.booking-note-field textarea:focus{
+  border-color:#ef9db9;box-shadow:0 0 0 3px rgba(233,45,111,.08)
+}
+.booking-note-hint{font-size:9px;color:var(--muted);margin-top:5px;line-height:1.35}
+.agenda-note{
+  margin-top:8px;padding:7px 9px;border-radius:10px;background:#fff8fb;
+  border:1px solid #f2e3e9;color:#765c65;font-size:10px;line-height:1.35
+}
+.agenda-note.admin{
+  background:#fff1f2;border-color:#fecdd3;color:#b42332;font-weight:700
+}
+.agenda-note.admin:before{content:"⚠ ";font-weight:900}
+.note-label{
+  display:block;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.045em;
+  margin-bottom:3px;opacity:.78
+}
+.detail-note{
+  margin-top:10px;border-radius:13px;padding:11px 12px;border:1px solid #f0e0e6;
+  background:#fff9fb;font-size:11px;line-height:1.45;color:#654e57
+}
+.detail-note.admin{
+  background:#fff1f2;border-color:#fda4af;color:#a61b2b;
+  box-shadow:0 5px 15px rgba(220,38,38,.06)
+}
+.detail-note.admin .note-label{color:#be123c;opacity:1}
+
 </style>
 </head>
 <body>
@@ -294,6 +327,11 @@ body{
 <div class="field"><label>Valor</label><input id="bPrice" type="number"></div>
 <div class="field"><label>Duração</label><select id="bDuration"><option value="30">30 min</option><option value="60">1 hora</option><option value="90">1h30</option><option value="120">2 horas</option></select></div>
 <div class="field"><label>Comissão %</label><input id="bCommission" type="number"></div>
+<div class="field booking-note-field">
+  <label>Observação do agendamento</label>
+  <textarea id="bObservation" placeholder="Ex.: cliente prefere atendimento mais rápido, alergia a determinado produto, encaixe, recado para a profissional..."></textarea>
+  <div id="observationHint" class="booking-note-hint">A observação ficará visível nos detalhes do agendamento.</div>
+</div>
 </div>
 <div class="actions"><button class="btn btn-light" onclick="closeBooking()">Cancelar</button><button class="btn btn-pink" onclick="saveBooking()">Agendar</button></div></div></div>
 
@@ -375,6 +413,9 @@ bookings=bookings.map(b=>({
   paidAt:null,
   commissionPaid:false,
   commissionPaymentId:null,
+  observation:'',
+  observationByAdmin:false,
+  observationAuthor:'',
   ...b
 }));
 
@@ -521,6 +562,7 @@ function renderGeneral(){
         <div class="list-sub">${safe(b.professionalName)} • ${safe(b.serviceName)} ${b.status==='finalizado'&&b.paymentMethod?'• '+safe(b.paymentMethod):''}</div></div>
         <div style="text-align:right"><div class="price">${brl(b.price)}</div><span class="badge ${b.status}">${cap(b.status)}</span></div>
       </div>
+      ${b.observation?`<div class="agenda-note ${b.observationByAdmin?'admin':''}"><span class="note-label">${b.observationByAdmin?'Observação da administração':'Observação'}</span>${safe(b.observation)}</div>`:''}
     </div>`).join(''):`<div class="report-placeholder">Nenhum agendamento neste dia.</div>`;
 }
 function renderTimeline(profId){
@@ -533,7 +575,9 @@ function renderTimeline(profId){
       <div class="appt-main"><div class="appt-name">${safe(b.client)}</div>
       <div class="appt-meta">${safe(b.serviceName)} • ${b.duration} min ${b.status==='finalizado'&&b.paymentMethod?'• '+safe(b.paymentMethod):''}</div></div>
       <div><div class="price">${brl(b.price)}</div><span class="badge ${b.status}">${cap(b.status)}</span></div>
-      </div></div></div>`;
+      </div>
+      ${b.observation?`<div class="agenda-note ${b.observationByAdmin?'admin':''}"><span class="note-label">${b.observationByAdmin?'Observação da administração':'Observação'}</span>${safe(b.observation)}</div>`:''}
+      </div></div>`;
     }else if(b){
       html+=`<div class="slot"><div class="slot-time">${t}</div><div class="slot-box" style="opacity:.45"><div class="appt-meta">Continuação de ${safe(b.client)}</div></div></div>`;
     }else{
@@ -595,7 +639,18 @@ function renderCalendarSummary(){
 function openBooking(profId,time){
   const pid=profId||(currentUser.role==='admin'?(selectedProfessional==='todos'?'luana':selectedProfessional):currentUser.id);
   $('bName').value='';$('bPhone').value='';$('bProfessional').value=pid;$('bTime').value=time||'08:00';$('bService').value=services[0].id;
-  syncService();$('bProfessional').disabled=currentUser.role!=='admin';$('bookingModal').classList.add('show');
+  $('bObservation').value='';
+  syncService();$('bProfessional').disabled=currentUser.role!=='admin';
+  updateObservationHint();
+  $('bProfessional').onchange=()=>{updateObservationHint();};
+  $('bookingModal').classList.add('show');
+}
+function updateObservationHint(){
+  const profId=$('bProfessional').value;
+  const adminForOther=currentUser?.role==='admin'&&profId!==currentUser.id;
+  $('observationHint').innerHTML=adminForOther
+    ? '<strong style="color:#be123c">Atenção:</strong> como é uma observação da administração para outra profissional, ela aparecerá em vermelho na agenda.'
+    : 'A observação ficará visível nos detalhes do agendamento.';
 }
 function closeBooking(){$('bookingModal').classList.remove('show')}
 function saveBooking(){
@@ -605,10 +660,15 @@ function saveBooking(){
   const a1=timeToMin(time),a2=a1+duration;
   const conflict=bookings.some(b=>b.date===dateKey()&&b.professionalId===profId&&b.status!=='cancelado'&&a1<timeToMin(b.time)+Number(b.duration)&&a2>timeToMin(b.time));
   if(conflict){alert('Esse horário já está ocupado.');return}
+  const observation=$('bObservation').value.trim();
+  const observationByAdmin=Boolean(observation)&&currentUser.role==='admin'&&profId!==currentUser.id;
   bookings.push({
     id:String(Date.now()),date:dateKey(),client:name,phone:$('bPhone').value.trim(),
     professionalId:profId,professionalName:professionals.find(p=>p.id===profId).name,time,
     serviceId:service.id,serviceName:service.name,duration,price,commission,status:'agendado',
+    observation,
+    observationByAdmin,
+    observationAuthor:observation?currentUser.name:'',
     paymentMethod:'',paymentInstallments:1,paymentNote:'',paidAt:null,
     commissionPaid:false,commissionPaymentId:null
   });
@@ -635,6 +695,7 @@ function openDetails(id){
         <div class="detail-cell"><small>Comissão</small><strong>${b.commission}% • ${brl(Number(b.price)*Number(b.commission)/100)}</strong></div>
         ${payment}
       </div>
+      ${b.observation?`<div class="detail-note ${b.observationByAdmin?'admin':''}"><span class="note-label">${b.observationByAdmin?'⚠ Observação da administração':'Observação do agendamento'}</span>${safe(b.observation)}${b.observationAuthor?`<div style="font-size:9px;margin-top:5px;opacity:.72">Por: ${safe(b.observationAuthor)}</div>`:''}</div>`:''}
       ${b.paymentNote?`<div class="soft-box" style="margin-top:9px"><div class="list-sub">Observação do pagamento</div><div style="font-size:11px;margin-top:3px">${safe(b.paymentNote)}</div></div>`:''}
     </div>`;
   $('detailsActions').innerHTML=b.status==='agendado'
