@@ -55,6 +55,135 @@ body{padding-bottom:78px}button,input,select,textarea{font:inherit}button{cursor
 .modal{position:fixed;inset:0;background:rgba(28,18,22,.42);z-index:100;display:none;align-items:flex-end;justify-content:center}.modal.show{display:flex}.sheet{width:100%;max-width:600px;background:#fff;border-radius:22px 22px 0 0;padding:16px;max-height:92vh;overflow:auto}.sheet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.sheet-head h2{font-family:Georgia,serif;margin:0;font-size:21px}.close{width:34px;height:34px;border:none;background:#f7f2f4;border-radius:10px}.actions{display:flex;gap:8px;margin-top:10px}.actions .btn{flex:1}
 .screen{display:none}.screen.active{display:block}
 @media(max-width:600px){.top{padding:0 12px}.page{padding:14px 12px 20px}.grid2{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}.people{grid-template-columns:1fr}}
+
+/* ===== BOOM VISUAL + CALENDÁRIO + PAGAMENTOS ===== */
+body{
+  background:
+    radial-gradient(circle at 12% -10%, rgba(233,45,111,.07), transparent 27%),
+    linear-gradient(180deg,#fffafb 0,#fffdfd 220px,#fff 100%);
+}
+.top{
+  box-shadow:0 1px 0 rgba(88,45,60,.03),0 8px 25px rgba(71,36,48,.035);
+  backdrop-filter:blur(18px);
+  background:rgba(255,255,255,.94);
+}
+.logo-icon{box-shadow:0 7px 16px rgba(233,45,111,.22)}
+.panel,.list-card,.card-stat,.wide-stat,.setting-box,.date-strip{
+  box-shadow:0 7px 24px rgba(67,36,48,.045);
+}
+.card-stat,.wide-stat,.list-card,.panel,.setting-box{transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}
+.list-card:active,.slot-box:active{transform:scale(.995)}
+.title-row h1,.more-title,.hello h2{letter-spacing:-.025em}
+.new-btn{
+  padding:10px 14px;border-radius:12px;
+  box-shadow:0 8px 18px rgba(213,45,121,.18)
+}
+.agenda-topline{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px
+}
+.view-toggle{
+  display:inline-grid;grid-template-columns:1fr 1fr;gap:3px;
+  background:#f8f1f4;border:1px solid #f0e2e7;padding:4px;border-radius:13px;
+  min-width:210px
+}
+.view-toggle button{
+  border:none;background:transparent;color:#8c727b;border-radius:9px;padding:8px 12px;
+  font-size:11px;font-weight:800
+}
+.view-toggle button.active{
+  background:#fff;color:var(--pink);box-shadow:0 3px 10px rgba(72,38,50,.08)
+}
+.calendar-shell{
+  margin-top:10px;border:1px solid var(--line);background:rgba(255,255,255,.95);
+  border-radius:20px;padding:13px;box-shadow:0 10px 30px rgba(75,38,52,.055)
+}
+.calendar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.calendar-head strong{font-family:Georgia,serif;font-size:19px;text-transform:capitalize}
+.calendar-nav{
+  width:34px;height:34px;border:1px solid var(--line);background:#fff;border-radius:11px;
+  color:#6f5660;font-size:19px
+}
+.calendar-weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.calendar-weekdays div{text-align:center;font-size:9px;color:#a08790;font-weight:800;padding:4px 0 6px}
+.cal-day{
+  position:relative;min-height:65px;border:1px solid transparent;background:#fff;border-radius:13px;
+  padding:7px;text-align:left;color:#3f3036
+}
+.cal-day:hover{background:#fff7fa}
+.cal-day.outside{opacity:.32}
+.cal-day.today{border-color:#f5bfd1;background:#fff8fb}
+.cal-day.selected{background:var(--pink);color:#fff;box-shadow:0 8px 18px rgba(233,45,111,.22)}
+.cal-day .num{font-size:11px;font-weight:900}
+.cal-day .count{
+  position:absolute;right:6px;top:6px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;background:#f7edf1;color:var(--pink);
+  font-size:8px;font-weight:900
+}
+.cal-day.selected .count{background:rgba(255,255,255,.2);color:#fff}
+.cal-dots{display:flex;gap:3px;flex-wrap:wrap;margin-top:13px}
+.cal-dot{width:5px;height:5px;border-radius:50%;background:#e92d6f}
+.cal-day.selected .cal-dot{background:#fff}
+.calendar-summary{
+  margin-top:11px;padding:12px;border-radius:15px;background:linear-gradient(135deg,#fff7fa,#fff);
+  border:1px solid var(--line)
+}
+.calendar-summary-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.calendar-summary strong{font-size:13px}.calendar-summary span{font-size:10px;color:var(--muted)}
+.summary-chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.summary-chip{
+  padding:6px 8px;border-radius:999px;background:#fff;border:1px solid var(--line);
+  font-size:9px;font-weight:800;color:#725a63
+}
+.pay-tag{
+  display:inline-flex;align-items:center;gap:4px;padding:4px 7px;border-radius:999px;
+  background:#f8f3f5;color:#806771;font-size:9px;font-weight:800
+}
+.payment-hero{
+  border-radius:18px;padding:14px;color:#fff;margin-bottom:10px;
+  background:linear-gradient(135deg,#1e1b2e,#3b2840 58%,#d72d76 130%);
+  box-shadow:0 12px 27px rgba(43,28,38,.13)
+}
+.payment-hero small{opacity:.76;font-size:10px}.payment-hero strong{display:block;font-size:24px;margin-top:3px}
+.history-title{font-size:13px;font-weight:900;margin:18px 0 8px}
+.payment-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;
+  border-bottom:1px solid var(--line)
+}
+.payment-row:last-child{border-bottom:none}
+.payment-icon{
+  width:34px;height:34px;border-radius:11px;background:var(--pink-soft);color:var(--pink);
+  display:flex;align-items:center;justify-content:center;font-size:15px;flex:none
+}
+.payment-left{display:flex;align-items:center;gap:9px;min-width:0}
+.payment-left strong{display:block;font-size:11px}.payment-left span{display:block;font-size:9px;color:var(--muted);margin-top:2px}
+.payment-value{text-align:right}.payment-value strong{display:block;font-size:11px}.payment-value span{font-size:9px;color:var(--muted)}
+.payment-breakdown{display:grid;gap:7px}
+.break-row{display:flex;align-items:center;justify-content:space-between;font-size:11px}
+.break-bar{height:6px;border-radius:999px;background:#f4edf0;overflow:hidden;margin-top:4px}
+.break-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--pink),#f35a8b)}
+.soft-box{border:1px solid var(--line);background:#fff;border-radius:15px;padding:12px}
+.details-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.detail-cell{background:#fff9fb;border:1px solid #f2e5e9;border-radius:12px;padding:9px}
+.detail-cell small{display:block;color:var(--muted);font-size:9px}.detail-cell strong{display:block;font-size:11px;margin-top:2px}
+.modal .sheet{box-shadow:0 -18px 60px rgba(41,23,30,.17)}
+.modal .sheet:before{
+  content:"";display:block;width:42px;height:4px;border-radius:999px;background:#e7d9de;margin:-5px auto 12px
+}
+.select-modern{
+  width:100%;border:1px solid var(--line);border-radius:11px;padding:11px;background:#fff;outline:none
+}
+.note-box{width:100%;border:1px solid var(--line);border-radius:11px;padding:10px;resize:vertical;min-height:70px}
+.client-kpis{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.client-kpi{font-size:9px;border-radius:999px;padding:5px 7px;background:#fff7fa;color:#87636f}
+@media(max-width:600px){
+  .agenda-topline{align-items:stretch;flex-direction:column}
+  .view-toggle{width:100%;min-width:0}
+  .cal-day{min-height:57px;padding:6px}
+  .calendar-grid,.calendar-weekdays{gap:3px}
+  .cal-day .count{right:4px;top:4px}
+  .details-grid{grid-template-columns:1fr 1fr}
+}
+
 </style>
 </head>
 <body>
@@ -78,8 +207,34 @@ body{padding-bottom:78px}button,input,select,textarea{font:inherit}button{cursor
 
 <section id="screen-agenda" class="screen">
 <div class="title-row"><h1>Agenda</h1><button class="new-btn" onclick="openBooking()">+ Novo</button></div>
-<div class="date-strip"><button class="date-arrow" onclick="changeDay(-1)">‹</button><div class="date-center"><strong id="agendaDate"></strong><span id="agendaDateLong"></span></div><button class="date-arrow" onclick="changeDay(1)">›</button></div>
-<div id="proTabs" class="pro-tabs"></div><div id="timeline" class="timeline"></div>
+
+<div class="agenda-topline">
+  <div class="view-toggle">
+    <button id="viewListBtn" class="active" onclick="setAgendaView('list')">☷ Lista</button>
+    <button id="viewCalendarBtn" onclick="setAgendaView('calendar')">▦ Calendário</button>
+  </div>
+  <button class="btn btn-light" onclick="goToday()">Hoje</button>
+</div>
+
+<div id="proTabs" class="pro-tabs"></div>
+
+<div id="agendaListView">
+  <div class="date-strip" style="margin-top:8px"><button class="date-arrow" onclick="changeDay(-1)">‹</button><div class="date-center"><strong id="agendaDate"></strong><span id="agendaDateLong"></span></div><button class="date-arrow" onclick="changeDay(1)">›</button></div>
+  <div id="timeline" class="timeline"></div>
+</div>
+
+<div id="agendaCalendarView" class="hidden">
+  <div class="calendar-shell">
+    <div class="calendar-head">
+      <button class="calendar-nav" onclick="changeMonth(-1)">‹</button>
+      <strong id="calendarMonthTitle"></strong>
+      <button class="calendar-nav" onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="calendar-weekdays"><div>DOM</div><div>SEG</div><div>TER</div><div>QUA</div><div>QUI</div><div>SEX</div><div>SÁB</div></div>
+    <div id="calendarGrid" class="calendar-grid"></div>
+    <div id="calendarSummary" class="calendar-summary"></div>
+  </div>
+</div>
 </section>
 
 <section id="screen-clientes" class="screen">
@@ -87,7 +242,13 @@ body{padding-bottom:78px}button,input,select,textarea{font:inherit}button{cursor
 <div class="panel"><input id="clientSearch" placeholder="Buscar cliente..." style="width:100%;border:1px solid var(--line);border-radius:10px;padding:11px;margin-bottom:10px"><div id="clientsList"></div></div>
 </section>
 
-<section id="screen-comissoes" class="screen"><div class="title-row"><h1>Comissões</h1></div><div id="commissionList"></div></section>
+<section id="screen-comissoes" class="screen">
+<div class="title-row"><h1>Comissões</h1></div>
+<div id="commissionSummary"></div>
+<div id="commissionList"></div>
+<div class="history-title">Histórico de pagamentos</div>
+<div id="commissionHistory" class="panel"></div>
+</section>
 
 <section id="screen-mais" class="screen">
 <h1 class="more-title">Mais</h1>
@@ -107,6 +268,8 @@ body{padding-bottom:78px}button,input,select,textarea{font:inherit}button{cursor
 <div class="report-hero"><small>↗ Faturamento do período</small><strong id="repRevenue">R$ 0,00</strong><small id="repDate"></small></div>
 <div class="grid3"><div class="card-stat" style="text-align:center"><small>Clientes</small><strong id="repClients">0</strong></div><div class="card-stat" style="text-align:center"><small>Atendimentos</small><strong id="repAppointments">0</strong></div><div class="card-stat" style="text-align:center"><small>Comissão</small><strong id="repCommission">R$ 0,00</strong></div></div>
 <div class="grid2" style="margin-top:10px"><div class="card-stat"><small style="color:var(--green)">Comissão paga</small><strong id="repPaid">R$ 0,00</strong></div><div class="card-stat"><small style="color:var(--orange)">Comissão pendente</small><strong id="repPending">R$ 0,00</strong></div></div>
+<div class="section"><div class="section-head"><h3>Formas de pagamento dos clientes</h3></div><div id="repPayments" class="panel payment-breakdown"></div></div>
+<div class="section"><div class="section-head"><h3>Pagamentos de comissão</h3></div><div id="repCommissionPayments" class="panel payment-breakdown"></div></div>
 </section>
 
 <section id="screen-config" class="screen">
@@ -134,7 +297,41 @@ body{padding-bottom:78px}button,input,select,textarea{font:inherit}button{cursor
 </div>
 <div class="actions"><button class="btn btn-light" onclick="closeBooking()">Cancelar</button><button class="btn btn-pink" onclick="saveBooking()">Agendar</button></div></div></div>
 
-<div id="detailsModal" class="modal"><div class="sheet"><div class="sheet-head"><h2>Atendimento</h2><button class="close" onclick="closeDetails()">✕</button></div><div id="detailsBody"></div><div class="actions"><button class="btn btn-danger" onclick="cancelCurrent()">Cancelar</button><button class="btn btn-pink" onclick="finishCurrent()">Finalizar</button></div></div></div>
+<div id="detailsModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2>Atendimento</h2><button class="close" onclick="closeDetails()">✕</button></div>
+<div id="detailsBody"></div><div id="detailsActions" class="actions"></div>
+</div></div>
+
+<div id="clientPaymentModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2>Finalizar atendimento</h2><button class="close" onclick="closeClientPayment()">✕</button></div>
+<div id="clientPaymentInfo" class="payment-hero"></div>
+<div class="field"><label>FORMA DE PAGAMENTO</label>
+<select id="clientPaymentMethod" class="select-modern" onchange="toggleInstallments()">
+<option value="Pix">Pix</option><option value="Dinheiro">Dinheiro</option><option value="Cartão de débito">Cartão de débito</option><option value="Cartão de crédito">Cartão de crédito</option><option value="Transferência">Transferência</option><option value="Outro">Outro</option>
+</select></div>
+<div id="installmentField" class="field hidden"><label>PARCELAS</label>
+<select id="clientInstallments" class="select-modern">
+<option value="1">1x</option><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option><option value="5">5x</option><option value="6">6x</option><option value="7">7x</option><option value="8">8x</option><option value="9">9x</option><option value="10">10x</option><option value="11">11x</option><option value="12">12x</option>
+</select></div>
+<div class="field"><label>OBSERVAÇÃO DO PAGAMENTO</label><textarea id="clientPaymentNote" class="note-box" placeholder="Opcional"></textarea></div>
+<div class="actions"><button class="btn btn-light" onclick="closeClientPayment()">Voltar</button><button class="btn btn-pink" onclick="confirmClientPayment()">Confirmar recebimento</button></div>
+</div></div>
+
+<div id="commissionPaymentModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2>Pagar comissão</h2><button class="close" onclick="closeCommissionPayment()">✕</button></div>
+<div id="commissionPaymentInfo" class="payment-hero"></div>
+<div class="field"><label>COMO A COMISSÃO FOI PAGA?</label>
+<select id="commissionPaymentMethod" class="select-modern">
+<option value="Pix">Pix</option><option value="Dinheiro">Dinheiro</option><option value="Transferência">Transferência</option><option value="Depósito">Depósito</option><option value="Outro">Outro</option>
+</select></div>
+<div class="field"><label>OBSERVAÇÃO</label><textarea id="commissionPaymentNote" class="note-box" placeholder="Ex.: pagamento referente à semana"></textarea></div>
+<div class="actions"><button class="btn btn-light" onclick="closeCommissionPayment()">Cancelar</button><button class="btn btn-pink" onclick="confirmCommissionPayment()">Confirmar pagamento</button></div>
+</div></div>
+
+<div id="clientHistoryModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2>Histórico da cliente</h2><button class="close" onclick="closeClientHistory()">✕</button></div>
+<div id="clientHistoryBody"></div>
+</div></div>
 
 <script>
 const professionals=[
@@ -143,6 +340,7 @@ const professionals=[
 {id:'ana',name:'Ana',role:'collab',commission:40},
 {id:'bruna',name:'Bruna',role:'collab',commission:40}
 ];
+
 let services=[
 {id:'coloracao',name:'Coloração',price:180,duration:90,commission:40},
 {id:'corte',name:'Corte',price:50,duration:30,commission:40},
@@ -150,50 +348,436 @@ let services=[
 {id:'hidratacao',name:'Hidratação',price:90,duration:60,commission:40},
 {id:'manicure',name:'Manicure',price:40,duration:60,commission:40}
 ];
-const times=[];for(let h=8;h<=18;h++){for(let m of [0,30]){if(h===18&&m===30)continue;times.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`)}}
-let currentUser=null,currentDate=new Date(),selectedProfessional='todos',currentBookingId=null;
+
+const times=[];
+for(let h=8;h<=18;h++){
+  for(let m of [0,30]){
+    if(h===18&&m===30)continue;
+    times.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
+  }
+}
+
+let currentUser=null;
+let currentDate=new Date();
+let selectedProfessional='todos';
+let currentBookingId=null;
+let currentCommissionProfessional=null;
+let agendaView='list';
+
 let bookings=JSON.parse(localStorage.getItem('belle_bookings')||'[]');
 let clients=JSON.parse(localStorage.getItem('belle_clients')||'[]');
+let commissionPayments=JSON.parse(localStorage.getItem('belle_commission_payments')||'[]');
+
+bookings=bookings.map(b=>({
+  paymentMethod:'',
+  paymentInstallments:1,
+  paymentNote:'',
+  paidAt:null,
+  commissionPaid:false,
+  commissionPaymentId:null,
+  ...b
+}));
+
 const $=id=>document.getElementById(id);
-function saveLocal(){localStorage.setItem('belle_bookings',JSON.stringify(bookings));localStorage.setItem('belle_clients',JSON.stringify(clients))}
+
+function saveLocal(){
+  localStorage.setItem('belle_bookings',JSON.stringify(bookings));
+  localStorage.setItem('belle_clients',JSON.stringify(clients));
+  localStorage.setItem('belle_commission_payments',JSON.stringify(commissionPayments));
+}
 function dateKey(d=currentDate){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function parseKey(key){const [y,m,d]=key.split('-').map(Number);return new Date(y,m-1,d)}
 function brl(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
 function initials(n){return n.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase()}
 function cap(s){return s?s[0].toUpperCase()+s.slice(1):''}
 function timeToMin(t){const [h,m]=t.split(':').map(Number);return h*60+m}
-function buildLogin(){$('people').innerHTML=professionals.map(p=>`<button class="person" onclick="login('${p.id}')"><div class="person-avatar">${initials(p.name)}</div><strong>${p.name}</strong><small>${p.role==='admin'?'Administradora':'Colaboradora'}</small></button>`).join('')}
-function login(id){currentUser=professionals.find(p=>p.id===id);selectedProfessional=currentUser.role==='admin'?'todos':currentUser.id;$('login').classList.add('hidden');$('app').classList.remove('hidden');$('topName').textContent=currentUser.name;$('topRole').textContent=currentUser.role==='admin'?'Administradora':'Colaboradora';$('panelLabel').textContent=currentUser.role==='admin'?'Painel da administradora':'Meu painel';buildNav();fillSelects();renderAll()}
+function shortDate(key){return parseKey(key).toLocaleDateString('pt-BR')}
+function fullDate(key){return parseKey(key).toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'})}
+function safe(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+
+function buildLogin(){
+  $('people').innerHTML=professionals.map(p=>`<button class="person" onclick="login('${p.id}')">
+    <div class="person-avatar">${initials(p.name)}</div><strong>${safe(p.name)}</strong>
+    <small>${p.role==='admin'?'Administradora':'Colaboradora'}</small></button>`).join('');
+}
+function login(id){
+  currentUser=professionals.find(p=>p.id===id);
+  selectedProfessional=currentUser.role==='admin'?'todos':currentUser.id;
+  $('login').classList.add('hidden');$('app').classList.remove('hidden');
+  $('topName').textContent=currentUser.name;
+  $('topRole').textContent=currentUser.role==='admin'?'Administradora':'Colaboradora';
+  $('panelLabel').textContent=currentUser.role==='admin'?'Painel da administradora':'Meu painel';
+  buildNav();fillSelects();renderAll();
+}
 function logout(){currentUser=null;$('app').classList.add('hidden');$('login').classList.remove('hidden')}
-function buildNav(){if(currentUser.role==='admin'){$('bottom').className='bottom admin';$('bottom').innerHTML=`<button class="nav active" data-screen="home"><span>⌂</span>Início</button><button class="nav" data-screen="agenda"><span>▦</span>Agenda</button><button class="nav" data-screen="clientes"><span>♙</span>Clientes</button><button class="nav" data-screen="comissoes"><span>▣</span>Comissões</button><button class="nav" data-screen="mais"><span>▦</span>Mais</button>`}else{$('bottom').className='bottom collab';$('bottom').innerHTML=`<button class="nav active" data-screen="home"><span>⌂</span>Início</button><button class="nav" data-screen="agenda"><span>▦</span>Agenda</button><button class="nav" data-screen="clientes"><span>♙</span>Clientes</button><button class="nav" data-screen="comissoes"><span>▣</span>Minha comissão</button>`}$('bottom').querySelectorAll('.nav').forEach(b=>b.onclick=()=>goScreen(b.dataset.screen,b))}
-function goScreen(name,btn){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$('screen-'+name).classList.add('active');$('bottom').querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));const n=btn||$('bottom').querySelector(`[data-screen="${name}"]`);if(n)n.classList.add('active');$('fab').style.display=name==='agenda'?'block':'none';if(name==='agenda')renderAgenda()}
-function fillSelects(){const allowed=currentUser.role==='admin'?professionals:professionals.filter(p=>p.id===currentUser.id);$('bProfessional').innerHTML=allowed.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');$('bTime').innerHTML=times.map(t=>`<option value="${t}">${t}</option>`).join('');$('bService').innerHTML=services.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');$('bService').onchange=syncService;syncService()}
-function syncService(){const s=services.find(x=>x.id===$('bService').value);if(!s)return;$('bPrice').value=s.price;$('bDuration').value=s.duration;$('bCommission').value=s.commission}
-function renderAll(){renderDates();renderHome();renderAgenda();renderClients();renderCommissions();renderProfessionals();renderServices();renderReports()}
-function renderDates(){const fmt=currentDate.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});$('agendaDate').textContent=fmt.replace(/^./,c=>c.toUpperCase());$('agendaDateLong').textContent=currentDate.toLocaleDateString('pt-BR',{year:'numeric'});$('homeDate').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'}).replace(/^./,c=>c.toUpperCase())}
+
+function buildNav(){
+  if(currentUser.role==='admin'){
+    $('bottom').className='bottom admin';
+    $('bottom').innerHTML=`<button class="nav active" data-screen="home"><span>⌂</span>Início</button>
+    <button class="nav" data-screen="agenda"><span>▦</span>Agenda</button>
+    <button class="nav" data-screen="clientes"><span>♙</span>Clientes</button>
+    <button class="nav" data-screen="comissoes"><span>▣</span>Comissões</button>
+    <button class="nav" data-screen="mais"><span>▦</span>Mais</button>`;
+  }else{
+    $('bottom').className='bottom collab';
+    $('bottom').innerHTML=`<button class="nav active" data-screen="home"><span>⌂</span>Início</button>
+    <button class="nav" data-screen="agenda"><span>▦</span>Agenda</button>
+    <button class="nav" data-screen="clientes"><span>♙</span>Clientes</button>
+    <button class="nav" data-screen="comissoes"><span>▣</span>Minha comissão</button>`;
+  }
+  $('bottom').querySelectorAll('.nav').forEach(b=>b.onclick=()=>goScreen(b.dataset.screen,b));
+}
+function goScreen(name,btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $('screen-'+name).classList.add('active');
+  $('bottom').querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));
+  const n=btn||$('bottom').querySelector(`[data-screen="${name}"]`);
+  if(n)n.classList.add('active');
+  $('fab').style.display=name==='agenda'?'block':'none';
+  if(name==='agenda')renderAgenda();
+  if(name==='comissoes')renderCommissions();
+  if(name==='clientes')renderClients();
+}
+
+function fillSelects(){
+  const allowed=currentUser.role==='admin'?professionals:professionals.filter(p=>p.id===currentUser.id);
+  $('bProfessional').innerHTML=allowed.map(p=>`<option value="${p.id}">${safe(p.name)}</option>`).join('');
+  $('bTime').innerHTML=times.map(t=>`<option value="${t}">${t}</option>`).join('');
+  $('bService').innerHTML=services.map(s=>`<option value="${s.id}">${safe(s.name)}</option>`).join('');
+  $('bService').onchange=syncService;syncService();
+}
+function syncService(){
+  const s=services.find(x=>x.id===$('bService').value);if(!s)return;
+  $('bPrice').value=s.price;$('bDuration').value=s.duration;$('bCommission').value=s.commission;
+}
+function renderAll(){
+  renderDates();renderHome();renderAgenda();renderClients();renderCommissions();
+  renderProfessionals();renderServices();renderReports();
+}
+function renderDates(){
+  const fmt=currentDate.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+  $('agendaDate').textContent=fmt.replace(/^./,c=>c.toUpperCase());
+  $('agendaDateLong').textContent=currentDate.toLocaleDateString('pt-BR',{year:'numeric'});
+  $('homeDate').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'}).replace(/^./,c=>c.toUpperCase());
+}
 function changeDay(n){currentDate.setDate(currentDate.getDate()+n);currentDate=new Date(currentDate);renderDates();renderAgenda()}
-function renderHome(){const today=dateKey(new Date());const scope=bookings.filter(b=>b.date===today&&b.status!=='cancelado'&&(currentUser.role==='admin'||b.professionalId===currentUser.id));const done=scope.filter(b=>b.status==='finalizado');$('stClients').textContent=new Set(scope.map(b=>b.client)).size;$('stDone').textContent=done.length;$('stPending').textContent=scope.filter(b=>b.status==='agendado').length;$('stSold').textContent=brl(done.reduce((s,b)=>s+Number(b.price||0),0));$('stCommission').textContent=brl(done.reduce((s,b)=>s+Number(b.price||0)*Number(b.commission||0)/100,0));$('todayPreview').innerHTML=scope.length?scope.slice(0,3).map(b=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)"><div><strong>${b.time} • ${b.client}</strong><div class="subtle">${b.serviceName} • ${b.professionalName}</div></div><span>${brl(b.price)}</span></div>`).join(''):'Nenhum agendamento para hoje.'}
-function renderAgenda(){if(currentUser.role==='admin'){$('proTabs').innerHTML=[{id:'todos',name:'Todos'},...professionals].map(p=>`<button class="pro-tab ${selectedProfessional===p.id?'active':''}" onclick="setPro('${p.id}')">${p.name==='Simples E Direto Informática'?'Chefe':p.name}</button>`).join('')}else{selectedProfessional=currentUser.id;$('proTabs').innerHTML=`<button class="pro-tab active">${currentUser.name}</button>`}selectedProfessional==='todos'?renderGeneral():renderTimeline(selectedProfessional)}
+function goToday(){currentDate=new Date();renderDates();renderAgenda()}
+function changeMonth(n){currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth()+n,1);renderDates();renderCalendar()}
+
+function scopeBookingsForDate(key){
+  return bookings.filter(b=>b.date===key&&b.status!=='cancelado'&&
+    (currentUser.role==='admin' ? (selectedProfessional==='todos'||b.professionalId===selectedProfessional) : b.professionalId===currentUser.id));
+}
+
+function renderHome(){
+  const today=dateKey(new Date());
+  const scope=bookings.filter(b=>b.date===today&&b.status!=='cancelado'&&(currentUser.role==='admin'||b.professionalId===currentUser.id));
+  const done=scope.filter(b=>b.status==='finalizado');
+  $('stClients').textContent=new Set(scope.map(b=>b.client)).size;
+  $('stDone').textContent=done.length;
+  $('stPending').textContent=scope.filter(b=>b.status==='agendado').length;
+  $('stSold').textContent=brl(done.reduce((s,b)=>s+Number(b.price||0),0));
+  $('stCommission').textContent=brl(done.reduce((s,b)=>s+Number(b.price||0)*Number(b.commission||0)/100,0));
+  $('todayPreview').innerHTML=scope.length?scope.slice(0,3).map(b=>`
+    <div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)">
+      <div><strong>${b.time} • ${safe(b.client)}</strong><div class="subtle">${safe(b.serviceName)} • ${safe(b.professionalName)}</div></div>
+      <span>${brl(b.price)}</span>
+    </div>`).join(''):'Nenhum agendamento para hoje.';
+}
+
+function setAgendaView(view){
+  agendaView=view;
+  $('viewListBtn').classList.toggle('active',view==='list');
+  $('viewCalendarBtn').classList.toggle('active',view==='calendar');
+  $('agendaListView').classList.toggle('hidden',view!=='list');
+  $('agendaCalendarView').classList.toggle('hidden',view!=='calendar');
+  renderAgenda();
+}
+function renderAgenda(){
+  if(currentUser.role==='admin'){
+    $('proTabs').innerHTML=[{id:'todos',name:'Todos'},...professionals].map(p=>`
+      <button class="pro-tab ${selectedProfessional===p.id?'active':''}" onclick="setPro('${p.id}')">${p.name==='Simples E Direto Informática'?'Chefe':safe(p.name)}</button>`).join('');
+  }else{
+    selectedProfessional=currentUser.id;
+    $('proTabs').innerHTML=`<button class="pro-tab active">${safe(currentUser.name)}</button>`;
+  }
+  $('agendaListView').classList.toggle('hidden',agendaView!=='list');
+  $('agendaCalendarView').classList.toggle('hidden',agendaView!=='calendar');
+  $('viewListBtn').classList.toggle('active',agendaView==='list');
+  $('viewCalendarBtn').classList.toggle('active',agendaView==='calendar');
+
+  if(agendaView==='calendar') renderCalendar();
+  else selectedProfessional==='todos'?renderGeneral():renderTimeline(selectedProfessional);
+}
 function setPro(id){selectedProfessional=id;renderAgenda()}
-function renderGeneral(){const arr=bookings.filter(b=>b.date===dateKey()&&b.status!=='cancelado').sort((a,b)=>a.time.localeCompare(b.time));$('timeline').innerHTML=arr.length?arr.map(b=>`<div class="list-card" onclick="openDetails('${b.id}')"><div class="list-top"><div><div class="list-title">${b.time} • ${b.client}</div><div class="list-sub">${b.professionalName} • ${b.serviceName}</div></div><div style="text-align:right"><div class="price">${brl(b.price)}</div><span class="badge ${b.status}">${cap(b.status)}</span></div></div></div>`).join(''):`<div class="report-placeholder">Nenhum agendamento neste dia.</div>`}
-function renderTimeline(profId){let html='';times.forEach(t=>{const b=getBookingForSlot(profId,t);if(b&&b.time===t){html+=`<div class="slot"><div class="slot-time">${t}</div><div class="slot-box" onclick="openDetails('${b.id}')"><div class="appt"><div class="appt-main"><div class="appt-name">${b.client}</div><div class="appt-meta">${b.serviceName} • ${b.duration} min</div></div><div><div class="price">${brl(b.price)}</div><span class="badge ${b.status}">${cap(b.status)}</span></div></div></div></div>`}else if(b){html+=`<div class="slot"><div class="slot-time">${t}</div><div class="slot-box" style="opacity:.45"><div class="appt-meta">Continuação de ${b.client}</div></div></div>`}else{html+=`<div class="slot"><div class="slot-time">${t}</div><div class="slot-box free"><span>Horário livre</span><button onclick="event.stopPropagation();openBooking('${profId}','${t}')">+ Agendar</button></div></div>`}});$('timeline').innerHTML=html}
-function getBookingForSlot(profId,time){const target=timeToMin(time);return bookings.find(b=>{if(b.date!==dateKey()||b.professionalId!==profId||b.status==='cancelado')return false;const s=timeToMin(b.time);return target>=s&&target<s+Number(b.duration)})}
-function openBooking(profId,time){const pid=profId||(currentUser.role==='admin'?(selectedProfessional==='todos'?'luana':selectedProfessional):currentUser.id);$('bName').value='';$('bPhone').value='';$('bProfessional').value=pid;$('bTime').value=time||'08:00';$('bService').value=services[0].id;syncService();$('bProfessional').disabled=currentUser.role!=='admin';$('bookingModal').classList.add('show')}
+
+function renderGeneral(){
+  const arr=scopeBookingsForDate(dateKey()).sort((a,b)=>a.time.localeCompare(b.time));
+  $('timeline').innerHTML=arr.length?arr.map(b=>`
+    <div class="list-card" onclick="openDetails('${b.id}')">
+      <div class="list-top">
+        <div><div class="list-title">${b.time} • ${safe(b.client)}</div>
+        <div class="list-sub">${safe(b.professionalName)} • ${safe(b.serviceName)} ${b.status==='finalizado'&&b.paymentMethod?'• '+safe(b.paymentMethod):''}</div></div>
+        <div style="text-align:right"><div class="price">${brl(b.price)}</div><span class="badge ${b.status}">${cap(b.status)}</span></div>
+      </div>
+    </div>`).join(''):`<div class="report-placeholder">Nenhum agendamento neste dia.</div>`;
+}
+function renderTimeline(profId){
+  let html='';
+  times.forEach(t=>{
+    const b=getBookingForSlot(profId,t);
+    if(b&&b.time===t){
+      html+=`<div class="slot"><div class="slot-time">${t}</div>
+      <div class="slot-box" onclick="openDetails('${b.id}')"><div class="appt">
+      <div class="appt-main"><div class="appt-name">${safe(b.client)}</div>
+      <div class="appt-meta">${safe(b.serviceName)} • ${b.duration} min ${b.status==='finalizado'&&b.paymentMethod?'• '+safe(b.paymentMethod):''}</div></div>
+      <div><div class="price">${brl(b.price)}</div><span class="badge ${b.status}">${cap(b.status)}</span></div>
+      </div></div></div>`;
+    }else if(b){
+      html+=`<div class="slot"><div class="slot-time">${t}</div><div class="slot-box" style="opacity:.45"><div class="appt-meta">Continuação de ${safe(b.client)}</div></div></div>`;
+    }else{
+      html+=`<div class="slot"><div class="slot-time">${t}</div><div class="slot-box free"><span>Horário livre</span><button onclick="event.stopPropagation();openBooking('${profId}','${t}')">+ Agendar</button></div></div>`;
+    }
+  });
+  $('timeline').innerHTML=html;
+}
+function getBookingForSlot(profId,time){
+  const target=timeToMin(time);
+  return bookings.find(b=>{
+    if(b.date!==dateKey()||b.professionalId!==profId||b.status==='cancelado')return false;
+    const s=timeToMin(b.time);return target>=s&&target<s+Number(b.duration);
+  });
+}
+
+function renderCalendar(){
+  const y=currentDate.getFullYear(),m=currentDate.getMonth();
+  $('calendarMonthTitle').textContent=currentDate.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  const first=new Date(y,m,1);
+  const start=new Date(y,m,1-first.getDay());
+  const today=dateKey(new Date());
+  let html='';
+  for(let i=0;i<42;i++){
+    const d=new Date(start);d.setDate(start.getDate()+i);
+    const key=dateKey(d);
+    const arr=scopeBookingsForDate(key);
+    const classes=['cal-day'];
+    if(d.getMonth()!==m)classes.push('outside');
+    if(key===today)classes.push('today');
+    if(key===dateKey())classes.push('selected');
+    html+=`<button class="${classes.join(' ')}" onclick="selectCalendarDay('${key}')">
+      <span class="num">${d.getDate()}</span>${arr.length?`<span class="count">${arr.length}</span>`:''}
+      <span class="cal-dots">${arr.slice(0,6).map(()=>'<i class="cal-dot"></i>').join('')}</span>
+    </button>`;
+  }
+  $('calendarGrid').innerHTML=html;
+  renderCalendarSummary();
+}
+function selectCalendarDay(key){currentDate=parseKey(key);renderDates();renderCalendar()}
+function renderCalendarSummary(){
+  const arr=scopeBookingsForDate(dateKey());
+  const done=arr.filter(b=>b.status==='finalizado');
+  const revenue=done.reduce((s,b)=>s+Number(b.price||0),0);
+  const profs=[...new Set(arr.map(b=>b.professionalName))];
+  $('calendarSummary').innerHTML=`
+    <div class="calendar-summary-top">
+      <div><strong>${cap(fullDate(dateKey()))}</strong><br><span>${arr.length} atendimento${arr.length===1?'':'s'} neste dia</span></div>
+      <button class="btn btn-pink" onclick="setAgendaView('list')">Abrir dia</button>
+    </div>
+    <div class="summary-chips">
+      <span class="summary-chip">📅 ${arr.length} agendados</span>
+      <span class="summary-chip">✓ ${done.length} concluídos</span>
+      <span class="summary-chip">💰 ${brl(revenue)}</span>
+      ${profs.slice(0,3).map(p=>`<span class="summary-chip">👤 ${safe(p)}</span>`).join('')}
+    </div>`;
+}
+
+function openBooking(profId,time){
+  const pid=profId||(currentUser.role==='admin'?(selectedProfessional==='todos'?'luana':selectedProfessional):currentUser.id);
+  $('bName').value='';$('bPhone').value='';$('bProfessional').value=pid;$('bTime').value=time||'08:00';$('bService').value=services[0].id;
+  syncService();$('bProfessional').disabled=currentUser.role!=='admin';$('bookingModal').classList.add('show');
+}
 function closeBooking(){$('bookingModal').classList.remove('show')}
-function saveBooking(){const name=$('bName').value.trim();if(!name){alert('Informe o nome da cliente.');return}const profId=$('bProfessional').value,time=$('bTime').value,duration=Number($('bDuration').value),price=Number($('bPrice').value||0),commission=Number($('bCommission').value||0),service=services.find(s=>s.id===$('bService').value);const a1=timeToMin(time),a2=a1+duration;const conflict=bookings.some(b=>b.date===dateKey()&&b.professionalId===profId&&b.status!=='cancelado'&&a1<timeToMin(b.time)+Number(b.duration)&&a2>timeToMin(b.time));if(conflict){alert('Esse horário já está ocupado.');return}bookings.push({id:String(Date.now()),date:dateKey(),client:name,phone:$('bPhone').value.trim(),professionalId:profId,professionalName:professionals.find(p=>p.id===profId).name,time,serviceId:service.id,serviceName:service.name,duration,price,commission,status:'agendado',commissionPaid:false});if(!clients.find(c=>c.name.toLowerCase()===name.toLowerCase()))clients.push({id:'c'+Date.now(),name,phone:$('bPhone').value.trim()});saveLocal();closeBooking();renderAll()}
-function openDetails(id){const b=bookings.find(x=>x.id===id);if(!b)return;currentBookingId=id;$('detailsBody').innerHTML=`<div class="panel"><div class="list-top"><div><div class="list-title">${b.client}</div><div class="list-sub">${b.phone||'Sem telefone'}</div></div><span class="badge ${b.status}">${cap(b.status)}</span></div><div style="margin-top:12px;font-size:12px;line-height:1.8"><b>Profissional:</b> ${b.professionalName}<br><b>Horário:</b> ${b.time}<br><b>Serviço:</b> ${b.serviceName}<br><b>Valor:</b> ${brl(b.price)}<br><b>Comissão:</b> ${b.commission}%</div></div>`;$('detailsModal').classList.add('show')}
+function saveBooking(){
+  const name=$('bName').value.trim();if(!name){alert('Informe o nome da cliente.');return}
+  const profId=$('bProfessional').value,time=$('bTime').value,duration=Number($('bDuration').value),price=Number($('bPrice').value||0),
+  commission=Number($('bCommission').value||0),service=services.find(s=>s.id===$('bService').value);
+  const a1=timeToMin(time),a2=a1+duration;
+  const conflict=bookings.some(b=>b.date===dateKey()&&b.professionalId===profId&&b.status!=='cancelado'&&a1<timeToMin(b.time)+Number(b.duration)&&a2>timeToMin(b.time));
+  if(conflict){alert('Esse horário já está ocupado.');return}
+  bookings.push({
+    id:String(Date.now()),date:dateKey(),client:name,phone:$('bPhone').value.trim(),
+    professionalId:profId,professionalName:professionals.find(p=>p.id===profId).name,time,
+    serviceId:service.id,serviceName:service.name,duration,price,commission,status:'agendado',
+    paymentMethod:'',paymentInstallments:1,paymentNote:'',paidAt:null,
+    commissionPaid:false,commissionPaymentId:null
+  });
+  let found=clients.find(c=>c.name.toLowerCase()===name.toLowerCase());
+  if(!found)clients.push({id:'c'+Date.now(),name,phone:$('bPhone').value.trim()});
+  else if(!found.phone&&$('bPhone').value.trim())found.phone=$('bPhone').value.trim();
+  saveLocal();closeBooking();renderAll();
+}
+
+function openDetails(id){
+  const b=bookings.find(x=>x.id===id);if(!b)return;currentBookingId=id;
+  const payment=b.status==='finalizado'
+    ? `<div class="detail-cell"><small>Pagamento</small><strong>${safe(b.paymentMethod||'Não informado')}${b.paymentMethod==='Cartão de crédito'?' • '+(b.paymentInstallments||1)+'x':''}</strong></div>
+       <div class="detail-cell"><small>Recebido em</small><strong>${b.paidAt?new Date(b.paidAt).toLocaleString('pt-BR'):'-'}</strong></div>`
+    : `<div class="detail-cell"><small>Pagamento</small><strong>A receber</strong></div>`;
+  $('detailsBody').innerHTML=`
+    <div class="panel">
+      <div class="list-top"><div><div class="list-title">${safe(b.client)}</div><div class="list-sub">${safe(b.phone||'Sem telefone')}</div></div><span class="badge ${b.status}">${cap(b.status)}</span></div>
+      <div class="details-grid">
+        <div class="detail-cell"><small>Profissional</small><strong>${safe(b.professionalName)}</strong></div>
+        <div class="detail-cell"><small>Horário</small><strong>${b.time}</strong></div>
+        <div class="detail-cell"><small>Serviço</small><strong>${safe(b.serviceName)}</strong></div>
+        <div class="detail-cell"><small>Valor</small><strong>${brl(b.price)}</strong></div>
+        <div class="detail-cell"><small>Comissão</small><strong>${b.commission}% • ${brl(Number(b.price)*Number(b.commission)/100)}</strong></div>
+        ${payment}
+      </div>
+      ${b.paymentNote?`<div class="soft-box" style="margin-top:9px"><div class="list-sub">Observação do pagamento</div><div style="font-size:11px;margin-top:3px">${safe(b.paymentNote)}</div></div>`:''}
+    </div>`;
+  $('detailsActions').innerHTML=b.status==='agendado'
+    ? `<button class="btn btn-danger" onclick="cancelCurrent()">Cancelar</button><button class="btn btn-pink" onclick="finishCurrent()">Finalizar e receber</button>`
+    : `<button class="btn btn-light" onclick="closeDetails()">Fechar</button>`;
+  $('detailsModal').classList.add('show');
+}
 function closeDetails(){$('detailsModal').classList.remove('show');currentBookingId=null}
-function finishCurrent(){const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;b.status='finalizado';saveLocal();closeDetails();renderAll()}
-function cancelCurrent(){const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;b.status='cancelado';saveLocal();closeDetails();renderAll()}
-function renderClients(){const q=($('clientSearch').value||'').toLowerCase();const arr=clients.filter(c=>c.name.toLowerCase().includes(q)||(c.phone||'').includes(q));$('clientsList').innerHTML=arr.length?arr.map(c=>`<div class="list-card"><div class="list-top"><div><div class="list-title">${c.name}</div><div class="list-sub">${c.phone||'Sem telefone'}</div></div>${c.phone?`<a class="btn btn-light" target="_blank" style="text-decoration:none" href="https://wa.me/55${c.phone.replace(/\D/g,'')}">WhatsApp</a>`:''}</div></div>`).join(''):`<div class="subtle" style="text-align:center;padding:20px">Nenhum cliente cadastrado.</div>`}
+function cancelCurrent(){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  if(!confirm('Cancelar este atendimento?'))return;
+  b.status='cancelado';saveLocal();closeDetails();renderAll();
+}
+function finishCurrent(){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  $('clientPaymentInfo').innerHTML=`<small>Recebimento da cliente</small><strong>${brl(b.price)}</strong><small>${safe(b.client)} • ${safe(b.serviceName)}</small>`;
+  $('clientPaymentMethod').value='Pix';$('clientInstallments').value='1';$('clientPaymentNote').value='';
+  toggleInstallments();$('detailsModal').classList.remove('show');$('clientPaymentModal').classList.add('show');
+}
+function toggleInstallments(){$('installmentField').classList.toggle('hidden',$('clientPaymentMethod').value!=='Cartão de crédito')}
+function closeClientPayment(){$('clientPaymentModal').classList.remove('show');if(currentBookingId)$('detailsModal').classList.add('show')}
+function confirmClientPayment(){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  b.status='finalizado';b.paymentMethod=$('clientPaymentMethod').value;
+  b.paymentInstallments=b.paymentMethod==='Cartão de crédito'?Number($('clientInstallments').value):1;
+  b.paymentNote=$('clientPaymentNote').value.trim();b.paidAt=new Date().toISOString();
+  saveLocal();$('clientPaymentModal').classList.remove('show');currentBookingId=null;renderAll();
+}
+
+function renderClients(){
+  const q=($('clientSearch').value||'').toLowerCase();
+  const arr=clients.filter(c=>c.name.toLowerCase().includes(q)||(c.phone||'').includes(q));
+  $('clientsList').innerHTML=arr.length?arr.map(c=>{
+    const hist=bookings.filter(b=>b.client.toLowerCase()===c.name.toLowerCase()&&b.status==='finalizado');
+    const spent=hist.reduce((s,b)=>s+Number(b.price||0),0);
+    const last=[...hist].sort((a,b)=>(b.paidAt||'').localeCompare(a.paidAt||''))[0];
+    return `<div class="list-card" onclick="openClientHistory('${c.id}')">
+      <div class="list-top"><div><div class="list-title">${safe(c.name)}</div><div class="list-sub">${safe(c.phone||'Sem telefone')}</div></div>
+      ${c.phone?`<a class="btn btn-light" onclick="event.stopPropagation()" target="_blank" style="text-decoration:none" href="https://wa.me/55${c.phone.replace(/\D/g,'')}">WhatsApp</a>`:''}</div>
+      <div class="client-kpis"><span class="client-kpi">${hist.length} atendimento${hist.length===1?'':'s'}</span><span class="client-kpi">${brl(spent)} recebido</span>${last?.paymentMethod?`<span class="client-kpi">Último: ${safe(last.paymentMethod)}</span>`:''}</div>
+    </div>`;
+  }).join(''):`<div class="subtle" style="text-align:center;padding:20px">Nenhum cliente cadastrado.</div>`;
+}
 $('clientSearch').oninput=renderClients;
 function quickClient(){const n=prompt('Nome da cliente:');if(!n)return;const p=prompt('Telefone:')||'';clients.push({id:'c'+Date.now(),name:n,phone:p});saveLocal();renderClients()}
-function renderCommissions(){if(currentUser.role==='admin'){$('commissionList').innerHTML=professionals.filter(p=>p.role==='collab').map(p=>{const arr=bookings.filter(b=>b.professionalId===p.id&&b.status==='finalizado'&&!b.commissionPaid);const total=arr.reduce((s,b)=>s+Number(b.price)*Number(b.commission)/100,0);return `<div class="list-card"><div class="list-top"><div><div class="list-title">${p.name}</div><div class="list-sub">${arr.length} atendimentos pendentes</div></div><div class="money">${brl(total)}</div></div><div class="row-btns"><button class="btn btn-pink btn-grow" onclick="payCommission('${p.id}')">Marcar como pago</button></div></div>`}).join('')}else{const arr=bookings.filter(b=>b.professionalId===currentUser.id&&b.status==='finalizado'&&!b.commissionPaid);const total=arr.reduce((s,b)=>s+Number(b.price)*Number(b.commission)/100,0);$('commissionList').innerHTML=`<div class="report-hero"><small>Minha comissão pendente</small><strong>${brl(total)}</strong><small>${arr.length} atendimentos</small></div>`}}
-function payCommission(id){const arr=bookings.filter(b=>b.professionalId===id&&b.status==='finalizado'&&!b.commissionPaid);if(!arr.length)return alert('Nada pendente.');arr.forEach(b=>b.commissionPaid=true);saveLocal();renderAll()}
-function renderProfessionals(){$('professionalsList').innerHTML=professionals.filter(p=>p.role==='collab').map(p=>`<div class="list-card"><div class="list-top"><div style="display:flex;align-items:center;gap:10px"><div class="person-avatar" style="width:34px;height:34px;font-size:13px;background:#8b5cf6">${initials(p.name)}</div><div><div class="list-title">${p.name}</div><div class="list-sub">Comissão ${p.commission}%</div></div></div><span class="active-dot">Ativo</span></div><div class="row-btns"><button class="btn btn-light btn-grow">✎ Editar</button><button class="btn btn-danger">⌫</button></div></div>`).join('')}
+function openClientHistory(id){
+  const c=clients.find(x=>x.id===id);if(!c)return;
+  const hist=bookings.filter(b=>b.client.toLowerCase()===c.name.toLowerCase()&&b.status==='finalizado').sort((a,b)=>(b.paidAt||'').localeCompare(a.paidAt||''));
+  const total=hist.reduce((s,b)=>s+Number(b.price||0),0);
+  $('clientHistoryBody').innerHTML=`<div class="payment-hero"><small>${safe(c.name)}</small><strong>${brl(total)}</strong><small>${hist.length} atendimento${hist.length===1?'':'s'} finalizado${hist.length===1?'':'s'}</small></div>
+    <div class="panel">${hist.length?hist.map(b=>`<div class="payment-row"><div class="payment-left"><div class="payment-icon">♡</div><div><strong>${safe(b.serviceName)}</strong><span>${shortDate(b.date)} • ${safe(b.professionalName)}</span></div></div><div class="payment-value"><strong>${brl(b.price)}</strong><span>${safe(b.paymentMethod||'Não informado')}${b.paymentMethod==='Cartão de crédito'?' • '+b.paymentInstallments+'x':''}</span></div></div>`).join(''):'<div class="subtle" style="text-align:center">Sem atendimentos finalizados.</div>'}</div>`;
+  $('clientHistoryModal').classList.add('show');
+}
+function closeClientHistory(){$('clientHistoryModal').classList.remove('show')}
+
+function renderCommissions(){
+  const isAdmin=currentUser.role==='admin';
+  const relevant=isAdmin?professionals.filter(p=>p.role==='collab'):[currentUser];
+  const pendingBookings=bookings.filter(b=>b.status==='finalizado'&&!b.commissionPaid&&(isAdmin||b.professionalId===currentUser.id));
+  const pendingTotal=pendingBookings.reduce((s,b)=>s+Number(b.price||0)*Number(b.commission||0)/100,0);
+  const history=commissionPayments.filter(p=>isAdmin||p.professionalId===currentUser.id).sort((a,b)=>b.paidAt.localeCompare(a.paidAt));
+
+  $('commissionSummary').innerHTML=`<div class="payment-hero"><small>${isAdmin?'Comissões pendentes da equipe':'Minha comissão pendente'}</small><strong>${brl(pendingTotal)}</strong><small>${pendingBookings.length} atendimento${pendingBookings.length===1?'':'s'} aguardando pagamento</small></div>`;
+
+  $('commissionList').innerHTML=isAdmin?relevant.map(p=>{
+    const arr=bookings.filter(b=>b.professionalId===p.id&&b.status==='finalizado'&&!b.commissionPaid);
+    const total=arr.reduce((s,b)=>s+Number(b.price)*Number(b.commission)/100,0);
+    return `<div class="list-card"><div class="list-top"><div><div class="list-title">${safe(p.name)}</div><div class="list-sub">${arr.length} atendimentos pendentes • comissão padrão ${p.commission}%</div></div><div class="money">${brl(total)}</div></div>
+      <div class="row-btns"><button class="btn btn-pink btn-grow" ${arr.length?'':'disabled style="opacity:.45"'} onclick="openCommissionPayment('${p.id}')">Pagar comissão</button></div></div>`;
+  }).join(''):'';
+
+  $('commissionHistory').innerHTML=history.length?history.map(p=>`
+    <div class="payment-row">
+      <div class="payment-left"><div class="payment-icon">↗</div><div><strong>${safe(p.professionalName)}</strong><span>${new Date(p.paidAt).toLocaleString('pt-BR')} • ${p.bookingIds.length} atendimentos</span></div></div>
+      <div class="payment-value"><strong>${brl(p.amount)}</strong><span>${safe(p.method)}</span></div>
+    </div>`).join(''):`<div class="subtle" style="text-align:center;padding:8px">Nenhum pagamento de comissão registrado.</div>`;
+}
+function openCommissionPayment(id){
+  const p=professionals.find(x=>x.id===id);if(!p)return;
+  const arr=bookings.filter(b=>b.professionalId===id&&b.status==='finalizado'&&!b.commissionPaid);
+  if(!arr.length)return alert('Não há comissão pendente para esta profissional.');
+  const total=arr.reduce((s,b)=>s+Number(b.price)*Number(b.commission)/100,0);
+  currentCommissionProfessional=id;
+  $('commissionPaymentInfo').innerHTML=`<small>Pagamento para ${safe(p.name)}</small><strong>${brl(total)}</strong><small>${arr.length} atendimentos incluídos</small>`;
+  $('commissionPaymentMethod').value='Pix';$('commissionPaymentNote').value='';
+  $('commissionPaymentModal').classList.add('show');
+}
+function closeCommissionPayment(){$('commissionPaymentModal').classList.remove('show');currentCommissionProfessional=null}
+function confirmCommissionPayment(){
+  const id=currentCommissionProfessional,p=professionals.find(x=>x.id===id);if(!p)return;
+  const arr=bookings.filter(b=>b.professionalId===id&&b.status==='finalizado'&&!b.commissionPaid);
+  if(!arr.length)return closeCommissionPayment();
+  const total=arr.reduce((s,b)=>s+Number(b.price)*Number(b.commission)/100,0);
+  const payment={
+    id:'cp'+Date.now(),professionalId:id,professionalName:p.name,amount:total,
+    method:$('commissionPaymentMethod').value,note:$('commissionPaymentNote').value.trim(),
+    paidAt:new Date().toISOString(),bookingIds:arr.map(b=>b.id)
+  };
+  commissionPayments.push(payment);
+  arr.forEach(b=>{b.commissionPaid=true;b.commissionPaymentId=payment.id});
+  saveLocal();closeCommissionPayment();renderAll();
+}
+
+function renderProfessionals(){
+  $('professionalsList').innerHTML=professionals.filter(p=>p.role==='collab').map(p=>`
+    <div class="list-card"><div class="list-top"><div style="display:flex;align-items:center;gap:10px">
+    <div class="person-avatar" style="width:34px;height:34px;font-size:13px;background:#8b5cf6">${initials(p.name)}</div>
+    <div><div class="list-title">${safe(p.name)}</div><div class="list-sub">Comissão ${p.commission}%</div></div></div><span class="active-dot">Ativo</span></div>
+    <div class="row-btns"><button class="btn btn-light btn-grow">✎ Editar</button><button class="btn btn-danger">⌫</button></div></div>`).join('');
+}
 function addProfessional(){alert('Cadastro de profissional será ligado ao Firebase depois.')}
-function renderServices(){$('servicesList').innerHTML=services.map(s=>`<div class="list-card"><div class="list-top"><div><div class="list-title">${s.name}</div><div class="money">${brl(s.price)}</div><div class="list-sub">◷ ${s.duration} minutos · Comissão ${s.commission}%</div></div><span class="active-dot">Ativo</span></div><div class="row-btns"><button class="btn btn-light btn-grow">✎ Editar</button><button class="btn btn-danger">⌫</button></div></div>`).join('')}
+function renderServices(){
+  $('servicesList').innerHTML=services.map(s=>`<div class="list-card"><div class="list-top"><div><div class="list-title">${safe(s.name)}</div>
+  <div class="money">${brl(s.price)}</div><div class="list-sub">◷ ${s.duration} minutos · Comissão ${s.commission}%</div></div><span class="active-dot">Ativo</span></div>
+  <div class="row-btns"><button class="btn btn-light btn-grow">✎ Editar</button><button class="btn btn-danger">⌫</button></div></div>`).join('');
+}
 function addService(){alert('Cadastro de serviço será ligado ao Firebase depois.')}
-function renderReports(){const arr=bookings.filter(b=>b.status==='finalizado');const rev=arr.reduce((s,b)=>s+Number(b.price),0),com=arr.reduce((s,b)=>s+Number(b.price)*Number(b.commission)/100,0);$('repRevenue').textContent=brl(rev);$('repDate').textContent=new Date().toLocaleDateString('pt-BR');$('repClients').textContent=new Set(arr.map(b=>b.client)).size;$('repAppointments').textContent=arr.length;$('repCommission').textContent=brl(com);$('repPaid').textContent=brl(arr.filter(b=>b.commissionPaid).reduce((s,b)=>s+Number(b.price)*Number(b.commission)/100,0));$('repPending').textContent=brl(arr.filter(b=>!b.commissionPaid).reduce((s,b)=>s+Number(b.price)*Number(b.commission)/100,0))}
+
+function renderBreakdown(containerId,items,total){
+  const el=$(containerId);
+  if(!items.length){el.innerHTML='<div class="subtle" style="text-align:center">Sem dados no período.</div>';return}
+  el.innerHTML=items.map(([name,value])=>{
+    const pct=total?Math.round(value/total*100):0;
+    return `<div><div class="break-row"><span>${safe(name)}</span><strong>${brl(value)} • ${pct}%</strong></div><div class="break-bar"><i style="width:${pct}%"></i></div></div>`;
+  }).join('');
+}
+function renderReports(){
+  const arr=bookings.filter(b=>b.status==='finalizado');
+  const rev=arr.reduce((s,b)=>s+Number(b.price),0);
+  const com=arr.reduce((s,b)=>s+Number(b.price)*Number(b.commission)/100,0);
+  $('repRevenue').textContent=brl(rev);$('repDate').textContent=new Date().toLocaleDateString('pt-BR');
+  $('repClients').textContent=new Set(arr.map(b=>b.client)).size;$('repAppointments').textContent=arr.length;$('repCommission').textContent=brl(com);
+  $('repPaid').textContent=brl(arr.filter(b=>b.commissionPaid).reduce((s,b)=>s+Number(b.price)*Number(b.commission)/100,0));
+  $('repPending').textContent=brl(arr.filter(b=>!b.commissionPaid).reduce((s,b)=>s+Number(b.price)*Number(b.commission)/100,0));
+
+  const pm={};arr.forEach(b=>{const k=b.paymentMethod||'Não informado';pm[k]=(pm[k]||0)+Number(b.price||0)});
+  renderBreakdown('repPayments',Object.entries(pm).sort((a,b)=>b[1]-a[1]),rev);
+
+  const cm={};commissionPayments.forEach(p=>{cm[p.method]=(cm[p.method]||0)+Number(p.amount||0)});
+  const ctotal=commissionPayments.reduce((s,p)=>s+Number(p.amount||0),0);
+  renderBreakdown('repCommissionPayments',Object.entries(cm).sort((a,b)=>b[1]-a[1]),ctotal);
+}
+
 buildLogin();$('fab').style.display='none';
 </script>
 </body>
