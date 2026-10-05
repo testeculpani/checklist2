@@ -275,6 +275,39 @@ body{
 .sync-status.connecting{background:#fff7ed;color:#a85b16}
 .sync-status.connecting:before{background:#f59e0b}
 
+
+/* ===== CADASTRO / EDIÇÃO DE PROFISSIONAIS ===== */
+.prof-form-avatar{
+  width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:900;
+  box-shadow:0 8px 18px rgba(109,40,217,.18)
+}
+.prof-form-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.prof-form-head strong{display:block;font-size:14px}
+.prof-form-head span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.switch-row{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border:1px solid var(--line);border-radius:13px;padding:11px 12px;background:#fff
+}
+.switch-row strong{display:block;font-size:11px}
+.switch-row span{display:block;font-size:9px;color:var(--muted);margin-top:2px}
+.switch{
+  position:relative;width:44px;height:25px;flex:none
+}
+.switch input{display:none}
+.switch i{
+  position:absolute;inset:0;border-radius:999px;background:#e8dde1;transition:.18s
+}
+.switch i:after{
+  content:"";position:absolute;width:19px;height:19px;left:3px;top:3px;border-radius:50%;
+  background:#fff;box-shadow:0 2px 7px rgba(0,0,0,.14);transition:.18s
+}
+.switch input:checked+i{background:var(--pink)}
+.switch input:checked+i:after{transform:translateX(19px)}
+.inactive-dot{
+  font-size:9px;color:#8b6f79;background:#f4eef1;padding:4px 7px;border-radius:999px
+}
+
 </style>
 </head>
 <body>
@@ -398,6 +431,44 @@ body{
 <div id="detailsBody"></div><div id="detailsActions" class="actions details-actions"></div>
 </div></div>
 
+<div id="professionalModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2 id="professionalModalTitle">Novo profissional</h2><button class="close" onclick="closeProfessionalModal()">✕</button></div>
+
+<div class="prof-form-head">
+  <div id="professionalAvatarPreview" class="prof-form-avatar">P</div>
+  <div><strong id="professionalFormHeading">Cadastrar profissional</strong><span>Os dados serão salvos no Firebase e aparecerão em todos os celulares.</span></div>
+</div>
+
+<div class="grid2">
+  <div class="field">
+    <label>NOME DO PROFISSIONAL</label>
+    <input id="professionalName" placeholder="Ex.: Thiago">
+  </div>
+  <div class="field">
+    <label>TELEFONE / WHATSAPP</label>
+    <input id="professionalPhone" placeholder="(00) 00000-0000">
+  </div>
+  <div class="field">
+    <label>COMISSÃO PADRÃO (%)</label>
+    <input id="professionalCommission" type="number" min="0" max="100" step="1" value="40">
+  </div>
+  <div class="field">
+    <label>TIPO DE ACESSO</label>
+    <input value="Colaborador" disabled>
+  </div>
+</div>
+
+<div class="switch-row">
+  <div><strong>Profissional ativo</strong><span>Quando ativo, aparece na agenda e na tela de entrada.</span></div>
+  <label class="switch"><input id="professionalActive" type="checkbox" checked><i></i></label>
+</div>
+
+<div class="actions" style="margin-top:14px">
+  <button class="btn btn-light" onclick="closeProfessionalModal()">Cancelar</button>
+  <button class="btn btn-pink" onclick="saveProfessional()">Salvar profissional</button>
+</div>
+</div></div>
+
 <div id="observationModal" class="modal"><div class="sheet">
 <div class="sheet-head"><h2 id="observationModalTitle">Adicionar observação</h2><button class="close" onclick="closeObservationModal()">✕</button></div>
 <div id="observationBookingInfo" class="note-modal-info"></div>
@@ -508,6 +579,7 @@ let selectedProfessional='todos';
 let currentBookingId=null;
 let currentCommissionProfessional=null;
 let currentObservationId=null;
+let currentEditingProfessionalId=null;
 let agendaView='list';
 
 let bookings=JSON.parse(localStorage.getItem('studio_thiago_bookings_cache')||localStorage.getItem('belle_bookings')||'[]');
@@ -665,12 +737,11 @@ function subscribeFirebase(){
         professionals=snap.docs.map(d=>({id:d.id,...d.data()}));
         const order={admin:0,luana:1,ana:2,bruna:3};
         professionals.sort((a,b)=>(order[a.id]??99)-(order[b.id]??99));
+        buildLogin();
         if(currentUser){
           currentUser=professionals.find(p=>p.id===currentUser.id)||currentUser;
           fillSelects();
           renderAll();
-        }else{
-          buildLogin();
         }
       }
     },err=>firebaseListenerError(err))
@@ -716,7 +787,7 @@ async function initFirebase(){
 }
 
 function buildLogin(){
-  $('people').innerHTML=professionals.map(p=>`<button class="person" onclick="login('${p.id}')">
+  $('people').innerHTML=professionals.filter(p=>p.role==='admin'||p.active!==false).map(p=>`<button class="person" onclick="login('${p.id}')">
     <div class="person-avatar">${initials(p.name)}</div><strong>${safe(p.name)}</strong>
     <small>${p.role==='admin'?'Administradora':'Colaboradora'}</small></button>`).join('');
 }
@@ -761,7 +832,9 @@ function goScreen(name,btn){
 }
 
 function fillSelects(){
-  const allowed=currentUser.role==='admin'?professionals:professionals.filter(p=>p.id===currentUser.id);
+  const allowed=currentUser.role==='admin'
+    ? professionals.filter(p=>p.role==='admin'||p.active!==false)
+    : professionals.filter(p=>p.id===currentUser.id);
   $('bProfessional').innerHTML=allowed.map(p=>`<option value="${p.id}">${safe(p.name)}</option>`).join('');
   $('bTime').innerHTML=times.map(t=>`<option value="${t}">${t}</option>`).join('');
   $('bService').innerHTML=services.map(s=>`<option value="${s.id}">${safe(s.name)}</option>`).join('');
@@ -1178,13 +1251,134 @@ async function confirmCommissionPayment(){
 }
 
 function renderProfessionals(){
-  $('professionalsList').innerHTML=professionals.filter(p=>p.role==='collab').map(p=>`
-    <div class="list-card"><div class="list-top"><div style="display:flex;align-items:center;gap:10px">
-    <div class="person-avatar" style="width:34px;height:34px;font-size:13px;background:#8b5cf6">${initials(p.name)}</div>
-    <div><div class="list-title">${safe(p.name)}</div><div class="list-sub">Comissão ${p.commission}%</div></div></div><span class="active-dot">Ativo</span></div>
-    <div class="row-btns"><button class="btn btn-light btn-grow">✎ Editar</button><button class="btn btn-danger">⌫</button></div></div>`).join('');
+  const arr=professionals.filter(p=>p.role==='collab');
+  $('professionalsList').innerHTML=arr.length?arr.map(p=>`
+    <div class="list-card">
+      <div class="list-top">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="person-avatar" style="width:34px;height:34px;font-size:13px;background:#8b5cf6">${initials(p.name)}</div>
+          <div>
+            <div class="list-title">${safe(p.name)}</div>
+            <div class="list-sub">${p.phone?safe(p.phone)+' • ':''}Comissão ${Number(p.commission||0)}%</div>
+          </div>
+        </div>
+        <span class="${p.active===false?'inactive-dot':'active-dot'}">${p.active===false?'Inativo':'Ativo'}</span>
+      </div>
+      <div class="row-btns">
+        <button class="btn btn-light btn-grow" onclick="editProfessional('${p.id}')">✎ Editar</button>
+        <button class="btn btn-danger" onclick="removeProfessional('${p.id}')" title="Excluir ou desativar">⌫</button>
+      </div>
+    </div>`).join(''):`<div class="report-placeholder">Nenhum profissional cadastrado.</div>`;
 }
-function addProfessional(){alert('Cadastro de profissional será ligado ao Firebase depois.')}
+
+function addProfessional(){
+  currentEditingProfessionalId=null;
+  $('professionalModalTitle').textContent='Novo profissional';
+  $('professionalFormHeading').textContent='Cadastrar profissional';
+  $('professionalName').value='';
+  $('professionalPhone').value='';
+  $('professionalCommission').value='40';
+  $('professionalActive').checked=true;
+  $('professionalAvatarPreview').textContent='P';
+  $('professionalName').oninput=updateProfessionalAvatar;
+  $('professionalModal').classList.add('show');
+  setTimeout(()=>$('professionalName').focus(),120);
+}
+
+function editProfessional(id){
+  const p=professionals.find(x=>x.id===id);if(!p)return;
+  currentEditingProfessionalId=id;
+  $('professionalModalTitle').textContent='Editar profissional';
+  $('professionalFormHeading').textContent='Editar '+p.name;
+  $('professionalName').value=p.name||'';
+  $('professionalPhone').value=p.phone||'';
+  $('professionalCommission').value=Number(p.commission??40);
+  $('professionalActive').checked=p.active!==false;
+  $('professionalAvatarPreview').textContent=initials(p.name||'P');
+  $('professionalName').oninput=updateProfessionalAvatar;
+  $('professionalModal').classList.add('show');
+  setTimeout(()=>$('professionalName').focus(),120);
+}
+
+function updateProfessionalAvatar(){
+  const name=$('professionalName').value.trim();
+  $('professionalAvatarPreview').textContent=name?initials(name):'P';
+}
+
+function closeProfessionalModal(){
+  $('professionalModal').classList.remove('show');
+  currentEditingProfessionalId=null;
+}
+
+async function saveProfessional(){
+  const name=$('professionalName').value.trim();
+  const phone=$('professionalPhone').value.trim();
+  const commission=Number($('professionalCommission').value);
+  const active=$('professionalActive').checked;
+
+  if(!name){alert('Informe o nome do profissional.');return}
+  if(Number.isNaN(commission)||commission<0||commission>100){
+    alert('A comissão deve ficar entre 0% e 100%.');return;
+  }
+
+  const id=currentEditingProfessionalId||('prof_'+Date.now());
+  const old=professionals.find(p=>p.id===id);
+  const data={
+    id,
+    name,
+    phone,
+    commission,
+    active,
+    role:'collab',
+    createdAt:old?.createdAt||new Date().toISOString(),
+    updatedAt:new Date().toISOString()
+  };
+
+  if(old)Object.assign(old,data);
+  else professionals.push(data);
+
+  buildLogin();
+  fillSelects();
+  renderProfessionals();
+  renderAgenda();
+  closeProfessionalModal();
+
+  try{
+    await cloudReplace('profissionais',id,data);
+    setSyncStatus('online','Online');
+  }catch(err){
+    console.error(err);
+    setSyncStatus('error','Erro ao salvar');
+    alert('Não foi possível salvar o profissional no Firebase. Confira as regras do Firestore.');
+  }
+}
+
+async function removeProfessional(id){
+  const p=professionals.find(x=>x.id===id);if(!p)return;
+  const related=bookings.filter(b=>b.professionalId===id);
+
+  if(related.length){
+    const ok=confirm(`${p.name} possui ${related.length} agendamento(s) no histórico. Para não perder o histórico, o profissional será apenas DESATIVADO. Deseja continuar?`);
+    if(!ok)return;
+    p.active=false;
+    p.updatedAt=new Date().toISOString();
+    renderProfessionals();buildLogin();fillSelects();renderAgenda();
+    try{await cloudReplace('profissionais',id,p);}
+    catch(err){console.error(err);setSyncStatus('error','Erro ao salvar');}
+    return;
+  }
+
+  if(!confirm(`Excluir ${p.name} definitivamente?`))return;
+  professionals=professionals.filter(x=>x.id!==id);
+  renderProfessionals();buildLogin();fillSelects();renderAgenda();
+
+  try{
+    if(firebaseReady)await db.collection('profissionais').doc(id).delete();
+  }catch(err){
+    console.error(err);setSyncStatus('error','Erro ao excluir');
+    alert('Não foi possível excluir no Firebase.');
+  }
+}
 function renderServices(){
   $('servicesList').innerHTML=services.map(s=>`<div class="list-card"><div class="list-top"><div><div class="list-title">${safe(s.name)}</div>
   <div class="money">${brl(s.price)}</div><div class="list-sub">◷ ${s.duration} minutos · Comissão ${s.commission}%</div></div><span class="active-dot">Ativo</span></div>
