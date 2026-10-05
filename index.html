@@ -308,6 +308,37 @@ body{
   font-size:9px;color:#8b6f79;background:#f4eef1;padding:4px 7px;border-radius:999px
 }
 
+
+/* ===== PIN DE ACESSO ===== */
+.pin-sheet{max-width:420px}
+.pin-user-card{
+  display:flex;align-items:center;gap:11px;padding:11px 12px;margin-bottom:13px;
+  border:1px solid var(--line);border-radius:14px;background:#fff9fb
+}
+.pin-user-avatar{
+  width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--pink),#b72167);
+  color:white;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;
+  box-shadow:0 7px 17px rgba(233,45,111,.19)
+}
+.pin-user-card strong{display:block;font-size:13px}
+.pin-user-card span{display:block;color:var(--muted);font-size:9px;margin-top:2px}
+.pin-input{
+  width:100%;height:58px;border:1px solid var(--line);border-radius:14px;background:#fff;
+  text-align:center;font-size:25px;font-weight:900;letter-spacing:12px;padding-left:12px;outline:none
+}
+.pin-input:focus{border-color:#ed9bb8;box-shadow:0 0 0 4px rgba(233,45,111,.08)}
+.pin-error{
+  min-height:17px;text-align:center;color:#be123c;font-size:10px;font-weight:800;margin-top:7px
+}
+.pin-help{font-size:9px;color:var(--muted);text-align:center;line-height:1.4;margin-top:7px}
+.pin-field-note{
+  font-size:9px;color:var(--muted);line-height:1.35;margin-top:5px
+}
+.pin-admin-badge{
+  display:inline-flex;align-items:center;gap:4px;background:#fff1f2;color:#be123c;
+  border:1px solid #fecdd3;border-radius:999px;padding:4px 7px;font-size:8px;font-weight:900
+}
+
 </style>
 </head>
 <body>
@@ -399,10 +430,17 @@ body{
 <section id="screen-config" class="screen">
 <div class="title-row"><div style="display:flex;align-items:center;gap:8px"><button class="back" onclick="goScreen('mais')">‹</button><h1>Configurações</h1></div></div>
 <div class="setting-box"><div class="field"><label>Nome do salão</label><input value="Studio Thiago Hair"></div></div>
-<div class="setting-box"><h3>PIN da administradora</h3><div class="field"><label>PIN de acesso (4 dígitos)</label><input value="1234"></div></div>
+<div class="setting-box">
+<h3>PIN da administradora</h3>
+<div class="field">
+  <label>NOVO PIN DE ACESSO (4 DÍGITOS)</label>
+  <input id="adminPinInput" type="password" inputmode="numeric" maxlength="4" placeholder="••••">
+  <div class="pin-field-note">Deixe em branco para manter o PIN atual. Somente a administradora consegue alterar PINs.</div>
+</div>
+</div>
 <div class="setting-box"><h3>Horário de funcionamento</h3><div class="grid2"><div class="field"><label>Abertura</label><input type="time" value="08:00"></div><div class="field"><label>Fechamento</label><input type="time" value="18:00"></div><div class="field"><label>Almoço início</label><input type="time" value="12:00"></div><div class="field"><label>Almoço fim</label><input type="time" value="13:00"></div></div></div>
 <div class="setting-box"><h3>Dias de funcionamento</h3><div class="day-row"><button class="day-btn">Dom</button><button class="day-btn active">Seg</button><button class="day-btn active">Ter</button><button class="day-btn active">Qua</button><button class="day-btn active">Qui</button><button class="day-btn active">Sex</button><button class="day-btn active">Sáb</button></div></div>
-<button class="save-wide">Salvar configurações</button>
+<button class="save-wide" onclick="saveAdminSettings()">Salvar configurações</button>
 </section>
 </main>
 <button id="fab" class="fab" onclick="openBooking()">+</button><nav id="bottom" class="bottom"></nav>
@@ -431,6 +469,21 @@ body{
 <div id="detailsBody"></div><div id="detailsActions" class="actions details-actions"></div>
 </div></div>
 
+<div id="pinModal" class="modal"><div class="sheet pin-sheet">
+<div class="sheet-head"><h2>Digite seu PIN</h2><button class="close" onclick="closePinModal()">✕</button></div>
+<div id="pinUserCard" class="pin-user-card"></div>
+<div class="field">
+  <label>PIN DE 4 DÍGITOS</label>
+  <input id="loginPinInput" class="pin-input" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••">
+  <div id="pinError" class="pin-error"></div>
+  <div class="pin-help">O PIN é individual. Se precisar trocar, solicite à administração.</div>
+</div>
+<div class="actions">
+  <button class="btn btn-light" onclick="closePinModal()">Cancelar</button>
+  <button class="btn btn-pink" onclick="confirmPinLogin()">Entrar</button>
+</div>
+</div></div>
+
 <div id="professionalModal" class="modal"><div class="sheet">
 <div class="sheet-head"><h2 id="professionalModalTitle">Novo profissional</h2><button class="close" onclick="closeProfessionalModal()">✕</button></div>
 
@@ -455,6 +508,15 @@ body{
   <div class="field">
     <label>TIPO DE ACESSO</label>
     <input value="Colaborador" disabled>
+  </div>
+  <div class="field">
+    <label>PIN DE ACESSO (4 DÍGITOS)</label>
+    <input id="professionalPin" type="password" inputmode="numeric" maxlength="4" placeholder="Ex.: 2580">
+    <div id="professionalPinHint" class="pin-field-note">Obrigatório para novo profissional.</div>
+  </div>
+  <div class="field">
+    <label>PERMISSÃO</label>
+    <div style="padding-top:8px"><span class="pin-admin-badge">🔒 PIN definido pela administração</span></div>
   </div>
 </div>
 
@@ -517,6 +579,8 @@ body{
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
+const DEFAULT_PIN_HASH = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
+
 const firebaseConfig = {
   apiKey: "AIzaSyBMY_HP2McL-j5cMC3nsw9N53eEgZxE4_U",
   authDomain: "studio-74a7d.firebaseapp.com",
@@ -551,10 +615,10 @@ async function cloudReplace(collection,id,data){
   await db.collection(collection).doc(String(id)).set(firestoreClean(data));
 }
 let professionals=[
-{id:'admin',name:'Simples E Direto Informática',role:'admin',commission:0},
-{id:'luana',name:'Luana',role:'collab',commission:40},
-{id:'ana',name:'Ana',role:'collab',commission:40},
-{id:'bruna',name:'Bruna',role:'collab',commission:40}
+{id:'admin',name:'Simples E Direto Informática',role:'admin',commission:0,active:true,pinHash:DEFAULT_PIN_HASH},
+{id:'luana',name:'Luana',role:'collab',commission:40,active:true,pinHash:DEFAULT_PIN_HASH},
+{id:'ana',name:'Ana',role:'collab',commission:40,active:true,pinHash:DEFAULT_PIN_HASH},
+{id:'bruna',name:'Bruna',role:'collab',commission:40,active:true,pinHash:DEFAULT_PIN_HASH}
 ];
 
 let services=[
@@ -580,6 +644,7 @@ let currentBookingId=null;
 let currentCommissionProfessional=null;
 let currentObservationId=null;
 let currentEditingProfessionalId=null;
+let pendingLoginUserId=null;
 let agendaView='list';
 
 let bookings=JSON.parse(localStorage.getItem('studio_thiago_bookings_cache')||localStorage.getItem('belle_bookings')||'[]');
@@ -631,6 +696,13 @@ function timeToMin(t){const [h,m]=t.split(':').map(Number);return h*60+m}
 function shortDate(key){return parseKey(key).toLocaleDateString('pt-BR')}
 function fullDate(key){return parseKey(key).toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'})}
 function safe(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+async function sha256(text){
+  const data=new TextEncoder().encode(String(text));
+  const hash=await crypto.subtle.digest('SHA-256',data);
+  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function validPin(pin){return /^\d{4}$/.test(String(pin||''))}
+
 function bookingNotes(b){return Array.isArray(b.observations)?b.observations:[]}
 function latestNote(b){
   const arr=bookingNotes(b);
@@ -734,7 +806,13 @@ function subscribeFirebase(){
   unsubscribeFirebase.push(
     db.collection('profissionais').onSnapshot(snap=>{
       if(!snap.empty){
-        professionals=snap.docs.map(d=>({id:d.id,...d.data()}));
+        professionals=snap.docs.map(d=>({id:d.id,active:true,pinHash:DEFAULT_PIN_HASH,...d.data()}));
+        snap.docs.forEach(d=>{
+          const data=d.data();
+          if(!data.pinHash){
+            db.collection('profissionais').doc(d.id).set({pinHash:DEFAULT_PIN_HASH},{merge:true}).catch(console.error);
+          }
+        });
         const order={admin:0,luana:1,ana:2,bruna:3};
         professionals.sort((a,b)=>(order[a.id]??99)-(order[b.id]??99));
         buildLogin();
@@ -787,10 +865,49 @@ async function initFirebase(){
 }
 
 function buildLogin(){
-  $('people').innerHTML=professionals.filter(p=>p.role==='admin'||p.active!==false).map(p=>`<button class="person" onclick="login('${p.id}')">
+  $('people').innerHTML=professionals.filter(p=>p.role==='admin'||p.active!==false).map(p=>`<button class="person" onclick="requestPin('${p.id}')">
     <div class="person-avatar">${initials(p.name)}</div><strong>${safe(p.name)}</strong>
     <small>${p.role==='admin'?'Administradora':'Colaboradora'}</small></button>`).join('');
 }
+
+function requestPin(id){
+  const user=professionals.find(p=>p.id===id);if(!user)return;
+  pendingLoginUserId=id;
+  $('pinUserCard').innerHTML=`<div class="pin-user-avatar">${initials(user.name)}</div>
+    <div><strong>${safe(user.name)}</strong><span>${user.role==='admin'?'Administradora':'Colaboradora'}</span></div>`;
+  $('loginPinInput').value='';
+  $('pinError').textContent='';
+  $('pinModal').classList.add('show');
+  setTimeout(()=>$('loginPinInput').focus(),120);
+}
+
+function closePinModal(){
+  $('pinModal').classList.remove('show');
+  pendingLoginUserId=null;
+  $('loginPinInput').value='';
+  $('pinError').textContent='';
+}
+
+async function confirmPinLogin(){
+  const user=professionals.find(p=>p.id===pendingLoginUserId);if(!user)return;
+  const pin=$('loginPinInput').value.trim();
+  if(!validPin(pin)){
+    $('pinError').textContent='Digite exatamente 4 números.';
+    return;
+  }
+  const hash=await sha256(pin);
+  const expected=user.pinHash||DEFAULT_PIN_HASH;
+  if(hash!==expected){
+    $('pinError').textContent='PIN incorreto.';
+    $('loginPinInput').value='';
+    $('loginPinInput').focus();
+    return;
+  }
+  $('pinModal').classList.remove('show');
+  pendingLoginUserId=null;
+  login(user.id);
+}
+
 function login(id){
   currentUser=professionals.find(p=>p.id===id);
   selectedProfessional=currentUser.role==='admin'?'todos':currentUser.id;
@@ -800,7 +917,13 @@ function login(id){
   $('panelLabel').textContent=currentUser.role==='admin'?'Painel da administradora':'Meu painel';
   buildNav();fillSelects();renderAll();
 }
-function logout(){currentUser=null;$('app').classList.add('hidden');$('login').classList.remove('hidden')}
+
+function logout(){
+  currentUser=null;
+  $('app').classList.add('hidden');
+  $('login').classList.remove('hidden');
+  buildLogin();
+}
 
 function buildNav(){
   if(currentUser.role==='admin'){
@@ -1250,6 +1373,39 @@ async function confirmCommissionPayment(){
   closeCommissionPayment();renderAll();
 }
 
+async function saveAdminSettings(){
+  if(currentUser?.role!=='admin'){
+    alert('Somente a administradora pode alterar configurações e PINs.');
+    return;
+  }
+
+  const pin=$('adminPinInput').value.trim();
+  if(pin&&!validPin(pin)){
+    alert('O PIN da administradora deve ter exatamente 4 números.');
+    return;
+  }
+
+  if(pin){
+    const admin=professionals.find(p=>p.role==='admin');
+    if(!admin){alert('Usuário administrador não encontrado.');return}
+    admin.pinHash=await sha256(pin);
+    admin.updatedAt=new Date().toISOString();
+    try{
+      await cloudSet('profissionais',admin.id,admin);
+      $('adminPinInput').value='';
+      setSyncStatus('online','Online');
+      alert('PIN da administradora atualizado com sucesso.');
+    }catch(err){
+      console.error(err);
+      setSyncStatus('error','Erro ao salvar');
+      alert('Não foi possível alterar o PIN no Firebase.');
+      return;
+    }
+  }else{
+    alert('Configurações salvas. O PIN atual foi mantido.');
+  }
+}
+
 function renderProfessionals(){
   const arr=professionals.filter(p=>p.role==='collab');
   $('professionalsList').innerHTML=arr.length?arr.map(p=>`
@@ -1272,12 +1428,15 @@ function renderProfessionals(){
 }
 
 function addProfessional(){
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode cadastrar profissionais.');return}
   currentEditingProfessionalId=null;
   $('professionalModalTitle').textContent='Novo profissional';
   $('professionalFormHeading').textContent='Cadastrar profissional';
   $('professionalName').value='';
   $('professionalPhone').value='';
   $('professionalCommission').value='40';
+  $('professionalPin').value='';
+  $('professionalPinHint').textContent='Obrigatório para novo profissional.';
   $('professionalActive').checked=true;
   $('professionalAvatarPreview').textContent='P';
   $('professionalName').oninput=updateProfessionalAvatar;
@@ -1286,6 +1445,7 @@ function addProfessional(){
 }
 
 function editProfessional(id){
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode editar profissionais e PINs.');return}
   const p=professionals.find(x=>x.id===id);if(!p)return;
   currentEditingProfessionalId=id;
   $('professionalModalTitle').textContent='Editar profissional';
@@ -1293,6 +1453,8 @@ function editProfessional(id){
   $('professionalName').value=p.name||'';
   $('professionalPhone').value=p.phone||'';
   $('professionalCommission').value=Number(p.commission??40);
+  $('professionalPin').value='';
+  $('professionalPinHint').textContent='Deixe em branco para manter o PIN atual.';
   $('professionalActive').checked=p.active!==false;
   $('professionalAvatarPreview').textContent=initials(p.name||'P');
   $('professionalName').oninput=updateProfessionalAvatar;
@@ -1311,10 +1473,12 @@ function closeProfessionalModal(){
 }
 
 async function saveProfessional(){
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode alterar profissionais e PINs.');return}
   const name=$('professionalName').value.trim();
   const phone=$('professionalPhone').value.trim();
   const commission=Number($('professionalCommission').value);
   const active=$('professionalActive').checked;
+  const pin=$('professionalPin').value.trim();
 
   if(!name){alert('Informe o nome do profissional.');return}
   if(Number.isNaN(commission)||commission<0||commission>100){
@@ -1323,12 +1487,24 @@ async function saveProfessional(){
 
   const id=currentEditingProfessionalId||('prof_'+Date.now());
   const old=professionals.find(p=>p.id===id);
+
+  if(!old&&!validPin(pin)){
+    alert('Defina um PIN de acesso com exatamente 4 números para o novo profissional.');
+    return;
+  }
+  if(pin&&!validPin(pin)){
+    alert('O PIN deve ter exatamente 4 números.');
+    return;
+  }
+
+  const pinHash=pin?await sha256(pin):(old?.pinHash||DEFAULT_PIN_HASH);
   const data={
     id,
     name,
     phone,
     commission,
     active,
+    pinHash,
     role:'collab',
     createdAt:old?.createdAt||new Date().toISOString(),
     updatedAt:new Date().toISOString()
@@ -1354,6 +1530,7 @@ async function saveProfessional(){
 }
 
 async function removeProfessional(id){
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode excluir ou desativar profissionais.');return}
   const p=professionals.find(x=>x.id===id);if(!p)return;
   const related=bookings.filter(b=>b.professionalId===id);
 
@@ -1413,6 +1590,13 @@ function renderReports(){
 
 buildLogin();
 $('fab').style.display='none';
+$('loginPinInput').addEventListener('input',e=>{
+  e.target.value=e.target.value.replace(/\D/g,'').slice(0,4);
+  $('pinError').textContent='';
+  if(e.target.value.length===4)confirmPinLogin();
+});
+$('professionalPin').addEventListener('input',e=>e.target.value=e.target.value.replace(/\D/g,'').slice(0,4));
+$('adminPinInput').addEventListener('input',e=>e.target.value=e.target.value.replace(/\D/g,'').slice(0,4));
 initFirebase();
 </script>
 </body>
