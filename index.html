@@ -217,13 +217,55 @@ body{
 }
 .detail-note.admin .note-label{color:#be123c;opacity:1}
 
+
+/* ===== HISTÓRICO / NOVAS OBSERVAÇÕES ===== */
+.note-history{margin-top:12px}
+.note-history-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px
+}
+.note-history-head strong{font-size:12px}
+.note-count{
+  min-width:22px;height:22px;padding:0 7px;border-radius:999px;background:#f7eef2;
+  color:#8b6673;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900
+}
+.note-item{
+  position:relative;margin-top:7px;padding:10px 11px;border-radius:12px;
+  border:1px solid #f0e0e6;background:#fff9fb;color:#654e57;font-size:11px;line-height:1.42
+}
+.note-item.admin{
+  background:#fff1f2;border-color:#fda4af;color:#a61b2b;
+}
+.note-meta{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px;
+  font-size:8px;opacity:.72
+}
+.note-edit{
+  border:none;background:rgba(255,255,255,.78);color:inherit;border-radius:8px;
+  padding:4px 7px;font-size:8px;font-weight:900
+}
+.details-actions{flex-wrap:wrap}
+.details-actions .btn-note{
+  flex:1 0 100%;background:#fff7fa;color:var(--pink);border:1px solid #f4cfdb
+}
+.note-modal-info{
+  padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:#fff9fb;
+  margin-bottom:11px
+}
+.note-modal-info strong{display:block;font-size:12px}
+.note-modal-info span{display:block;color:var(--muted);font-size:9px;margin-top:3px}
+.note-admin-warning{
+  display:none;margin-top:7px;padding:8px 9px;border-radius:10px;background:#fff1f2;
+  border:1px solid #fecdd3;color:#b42332;font-size:9px;font-weight:800;line-height:1.35
+}
+.note-admin-warning.show{display:block}
+
 </style>
 </head>
 <body>
-<section id="login" class="login"><div class="login-inner"><div class="login-logo"><div class="logo-icon">✦</div><strong>Belle Salão</strong></div><h1>Quem é você?</h1><p>Toque no seu nome para entrar</p><div id="people" class="people"></div></div></section>
+<section id="login" class="login"><div class="login-inner"><div class="login-logo"><div class="logo-icon">✦</div><strong>Studio Thiago Hair</strong></div><h1>Quem é você?</h1><p>Toque no seu nome para entrar</p><div id="people" class="people"></div></div></section>
 
 <div id="app" class="app hidden">
-<header class="top"><div class="logo"><div class="logo-icon">✦</div><span>Belle</span></div><div class="userbox"><div class="usertext"><strong id="topName"></strong><span id="topRole"></span></div><button class="logout" onclick="logout()">↪</button></div></header>
+<header class="top"><div class="logo"><div class="logo-icon">✦</div><span>Studio Thiago Hair</span></div><div class="userbox"><div class="usertext"><strong id="topName"></strong><span id="topRole"></span></div><button class="logout" onclick="logout()">↪</button></div></header>
 <main class="page">
 <section id="screen-home" class="screen active">
 <div class="hello"><small id="panelLabel">Painel da administradora</small><h2 id="homeDate"></h2></div>
@@ -307,7 +349,7 @@ body{
 
 <section id="screen-config" class="screen">
 <div class="title-row"><div style="display:flex;align-items:center;gap:8px"><button class="back" onclick="goScreen('mais')">‹</button><h1>Configurações</h1></div></div>
-<div class="setting-box"><div class="field"><label>Nome do salão</label><input value="Belle Salão"></div></div>
+<div class="setting-box"><div class="field"><label>Nome do salão</label><input value="Studio Thiago Hair"></div></div>
 <div class="setting-box"><h3>PIN da administradora</h3><div class="field"><label>PIN de acesso (4 dígitos)</label><input value="1234"></div></div>
 <div class="setting-box"><h3>Horário de funcionamento</h3><div class="grid2"><div class="field"><label>Abertura</label><input type="time" value="08:00"></div><div class="field"><label>Fechamento</label><input type="time" value="18:00"></div><div class="field"><label>Almoço início</label><input type="time" value="12:00"></div><div class="field"><label>Almoço fim</label><input type="time" value="13:00"></div></div></div>
 <div class="setting-box"><h3>Dias de funcionamento</h3><div class="day-row"><button class="day-btn">Dom</button><button class="day-btn active">Seg</button><button class="day-btn active">Ter</button><button class="day-btn active">Qua</button><button class="day-btn active">Qui</button><button class="day-btn active">Sex</button><button class="day-btn active">Sáb</button></div></div>
@@ -337,7 +379,21 @@ body{
 
 <div id="detailsModal" class="modal"><div class="sheet">
 <div class="sheet-head"><h2>Atendimento</h2><button class="close" onclick="closeDetails()">✕</button></div>
-<div id="detailsBody"></div><div id="detailsActions" class="actions"></div>
+<div id="detailsBody"></div><div id="detailsActions" class="actions details-actions"></div>
+</div></div>
+
+<div id="observationModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2 id="observationModalTitle">Adicionar observação</h2><button class="close" onclick="closeObservationModal()">✕</button></div>
+<div id="observationBookingInfo" class="note-modal-info"></div>
+<div class="field">
+  <label>OBSERVAÇÃO</label>
+  <textarea id="newObservationText" class="note-box" placeholder="Digite uma nova observação sobre este agendamento..."></textarea>
+  <div id="newObservationWarning" class="note-admin-warning">⚠ Esta observação será destacada em vermelho para a profissional porque foi adicionada pela administração.</div>
+</div>
+<div class="actions">
+  <button class="btn btn-light" onclick="closeObservationModal()">Cancelar</button>
+  <button class="btn btn-pink" onclick="saveNewObservation()">Salvar observação</button>
+</div>
 </div></div>
 
 <div id="clientPaymentModal" class="modal"><div class="sheet">
@@ -400,24 +456,40 @@ let currentDate=new Date();
 let selectedProfessional='todos';
 let currentBookingId=null;
 let currentCommissionProfessional=null;
+let currentObservationId=null;
 let agendaView='list';
 
 let bookings=JSON.parse(localStorage.getItem('belle_bookings')||'[]');
 let clients=JSON.parse(localStorage.getItem('belle_clients')||'[]');
 let commissionPayments=JSON.parse(localStorage.getItem('belle_commission_payments')||'[]');
 
-bookings=bookings.map(b=>({
-  paymentMethod:'',
-  paymentInstallments:1,
-  paymentNote:'',
-  paidAt:null,
-  commissionPaid:false,
-  commissionPaymentId:null,
-  observation:'',
-  observationByAdmin:false,
-  observationAuthor:'',
-  ...b
-}));
+bookings=bookings.map(b=>{
+  const history=Array.isArray(b.observations)?[...b.observations]:[];
+  if(!history.length&&b.observation){
+    history.push({
+      id:'legacy-'+(b.id||Date.now()),
+      text:b.observation,
+      byAdmin:Boolean(b.observationByAdmin),
+      author:b.observationAuthor||'',
+      authorId:b.observationByAdmin?'admin':(b.professionalId||''),
+      createdAt:b.createdAt||null
+    });
+  }
+  return {
+    paymentMethod:'',
+    paymentInstallments:1,
+    paymentNote:'',
+    paidAt:null,
+    commissionPaid:false,
+    commissionPaymentId:null,
+    observation:'',
+    observationByAdmin:false,
+    observationAuthor:'',
+    observations:history,
+    ...b,
+    observations:history
+  };
+});
 
 const $=id=>document.getElementById(id);
 
@@ -435,6 +507,41 @@ function timeToMin(t){const [h,m]=t.split(':').map(Number);return h*60+m}
 function shortDate(key){return parseKey(key).toLocaleDateString('pt-BR')}
 function fullDate(key){return parseKey(key).toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'})}
 function safe(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function bookingNotes(b){return Array.isArray(b.observations)?b.observations:[]}
+function latestNote(b){
+  const arr=bookingNotes(b);
+  return arr.length?arr[arr.length-1]:null;
+}
+function noteDate(n){
+  if(!n?.createdAt)return '';
+  const d=new Date(n.createdAt);
+  return Number.isNaN(d.getTime())?'':d.toLocaleString('pt-BR');
+}
+function canEditNote(n){
+  return Boolean(currentUser&&n&&n.authorId===currentUser.id);
+}
+function renderAgendaNote(b){
+  const n=latestNote(b);
+  if(!n||!n.text)return '';
+  return `<div class="agenda-note ${n.byAdmin?'admin':''}">
+    <span class="note-label">${n.byAdmin?'Observação da administração':'Observação'}</span>${safe(n.text)}
+  </div>`;
+}
+function renderObservationHistory(b){
+  const arr=bookingNotes(b);
+  if(!arr.length)return `<div class="note-history"><div class="note-history-head"><strong>Observações</strong><span class="note-count">0</span></div><div class="subtle">Nenhuma observação neste agendamento.</div></div>`;
+  return `<div class="note-history">
+    <div class="note-history-head"><strong>Observações</strong><span class="note-count">${arr.length}</span></div>
+    ${arr.map(n=>`<div class="note-item ${n.byAdmin?'admin':''}">
+      <span class="note-label">${n.byAdmin?'⚠ Observação da administração':'Observação'}</span>
+      ${safe(n.text)}
+      <div class="note-meta">
+        <span>${safe(n.author||'Usuário')}${noteDate(n)?' • '+noteDate(n):''}</span>
+        ${canEditNote(n)?`<button class="note-edit" onclick="event.stopPropagation();openObservationModal('${n.id}')">Editar</button>`:''}
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
 
 function buildLogin(){
   $('people').innerHTML=professionals.map(p=>`<button class="person" onclick="login('${p.id}')">
@@ -562,7 +669,7 @@ function renderGeneral(){
         <div class="list-sub">${safe(b.professionalName)} • ${safe(b.serviceName)} ${b.status==='finalizado'&&b.paymentMethod?'• '+safe(b.paymentMethod):''}</div></div>
         <div style="text-align:right"><div class="price">${brl(b.price)}</div><span class="badge ${b.status}">${cap(b.status)}</span></div>
       </div>
-      ${b.observation?`<div class="agenda-note ${b.observationByAdmin?'admin':''}"><span class="note-label">${b.observationByAdmin?'Observação da administração':'Observação'}</span>${safe(b.observation)}</div>`:''}
+      ${renderAgendaNote(b)}
     </div>`).join(''):`<div class="report-placeholder">Nenhum agendamento neste dia.</div>`;
 }
 function renderTimeline(profId){
@@ -576,7 +683,7 @@ function renderTimeline(profId){
       <div class="appt-meta">${safe(b.serviceName)} • ${b.duration} min ${b.status==='finalizado'&&b.paymentMethod?'• '+safe(b.paymentMethod):''}</div></div>
       <div><div class="price">${brl(b.price)}</div><span class="badge ${b.status}">${cap(b.status)}</span></div>
       </div>
-      ${b.observation?`<div class="agenda-note ${b.observationByAdmin?'admin':''}"><span class="note-label">${b.observationByAdmin?'Observação da administração':'Observação'}</span>${safe(b.observation)}</div>`:''}
+      ${renderAgendaNote(b)}
       </div></div>`;
     }else if(b){
       html+=`<div class="slot"><div class="slot-time">${t}</div><div class="slot-box" style="opacity:.45"><div class="appt-meta">Continuação de ${safe(b.client)}</div></div></div>`;
@@ -662,6 +769,14 @@ function saveBooking(){
   if(conflict){alert('Esse horário já está ocupado.');return}
   const observation=$('bObservation').value.trim();
   const observationByAdmin=Boolean(observation)&&currentUser.role==='admin'&&profId!==currentUser.id;
+  const firstNote=observation?[{
+    id:'n'+Date.now(),
+    text:observation,
+    byAdmin:observationByAdmin,
+    author:currentUser.name,
+    authorId:currentUser.id,
+    createdAt:new Date().toISOString()
+  }]:[];
   bookings.push({
     id:String(Date.now()),date:dateKey(),client:name,phone:$('bPhone').value.trim(),
     professionalId:profId,professionalName:professionals.find(p=>p.id===profId).name,time,
@@ -669,6 +784,7 @@ function saveBooking(){
     observation,
     observationByAdmin,
     observationAuthor:observation?currentUser.name:'',
+    observations:firstNote,
     paymentMethod:'',paymentInstallments:1,paymentNote:'',paidAt:null,
     commissionPaid:false,commissionPaymentId:null
   });
@@ -695,14 +811,65 @@ function openDetails(id){
         <div class="detail-cell"><small>Comissão</small><strong>${b.commission}% • ${brl(Number(b.price)*Number(b.commission)/100)}</strong></div>
         ${payment}
       </div>
-      ${b.observation?`<div class="detail-note ${b.observationByAdmin?'admin':''}"><span class="note-label">${b.observationByAdmin?'⚠ Observação da administração':'Observação do agendamento'}</span>${safe(b.observation)}${b.observationAuthor?`<div style="font-size:9px;margin-top:5px;opacity:.72">Por: ${safe(b.observationAuthor)}</div>`:''}</div>`:''}
+      ${renderObservationHistory(b)}
       ${b.paymentNote?`<div class="soft-box" style="margin-top:9px"><div class="list-sub">Observação do pagamento</div><div style="font-size:11px;margin-top:3px">${safe(b.paymentNote)}</div></div>`:''}
     </div>`;
   $('detailsActions').innerHTML=b.status==='agendado'
-    ? `<button class="btn btn-danger" onclick="cancelCurrent()">Cancelar</button><button class="btn btn-pink" onclick="finishCurrent()">Finalizar e receber</button>`
-    : `<button class="btn btn-light" onclick="closeDetails()">Fechar</button>`;
+    ? `<button class="btn btn-note" onclick="openObservationModal()">＋ Adicionar observação</button><button class="btn btn-danger" onclick="cancelCurrent()">Cancelar</button><button class="btn btn-pink" onclick="finishCurrent()">Finalizar e receber</button>`
+    : `<button class="btn btn-note" onclick="openObservationModal()">＋ Adicionar observação</button><button class="btn btn-light" onclick="closeDetails()">Fechar</button>`;
   $('detailsModal').classList.add('show');
 }
+function openObservationModal(noteId=null){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  currentObservationId=noteId;
+  const note=noteId?bookingNotes(b).find(n=>n.id===noteId):null;
+  $('observationModalTitle').textContent=note?'Editar observação':'Adicionar observação';
+  $('observationBookingInfo').innerHTML=`<strong>${safe(b.client)} • ${b.time}</strong><span>${safe(b.professionalName)} • ${safe(b.serviceName)}</span>`;
+  $('newObservationText').value=note?.text||'';
+  const willBeAdmin=currentUser.role==='admin'&&b.professionalId!==currentUser.id;
+  $('newObservationWarning').classList.toggle('show',willBeAdmin);
+  $('detailsModal').classList.remove('show');
+  $('observationModal').classList.add('show');
+  setTimeout(()=>$('newObservationText').focus(),120);
+}
+function closeObservationModal(){
+  $('observationModal').classList.remove('show');
+  currentObservationId=null;
+  if(currentBookingId)openDetails(currentBookingId);
+}
+function saveNewObservation(){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  const text=$('newObservationText').value.trim();
+  if(!text){alert('Digite a observação.');return}
+  if(!Array.isArray(b.observations))b.observations=[];
+  if(currentObservationId){
+    const note=b.observations.find(n=>n.id===currentObservationId);
+    if(!note)return;
+    if(note.authorId!==currentUser.id){alert('Você só pode editar uma observação criada por você.');return}
+    note.text=text;
+    note.editedAt=new Date().toISOString();
+  }else{
+    const byAdmin=currentUser.role==='admin'&&b.professionalId!==currentUser.id;
+    b.observations.push({
+      id:'n'+Date.now(),
+      text,
+      byAdmin,
+      author:currentUser.name,
+      authorId:currentUser.id,
+      createdAt:new Date().toISOString()
+    });
+  }
+  const last=latestNote(b);
+  b.observation=last?.text||'';
+  b.observationByAdmin=Boolean(last?.byAdmin);
+  b.observationAuthor=last?.author||'';
+  saveLocal();
+  $('observationModal').classList.remove('show');
+  currentObservationId=null;
+  renderAll();
+  openDetails(currentBookingId);
+}
+
 function closeDetails(){$('detailsModal').classList.remove('show');currentBookingId=null}
 function cancelCurrent(){
   const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
