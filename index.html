@@ -339,6 +339,37 @@ body{
   border:1px solid #fecdd3;border-radius:999px;padding:4px 7px;font-size:8px;font-weight:900
 }
 
+
+/* ===== SERVIÇOS / RELATÓRIOS / CONFIGURAÇÕES FUNCIONAIS ===== */
+.service-form-head{
+  display:flex;align-items:center;gap:12px;padding:11px 12px;margin-bottom:12px;
+  border:1px solid var(--line);border-radius:14px;background:#fff9fb
+}
+.service-form-icon{
+  width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#ef3367,#c91d5c);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;
+  box-shadow:0 8px 18px rgba(233,45,111,.18)
+}
+.service-form-head strong{display:block;font-size:13px}
+.service-form-head span{display:block;color:var(--muted);font-size:9px;margin-top:3px}
+.custom-report{
+  margin:-2px 0 11px;padding:11px;border:1px solid var(--line);border-radius:13px;background:#fff
+}
+.custom-report .grid2{align-items:end}
+.custom-report .btn{width:100%}
+.config-saved{
+  display:none;margin:9px 0 0;padding:9px 10px;border-radius:10px;background:#ecfdf5;
+  border:1px solid #bbf7d0;color:#137b50;font-size:10px;font-weight:800;text-align:center
+}
+.config-saved.show{display:block}
+.closed-day{
+  border:1px dashed #eccfd9;background:#fff8fa;border-radius:15px;padding:24px;text-align:center;
+  color:#987783;font-size:11px
+}
+.closed-day strong{display:block;color:#624d55;font-size:13px;margin-bottom:4px}
+.service-inactive{opacity:.68}
+.report-period-label{font-size:9px;color:rgba(255,255,255,.8)}
+
 </style>
 </head>
 <body>
@@ -419,17 +450,31 @@ body{
 
 <section id="screen-relatorios" class="screen">
 <div class="title-row"><div style="display:flex;align-items:center;gap:8px"><button class="back" onclick="goScreen('mais')">‹</button><h1>Relatórios</h1></div></div>
-<div class="period"><button class="active">Hoje</button><button>Semana</button><button>Mês</button><button>Personalizado</button></div>
-<div class="report-hero"><small>↗ Faturamento do período</small><strong id="repRevenue">R$ 0,00</strong><small id="repDate"></small></div>
+<div class="period">
+  <button class="active" data-period="today" onclick="setReportPeriod('today')">Hoje</button>
+  <button data-period="week" onclick="setReportPeriod('week')">Semana</button>
+  <button data-period="month" onclick="setReportPeriod('month')">Mês</button>
+  <button data-period="custom" onclick="setReportPeriod('custom')">Personalizado</button>
+</div>
+<div id="customReportRange" class="custom-report hidden">
+  <div class="grid2">
+    <div class="field"><label>DATA INICIAL</label><input id="reportStartDate" type="date"></div>
+    <div class="field"><label>DATA FINAL</label><input id="reportEndDate" type="date"></div>
+  </div>
+  <button class="btn btn-pink" onclick="applyCustomReport()">Aplicar período</button>
+</div>
+<div class="report-hero"><small>↗ Faturamento do período</small><strong id="repRevenue">R$ 0,00</strong><small id="repDate" class="report-period-label"></small></div>
 <div class="grid3"><div class="card-stat" style="text-align:center"><small>Clientes</small><strong id="repClients">0</strong></div><div class="card-stat" style="text-align:center"><small>Atendimentos</small><strong id="repAppointments">0</strong></div><div class="card-stat" style="text-align:center"><small>Comissão</small><strong id="repCommission">R$ 0,00</strong></div></div>
 <div class="grid2" style="margin-top:10px"><div class="card-stat"><small style="color:var(--green)">Comissão paga</small><strong id="repPaid">R$ 0,00</strong></div><div class="card-stat"><small style="color:var(--orange)">Comissão pendente</small><strong id="repPending">R$ 0,00</strong></div></div>
 <div class="section"><div class="section-head"><h3>Formas de pagamento dos clientes</h3></div><div id="repPayments" class="panel payment-breakdown"></div></div>
 <div class="section"><div class="section-head"><h3>Pagamentos de comissão</h3></div><div id="repCommissionPayments" class="panel payment-breakdown"></div></div>
+<div class="section"><div class="section-head"><h3>Faturamento por profissional</h3></div><div id="repByProfessional" class="panel payment-breakdown"></div></div>
+<div class="section"><div class="section-head"><h3>Faturamento por serviço</h3></div><div id="repByService" class="panel payment-breakdown"></div></div>
 </section>
 
 <section id="screen-config" class="screen">
 <div class="title-row"><div style="display:flex;align-items:center;gap:8px"><button class="back" onclick="goScreen('mais')">‹</button><h1>Configurações</h1></div></div>
-<div class="setting-box"><div class="field"><label>Nome do salão</label><input value="Studio Thiago Hair"></div></div>
+<div class="setting-box"><div class="field"><label>Nome do salão</label><input id="salonNameInput" value="Studio Thiago Hair"></div></div>
 <div class="setting-box">
 <h3>PIN da administradora</h3>
 <div class="field">
@@ -438,9 +483,27 @@ body{
   <div class="pin-field-note">Deixe em branco para manter o PIN atual. Somente a administradora consegue alterar PINs.</div>
 </div>
 </div>
-<div class="setting-box"><h3>Horário de funcionamento</h3><div class="grid2"><div class="field"><label>Abertura</label><input type="time" value="08:00"></div><div class="field"><label>Fechamento</label><input type="time" value="18:00"></div><div class="field"><label>Almoço início</label><input type="time" value="12:00"></div><div class="field"><label>Almoço fim</label><input type="time" value="13:00"></div></div></div>
-<div class="setting-box"><h3>Dias de funcionamento</h3><div class="day-row"><button class="day-btn">Dom</button><button class="day-btn active">Seg</button><button class="day-btn active">Ter</button><button class="day-btn active">Qua</button><button class="day-btn active">Qui</button><button class="day-btn active">Sex</button><button class="day-btn active">Sáb</button></div></div>
+<div class="setting-box"><h3>Horário de funcionamento</h3>
+<div class="grid2">
+  <div class="field"><label>Abertura</label><input id="openTimeInput" type="time" value="08:00"></div>
+  <div class="field"><label>Fechamento</label><input id="closeTimeInput" type="time" value="18:00"></div>
+  <div class="field"><label>Almoço início</label><input id="lunchStartInput" type="time" value="12:00"></div>
+  <div class="field"><label>Almoço fim</label><input id="lunchEndInput" type="time" value="13:00"></div>
+</div>
+<div class="pin-field-note">Os horários da agenda são recalculados automaticamente em intervalos de 30 minutos.</div>
+</div>
+<div class="setting-box"><h3>Dias de funcionamento</h3>
+<div class="day-row">
+  <button class="day-btn" data-day="0" onclick="toggleWorkingDay(this)">Dom</button>
+  <button class="day-btn active" data-day="1" onclick="toggleWorkingDay(this)">Seg</button>
+  <button class="day-btn active" data-day="2" onclick="toggleWorkingDay(this)">Ter</button>
+  <button class="day-btn active" data-day="3" onclick="toggleWorkingDay(this)">Qua</button>
+  <button class="day-btn active" data-day="4" onclick="toggleWorkingDay(this)">Qui</button>
+  <button class="day-btn active" data-day="5" onclick="toggleWorkingDay(this)">Sex</button>
+  <button class="day-btn active" data-day="6" onclick="toggleWorkingDay(this)">Sáb</button>
+</div></div>
 <button class="save-wide" onclick="saveAdminSettings()">Salvar configurações</button>
+<div id="configSaved" class="config-saved">✓ Configurações salvas e sincronizadas.</div>
 </section>
 </main>
 <button id="fab" class="fab" onclick="openBooking()">+</button><nav id="bottom" class="bottom"></nav>
@@ -467,6 +530,35 @@ body{
 <div id="detailsModal" class="modal"><div class="sheet">
 <div class="sheet-head"><h2>Atendimento</h2><button class="close" onclick="closeDetails()">✕</button></div>
 <div id="detailsBody"></div><div id="detailsActions" class="actions details-actions"></div>
+</div></div>
+
+<div id="serviceModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2 id="serviceModalTitle">Novo serviço</h2><button class="close" onclick="closeServiceModal()">✕</button></div>
+<div class="service-form-head">
+  <div class="service-form-icon">✂</div>
+  <div><strong id="serviceFormHeading">Cadastrar serviço</strong><span>O serviço ficará disponível no agendamento de todos os celulares.</span></div>
+</div>
+<div class="grid2">
+  <div class="field"><label>NOME DO SERVIÇO</label><input id="serviceNameInput" placeholder="Ex.: Corte feminino"></div>
+  <div class="field"><label>VALOR (R$)</label><input id="servicePriceInput" type="number" min="0" step="0.01" placeholder="0,00"></div>
+  <div class="field"><label>DURAÇÃO</label>
+    <select id="serviceDurationInput">
+      <option value="30">30 minutos</option><option value="60">1 hora</option>
+      <option value="90">1h30</option><option value="120">2 horas</option>
+      <option value="150">2h30</option><option value="180">3 horas</option>
+      <option value="210">3h30</option><option value="240">4 horas</option>
+    </select>
+  </div>
+  <div class="field"><label>COMISSÃO (%)</label><input id="serviceCommissionInput" type="number" min="0" max="100" step="1" value="40"></div>
+</div>
+<div class="switch-row">
+  <div><strong>Serviço ativo</strong><span>Serviços inativos não aparecem em novos agendamentos.</span></div>
+  <label class="switch"><input id="serviceActiveInput" type="checkbox" checked><i></i></label>
+</div>
+<div class="actions" style="margin-top:14px">
+  <button class="btn btn-light" onclick="closeServiceModal()">Cancelar</button>
+  <button class="btn btn-pink" onclick="saveService()">Salvar serviço</button>
+</div>
 </div></div>
 
 <div id="pinModal" class="modal"><div class="sheet pin-sheet">
@@ -630,12 +722,6 @@ let services=[
 ];
 
 const times=[];
-for(let h=8;h<=18;h++){
-  for(let m of [0,30]){
-    if(h===18&&m===30)continue;
-    times.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
-  }
-}
 
 let currentUser=null;
 let currentDate=new Date();
@@ -644,8 +730,22 @@ let currentBookingId=null;
 let currentCommissionProfessional=null;
 let currentObservationId=null;
 let currentEditingProfessionalId=null;
+let currentEditingServiceId=null;
 let pendingLoginUserId=null;
 let agendaView='list';
+let reportPeriod='today';
+let reportCustomStart='';
+let reportCustomEnd='';
+
+let salonSettings={
+  id:'geral',
+  salonName:'Studio Thiago Hair',
+  openTime:'08:00',
+  closeTime:'18:00',
+  lunchStart:'12:00',
+  lunchEnd:'13:00',
+  workingDays:[1,2,3,4,5,6]
+};
 
 let bookings=JSON.parse(localStorage.getItem('studio_thiago_bookings_cache')||localStorage.getItem('belle_bookings')||'[]');
 let clients=JSON.parse(localStorage.getItem('studio_thiago_clients_cache')||localStorage.getItem('belle_clients')||'[]');
@@ -702,6 +802,46 @@ async function sha256(text){
   return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 function validPin(pin){return /^\d{4}$/.test(String(pin||''))}
+function minutesToTime(min){
+  return `${String(Math.floor(min/60)).padStart(2,'0')}:${String(min%60).padStart(2,'0')}`;
+}
+function rebuildTimes(){
+  times.length=0;
+  const start=timeToMin(salonSettings.openTime||'08:00');
+  const end=timeToMin(salonSettings.closeTime||'18:00');
+  const lunchStart=salonSettings.lunchStart?timeToMin(salonSettings.lunchStart):null;
+  const lunchEnd=salonSettings.lunchEnd?timeToMin(salonSettings.lunchEnd):null;
+  for(let m=start;m<end;m+=30){
+    const inLunch=lunchStart!==null&&lunchEnd!==null&&lunchStart<lunchEnd&&m>=lunchStart&&m<lunchEnd;
+    if(!inLunch)times.push(minutesToTime(m));
+  }
+}
+function isWorkingDay(date=currentDate){
+  const days=Array.isArray(salonSettings.workingDays)?salonSettings.workingDays:[1,2,3,4,5,6];
+  return days.includes(date.getDay());
+}
+function toggleWorkingDay(btn){
+  if(currentUser?.role!=='admin')return;
+  btn.classList.toggle('active');
+}
+function renderSettings(){
+  if(!$('salonNameInput'))return;
+  $('salonNameInput').value=salonSettings.salonName||'Studio Thiago Hair';
+  $('openTimeInput').value=salonSettings.openTime||'08:00';
+  $('closeTimeInput').value=salonSettings.closeTime||'18:00';
+  $('lunchStartInput').value=salonSettings.lunchStart||'';
+  $('lunchEndInput').value=salonSettings.lunchEnd||'';
+  document.querySelectorAll('.day-btn[data-day]').forEach(btn=>{
+    btn.classList.toggle('active',(salonSettings.workingDays||[]).includes(Number(btn.dataset.day)));
+  });
+}
+function applySalonBrand(){
+  const name=salonSettings.salonName||'Studio Thiago Hair';
+  document.title=name;
+  const brand=document.querySelector('.top .logo span');
+  if(brand)brand.textContent=name;
+}
+
 
 function bookingNotes(b){return Array.isArray(b.observations)?b.observations:[]}
 function latestNote(b){
@@ -828,8 +968,19 @@ function subscribeFirebase(){
   unsubscribeFirebase.push(
     db.collection('servicos').onSnapshot(snap=>{
       if(!snap.empty){
-        services=snap.docs.map(d=>({id:d.id,...d.data()}));
+        services=snap.docs.map(d=>({id:d.id,active:true,...d.data()}));
         if(currentUser){fillSelects();renderServices();}
+      }
+    },err=>firebaseListenerError(err))
+  );
+
+  unsubscribeFirebase.push(
+    db.collection('configuracoes').doc('geral').onSnapshot(doc=>{
+      if(doc.exists){
+        salonSettings={...salonSettings,...doc.data(),id:'geral'};
+        rebuildTimes();
+        applySalonBrand();
+        if(currentUser){fillSelects();renderSettings();renderAgenda();}
       }
     },err=>firebaseListenerError(err))
   );
@@ -844,8 +995,10 @@ async function initFirebase(){
   setSyncStatus('connecting','Conectando');
   try{
     // Cria automaticamente as coleções base na primeira execução.
+    rebuildTimes();
     await seedCollectionIfEmpty('profissionais',professionals);
     await seedCollectionIfEmpty('servicos',services);
+    await seedCollectionIfEmpty('configuracoes',[salonSettings]);
 
     // Se havia dados no protótipo local e o Firestore ainda está vazio,
     // leva esses dados para a nuvem uma única vez.
@@ -952,6 +1105,9 @@ function goScreen(name,btn){
   if(name==='agenda')renderAgenda();
   if(name==='comissoes')renderCommissions();
   if(name==='clientes')renderClients();
+  if(name==='servicos')renderServices();
+  if(name==='relatorios')renderReports();
+  if(name==='config')renderSettings();
 }
 
 function fillSelects(){
@@ -960,8 +1116,10 @@ function fillSelects(){
     : professionals.filter(p=>p.id===currentUser.id);
   $('bProfessional').innerHTML=allowed.map(p=>`<option value="${p.id}">${safe(p.name)}</option>`).join('');
   $('bTime').innerHTML=times.map(t=>`<option value="${t}">${t}</option>`).join('');
-  $('bService').innerHTML=services.map(s=>`<option value="${s.id}">${safe(s.name)}</option>`).join('');
-  $('bService').onchange=syncService;syncService();
+  const activeServices=services.filter(s=>s.active!==false);
+  $('bService').innerHTML=activeServices.map(s=>`<option value="${s.id}">${safe(s.name)}</option>`).join('');
+  $('bService').onchange=syncService;
+  if(activeServices.length)syncService();
 }
 function syncService(){
   const s=services.find(x=>x.id===$('bService').value);if(!s)return;
@@ -969,7 +1127,7 @@ function syncService(){
 }
 function renderAll(){
   renderDates();renderHome();renderAgenda();renderClients();renderCommissions();
-  renderProfessionals();renderServices();renderReports();
+  renderProfessionals();renderServices();renderReports();renderSettings();
 }
 function renderDates(){
   const fmt=currentDate.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
@@ -1029,6 +1187,10 @@ function renderAgenda(){
 function setPro(id){selectedProfessional=id;renderAgenda()}
 
 function renderGeneral(){
+  if(!isWorkingDay(currentDate)){
+    $('timeline').innerHTML=`<div class="closed-day"><strong>Salão fechado neste dia</strong>Este dia está desativado nas configurações de funcionamento.</div>`;
+    return;
+  }
   const arr=scopeBookingsForDate(dateKey()).sort((a,b)=>a.time.localeCompare(b.time));
   $('timeline').innerHTML=arr.length?arr.map(b=>`
     <div class="list-card" onclick="openDetails('${b.id}')">
@@ -1041,6 +1203,10 @@ function renderGeneral(){
     </div>`).join(''):`<div class="report-placeholder">Nenhum agendamento neste dia.</div>`;
 }
 function renderTimeline(profId){
+  if(!isWorkingDay(currentDate)){
+    $('timeline').innerHTML=`<div class="closed-day"><strong>Salão fechado neste dia</strong>Ative este dia em Configurações para liberar horários.</div>`;
+    return;
+  }
   let html='';
   times.forEach(t=>{
     const b=getBookingForSlot(profId,t);
@@ -1112,8 +1278,11 @@ function renderCalendarSummary(){
 }
 
 function openBooking(profId,time){
-  const pid=profId||(currentUser.role==='admin'?(selectedProfessional==='todos'?'luana':selectedProfessional):currentUser.id);
-  $('bName').value='';$('bPhone').value='';$('bProfessional').value=pid;$('bTime').value=time||'08:00';$('bService').value=services[0].id;
+  if(!isWorkingDay(currentDate)){alert('O salão está marcado como fechado neste dia. Altere em Configurações se necessário.');return}
+  const activeServices=services.filter(s=>s.active!==false);
+  if(!activeServices.length){alert('Cadastre ou ative pelo menos um serviço antes de criar um agendamento.');return}
+  const pid=profId||(currentUser.role==='admin'?(selectedProfessional==='todos'?(professionals.find(p=>p.role==='collab'&&p.active!==false)?.id||'admin'):selectedProfessional):currentUser.id);
+  $('bName').value='';$('bPhone').value='';$('bProfessional').value=pid;$('bTime').value=time||'08:00';$('bService').value=activeServices[0].id;
   $('bObservation').value='';
   syncService();$('bProfessional').disabled=currentUser.role!=='admin';
   updateObservationHint();
@@ -1385,24 +1554,60 @@ async function saveAdminSettings(){
     return;
   }
 
-  if(pin){
-    const admin=professionals.find(p=>p.role==='admin');
-    if(!admin){alert('Usuário administrador não encontrado.');return}
-    admin.pinHash=await sha256(pin);
-    admin.updatedAt=new Date().toISOString();
-    try{
+  const salonName=$('salonNameInput').value.trim()||'Studio Thiago Hair';
+  const openTime=$('openTimeInput').value;
+  const closeTime=$('closeTimeInput').value;
+  const lunchStart=$('lunchStartInput').value;
+  const lunchEnd=$('lunchEndInput').value;
+  const workingDays=[...document.querySelectorAll('.day-btn[data-day].active')].map(b=>Number(b.dataset.day));
+
+  if(!openTime||!closeTime||timeToMin(openTime)>=timeToMin(closeTime)){
+    alert('Confira os horários de abertura e fechamento.');
+    return;
+  }
+  if(lunchStart&&lunchEnd&&timeToMin(lunchStart)>=timeToMin(lunchEnd)){
+    alert('O início do almoço deve ser antes do fim do almoço.');
+    return;
+  }
+  if(!workingDays.length){
+    alert('Selecione pelo menos um dia de funcionamento.');
+    return;
+  }
+
+  salonSettings={
+    id:'geral',
+    salonName,
+    openTime,
+    closeTime,
+    lunchStart,
+    lunchEnd,
+    workingDays,
+    updatedAt:new Date().toISOString()
+  };
+
+  try{
+    await cloudReplace('configuracoes','geral',salonSettings);
+
+    if(pin){
+      const admin=professionals.find(p=>p.role==='admin');
+      if(!admin){alert('Usuário administrador não encontrado.');return}
+      admin.pinHash=await sha256(pin);
+      admin.updatedAt=new Date().toISOString();
       await cloudSet('profissionais',admin.id,admin);
       $('adminPinInput').value='';
-      setSyncStatus('online','Online');
-      alert('PIN da administradora atualizado com sucesso.');
-    }catch(err){
-      console.error(err);
-      setSyncStatus('error','Erro ao salvar');
-      alert('Não foi possível alterar o PIN no Firebase.');
-      return;
     }
-  }else{
-    alert('Configurações salvas. O PIN atual foi mantido.');
+
+    rebuildTimes();
+    applySalonBrand();
+    fillSelects();
+    renderAgenda();
+    setSyncStatus('online','Online');
+    $('configSaved').classList.add('show');
+    setTimeout(()=>$('configSaved')?.classList.remove('show'),2600);
+  }catch(err){
+    console.error(err);
+    setSyncStatus('error','Erro ao salvar');
+    alert('Não foi possível salvar as configurações no Firebase.');
   }
 }
 
@@ -1557,37 +1762,209 @@ async function removeProfessional(id){
   }
 }
 function renderServices(){
-  $('servicesList').innerHTML=services.map(s=>`<div class="list-card"><div class="list-top"><div><div class="list-title">${safe(s.name)}</div>
-  <div class="money">${brl(s.price)}</div><div class="list-sub">◷ ${s.duration} minutos · Comissão ${s.commission}%</div></div><span class="active-dot">Ativo</span></div>
-  <div class="row-btns"><button class="btn btn-light btn-grow">✎ Editar</button><button class="btn btn-danger">⌫</button></div></div>`).join('');
+  const arr=[...services].sort((a,b)=>(a.active===false)-(b.active===false)||String(a.name).localeCompare(String(b.name)));
+  $('servicesList').innerHTML=arr.length?arr.map(s=>`
+    <div class="list-card ${s.active===false?'service-inactive':''}">
+      <div class="list-top">
+        <div>
+          <div class="list-title">${safe(s.name)}</div>
+          <div class="money">${brl(s.price)}</div>
+          <div class="list-sub">◷ ${Number(s.duration||30)} minutos · Comissão ${Number(s.commission||0)}%</div>
+        </div>
+        <span class="${s.active===false?'inactive-dot':'active-dot'}">${s.active===false?'Inativo':'Ativo'}</span>
+      </div>
+      <div class="row-btns">
+        <button class="btn btn-light btn-grow" onclick="editService('${s.id}')">✎ Editar</button>
+        <button class="btn btn-danger" onclick="removeService('${s.id}')">⌫</button>
+      </div>
+    </div>`).join(''):`<div class="report-placeholder">Nenhum serviço cadastrado.</div>`;
 }
-function addService(){alert('Cadastro de serviço será ligado ao Firebase depois.')}
+
+function addService(){
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode cadastrar serviços.');return}
+  currentEditingServiceId=null;
+  $('serviceModalTitle').textContent='Novo serviço';
+  $('serviceFormHeading').textContent='Cadastrar serviço';
+  $('serviceNameInput').value='';
+  $('servicePriceInput').value='';
+  $('serviceDurationInput').value='30';
+  $('serviceCommissionInput').value='40';
+  $('serviceActiveInput').checked=true;
+  $('serviceModal').classList.add('show');
+  setTimeout(()=>$('serviceNameInput').focus(),120);
+}
+
+function editService(id){
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode editar serviços.');return}
+  const s=services.find(x=>x.id===id);if(!s)return;
+  currentEditingServiceId=id;
+  $('serviceModalTitle').textContent='Editar serviço';
+  $('serviceFormHeading').textContent='Editar '+s.name;
+  $('serviceNameInput').value=s.name||'';
+  $('servicePriceInput').value=Number(s.price||0);
+  $('serviceDurationInput').value=String(s.duration||30);
+  $('serviceCommissionInput').value=Number(s.commission||0);
+  $('serviceActiveInput').checked=s.active!==false;
+  $('serviceModal').classList.add('show');
+}
+
+function closeServiceModal(){
+  $('serviceModal').classList.remove('show');
+  currentEditingServiceId=null;
+}
+
+async function saveService(){
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode alterar serviços.');return}
+  const name=$('serviceNameInput').value.trim();
+  const price=Number($('servicePriceInput').value);
+  const duration=Number($('serviceDurationInput').value);
+  const commission=Number($('serviceCommissionInput').value);
+  const active=$('serviceActiveInput').checked;
+
+  if(!name){alert('Informe o nome do serviço.');return}
+  if(Number.isNaN(price)||price<0){alert('Informe um valor válido.');return}
+  if(!duration||duration<30){alert('Informe uma duração válida.');return}
+  if(Number.isNaN(commission)||commission<0||commission>100){alert('A comissão deve ficar entre 0% e 100%.');return}
+
+  const id=currentEditingServiceId||('serv_'+Date.now());
+  const old=services.find(s=>s.id===id);
+  const data={
+    id,name,price,duration,commission,active,
+    createdAt:old?.createdAt||new Date().toISOString(),
+    updatedAt:new Date().toISOString()
+  };
+
+  if(old)Object.assign(old,data);else services.push(data);
+  renderServices();fillSelects();closeServiceModal();
+
+  try{
+    await cloudReplace('servicos',id,data);
+    setSyncStatus('online','Online');
+  }catch(err){
+    console.error(err);setSyncStatus('error','Erro ao salvar');
+    alert('Não foi possível salvar o serviço no Firebase.');
+  }
+}
+
+async function removeService(id){
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode excluir serviços.');return}
+  const s=services.find(x=>x.id===id);if(!s)return;
+  const related=bookings.filter(b=>b.serviceId===id);
+
+  if(related.length){
+    if(!confirm(`${s.name} já aparece em ${related.length} atendimento(s). Para preservar o histórico, ele será apenas DESATIVADO. Deseja continuar?`))return;
+    s.active=false;s.updatedAt=new Date().toISOString();
+    renderServices();fillSelects();
+    try{await cloudReplace('servicos',id,s);}catch(err){console.error(err);setSyncStatus('error','Erro ao salvar')}
+    return;
+  }
+
+  if(!confirm(`Excluir o serviço "${s.name}" definitivamente?`))return;
+  services=services.filter(x=>x.id!==id);
+  renderServices();fillSelects();
+  try{if(firebaseReady)await db.collection('servicos').doc(id).delete();}
+  catch(err){console.error(err);setSyncStatus('error','Erro ao excluir');alert('Não foi possível excluir o serviço no Firebase.')}
+}
 
 function renderBreakdown(containerId,items,total){
-  const el=$(containerId);
+  const el=$(containerId);if(!el)return;
   if(!items.length){el.innerHTML='<div class="subtle" style="text-align:center">Sem dados no período.</div>';return}
   el.innerHTML=items.map(([name,value])=>{
     const pct=total?Math.round(value/total*100):0;
     return `<div><div class="break-row"><span>${safe(name)}</span><strong>${brl(value)} • ${pct}%</strong></div><div class="break-bar"><i style="width:${pct}%"></i></div></div>`;
   }).join('');
 }
+
+function localDateKey(d){
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function reportRange(){
+  const now=new Date();
+  let start,end,label;
+  if(reportPeriod==='week'){
+    const day=now.getDay();
+    const diff=day===0?-6:1-day;
+    start=new Date(now);start.setDate(now.getDate()+diff);start.setHours(0,0,0,0);
+    end=new Date(start);end.setDate(start.getDate()+6);end.setHours(23,59,59,999);
+    label=`${start.toLocaleDateString('pt-BR')} até ${end.toLocaleDateString('pt-BR')}`;
+  }else if(reportPeriod==='month'){
+    start=new Date(now.getFullYear(),now.getMonth(),1);
+    end=new Date(now.getFullYear(),now.getMonth()+1,0,23,59,59,999);
+    label=now.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  }else if(reportPeriod==='custom'&&reportCustomStart&&reportCustomEnd){
+    start=parseKey(reportCustomStart);start.setHours(0,0,0,0);
+    end=parseKey(reportCustomEnd);end.setHours(23,59,59,999);
+    label=`${start.toLocaleDateString('pt-BR')} até ${end.toLocaleDateString('pt-BR')}`;
+  }else{
+    start=new Date(now);start.setHours(0,0,0,0);
+    end=new Date(now);end.setHours(23,59,59,999);
+    label=now.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  }
+  return {start,end,startKey:localDateKey(start),endKey:localDateKey(end),label};
+}
+
+function setReportPeriod(period){
+  reportPeriod=period;
+  document.querySelectorAll('.period button[data-period]').forEach(b=>b.classList.toggle('active',b.dataset.period===period));
+  $('customReportRange').classList.toggle('hidden',period!=='custom');
+
+  if(period==='custom'){
+    const now=new Date();
+    const first=new Date(now.getFullYear(),now.getMonth(),1);
+    if(!$('reportStartDate').value)$('reportStartDate').value=localDateKey(first);
+    if(!$('reportEndDate').value)$('reportEndDate').value=localDateKey(now);
+    return;
+  }
+  renderReports();
+}
+
+function applyCustomReport(){
+  const start=$('reportStartDate').value,end=$('reportEndDate').value;
+  if(!start||!end){alert('Selecione a data inicial e final.');return}
+  if(start>end){alert('A data inicial não pode ser maior que a data final.');return}
+  reportCustomStart=start;reportCustomEnd=end;reportPeriod='custom';
+  renderReports();
+}
+
 function renderReports(){
-  const arr=bookings.filter(b=>b.status==='finalizado');
-  const rev=arr.reduce((s,b)=>s+Number(b.price),0);
-  const com=arr.reduce((s,b)=>s+Number(b.price)*Number(b.commission)/100,0);
-  $('repRevenue').textContent=brl(rev);$('repDate').textContent=new Date().toLocaleDateString('pt-BR');
-  $('repClients').textContent=new Set(arr.map(b=>b.client)).size;$('repAppointments').textContent=arr.length;$('repCommission').textContent=brl(com);
-  $('repPaid').textContent=brl(arr.filter(b=>b.commissionPaid).reduce((s,b)=>s+Number(b.price)*Number(b.commission)/100,0));
-  $('repPending').textContent=brl(arr.filter(b=>!b.commissionPaid).reduce((s,b)=>s+Number(b.price)*Number(b.commission)/100,0));
+  if(!$('repRevenue'))return;
+  const range=reportRange();
+  document.querySelectorAll('.period button[data-period]').forEach(b=>b.classList.toggle('active',b.dataset.period===reportPeriod));
+  $('customReportRange').classList.toggle('hidden',reportPeriod!=='custom');
+
+  const arr=bookings.filter(b=>b.status==='finalizado'&&b.date>=range.startKey&&b.date<=range.endKey);
+  const rev=arr.reduce((s,b)=>s+Number(b.price||0),0);
+  const com=arr.reduce((s,b)=>s+Number(b.price||0)*Number(b.commission||0)/100,0);
+
+  $('repRevenue').textContent=brl(rev);
+  $('repDate').textContent=cap(range.label);
+  $('repClients').textContent=new Set(arr.map(b=>b.client)).size;
+  $('repAppointments').textContent=arr.length;
+  $('repCommission').textContent=brl(com);
+  $('repPaid').textContent=brl(arr.filter(b=>b.commissionPaid).reduce((s,b)=>s+Number(b.price||0)*Number(b.commission||0)/100,0));
+  $('repPending').textContent=brl(arr.filter(b=>!b.commissionPaid).reduce((s,b)=>s+Number(b.price||0)*Number(b.commission||0)/100,0));
 
   const pm={};arr.forEach(b=>{const k=b.paymentMethod||'Não informado';pm[k]=(pm[k]||0)+Number(b.price||0)});
   renderBreakdown('repPayments',Object.entries(pm).sort((a,b)=>b[1]-a[1]),rev);
 
-  const cm={};commissionPayments.forEach(p=>{cm[p.method]=(cm[p.method]||0)+Number(p.amount||0)});
-  const ctotal=commissionPayments.reduce((s,p)=>s+Number(p.amount||0),0);
+  const periodCommissionPayments=commissionPayments.filter(p=>{
+    if(!p.paidAt)return false;
+    const d=new Date(p.paidAt);if(Number.isNaN(d.getTime()))return false;
+    const k=localDateKey(d);return k>=range.startKey&&k<=range.endKey;
+  });
+  const cm={};periodCommissionPayments.forEach(p=>{cm[p.method||'Não informado']=(cm[p.method||'Não informado']||0)+Number(p.amount||0)});
+  const ctotal=periodCommissionPayments.reduce((s,p)=>s+Number(p.amount||0),0);
   renderBreakdown('repCommissionPayments',Object.entries(cm).sort((a,b)=>b[1]-a[1]),ctotal);
+
+  const prof={};arr.forEach(b=>{prof[b.professionalName||'Sem profissional']=(prof[b.professionalName||'Sem profissional']||0)+Number(b.price||0)});
+  renderBreakdown('repByProfessional',Object.entries(prof).sort((a,b)=>b[1]-a[1]),rev);
+
+  const serv={};arr.forEach(b=>{serv[b.serviceName||'Sem serviço']=(serv[b.serviceName||'Sem serviço']||0)+Number(b.price||0)});
+  renderBreakdown('repByService',Object.entries(serv).sort((a,b)=>b[1]-a[1]),rev);
 }
 
+rebuildTimes();
+applySalonBrand();
 buildLogin();
 $('fab').style.display='none';
 $('loginPinInput').addEventListener('input',e=>{
