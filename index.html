@@ -683,8 +683,6 @@ body{
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
-const DEFAULT_PIN_HASH = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
-
 const firebaseConfig = {
   apiKey: "AIzaSyBMY_HP2McL-j5cMC3nsw9N53eEgZxE4_U",
   authDomain: "studio-74a7d.firebaseapp.com",
@@ -718,21 +716,9 @@ async function cloudReplace(collection,id,data){
   if(!firebaseReady)return;
   await db.collection(collection).doc(String(id)).set(firestoreClean(data));
 }
-let professionals=[
-{id:'admin',name:'Simples E Direto Informática',role:'admin',commission:0,active:true,pinHash:DEFAULT_PIN_HASH},
-{id:'luana',name:'Luana',role:'collab',commission:40,active:true,pinHash:DEFAULT_PIN_HASH},
-{id:'ana',name:'Ana',role:'collab',commission:40,active:true,pinHash:DEFAULT_PIN_HASH},
-{id:'bruna',name:'Bruna',role:'collab',commission:40,active:true,pinHash:DEFAULT_PIN_HASH}
-];
+let professionals=[];
 
-let services=[
-{id:'coloracao',name:'Coloração',price:180,duration:90,commission:40},
-{id:'corte',name:'Corte',price:50,duration:30,commission:40},
-{id:'escova',name:'Escova',price:60,duration:60,commission:40},
-{id:'hidratacao',name:'Hidratação',price:90,duration:60,commission:40},
-{id:'manicure',name:'Manicure',price:40,duration:60,commission:40}
-];
-
+let services=[];
 const times=[];
 
 let currentUser=null;
@@ -751,17 +737,17 @@ let reportCustomEnd='';
 
 let salonSettings={
   id:'geral',
-  salonName:'Studio Thiago Hair',
-  openTime:'08:00',
-  closeTime:'18:00',
-  lunchStart:'12:00',
-  lunchEnd:'13:00',
-  workingDays:[1,2,3,4,5,6]
+  salonName:'',
+  openTime:'',
+  closeTime:'',
+  lunchStart:'',
+  lunchEnd:'',
+  workingDays:[]
 };
 
-let bookings=JSON.parse(localStorage.getItem('studio_thiago_bookings_cache')||localStorage.getItem('belle_bookings')||'[]');
-let clients=JSON.parse(localStorage.getItem('studio_thiago_clients_cache')||localStorage.getItem('belle_clients')||'[]');
-let commissionPayments=JSON.parse(localStorage.getItem('studio_thiago_commission_cache')||localStorage.getItem('belle_commission_payments')||'[]');
+let bookings=[];
+let clients=[];
+let commissionPayments=[];
 
 bookings=bookings.map(b=>{
   const history=Array.isArray(b.observations)?[...b.observations]:[];
@@ -793,12 +779,7 @@ bookings=bookings.map(b=>{
 
 const $=id=>document.getElementById(id);
 
-function saveLocal(){
-  // Cache local: abre rápido e serve como contingência se a internet cair.
-  localStorage.setItem('studio_thiago_bookings_cache',JSON.stringify(bookings));
-  localStorage.setItem('studio_thiago_clients_cache',JSON.stringify(clients));
-  localStorage.setItem('studio_thiago_commission_cache',JSON.stringify(commissionPayments));
-}
+function saveLocal(){ /* Dados persistidos somente no Firebase. */ }
 function dateKey(d=currentDate){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function parseKey(key){const [y,m,d]=key.split('-').map(Number);return new Date(y,m-1,d)}
 function brl(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
@@ -828,8 +809,9 @@ function minutesToTime(min){
 }
 function rebuildTimes(){
   times.length=0;
-  const start=timeToMin(salonSettings.openTime||'08:00');
-  const end=timeToMin(salonSettings.closeTime||'18:00');
+  if(!salonSettings.openTime||!salonSettings.closeTime)return;
+  const start=timeToMin(salonSettings.openTime);
+  const end=timeToMin(salonSettings.closeTime);
   const lunchStart=salonSettings.lunchStart?timeToMin(salonSettings.lunchStart):null;
   const lunchEnd=salonSettings.lunchEnd?timeToMin(salonSettings.lunchEnd):null;
   for(let m=start;m<end;m+=30){
@@ -838,7 +820,7 @@ function rebuildTimes(){
   }
 }
 function isWorkingDay(date=currentDate){
-  const days=Array.isArray(salonSettings.workingDays)?salonSettings.workingDays:[1,2,3,4,5,6];
+  const days=Array.isArray(salonSettings.workingDays)?salonSettings.workingDays:[];
   return days.includes(date.getDay());
 }
 function toggleWorkingDay(btn){
@@ -847,9 +829,9 @@ function toggleWorkingDay(btn){
 }
 function renderSettings(){
   if(!$('salonNameInput'))return;
-  $('salonNameInput').value=salonSettings.salonName||'Studio Thiago Hair';
-  $('openTimeInput').value=salonSettings.openTime||'08:00';
-  $('closeTimeInput').value=salonSettings.closeTime||'18:00';
+  $('salonNameInput').value=salonSettings.salonName||'';
+  $('openTimeInput').value=salonSettings.openTime||'';
+  $('closeTimeInput').value=salonSettings.closeTime||'';
   $('lunchStartInput').value=salonSettings.lunchStart||'';
   $('lunchEndInput').value=salonSettings.lunchEnd||'';
   document.querySelectorAll('.day-btn[data-day]').forEach(btn=>{
@@ -857,10 +839,12 @@ function renderSettings(){
   });
 }
 function applySalonBrand(){
-  const name=salonSettings.salonName||'Studio Thiago Hair';
-  document.title=name;
-  const brand=document.querySelector('.top .logo span');
-  if(brand)brand.textContent=name;
+  const name=salonSettings.salonName||'';
+  if(name){
+    document.title=name;
+    const brand=document.querySelector('.top .logo span');
+    if(brand)brand.textContent=name;
+  }
 }
 
 
@@ -900,23 +884,6 @@ function renderObservationHistory(b){
   </div>`;
 }
 
-
-async function seedCollectionIfEmpty(collection, items){
-  const snap=await db.collection(collection).limit(1).get();
-  if(!snap.empty)return;
-  const batch=db.batch();
-  items.forEach(item=>batch.set(db.collection(collection).doc(String(item.id)),firestoreClean(item)));
-  await batch.commit();
-}
-
-async function migrateLocalCollectionIfCloudEmpty(collection, items){
-  if(!items.length)return;
-  const snap=await db.collection(collection).limit(1).get();
-  if(!snap.empty)return;
-  const batch=db.batch();
-  items.forEach(item=>batch.set(db.collection(collection).doc(String(item.id)),firestoreClean(item)));
-  await batch.commit();
-}
 
 function normalizeBooking(b){
   const history=Array.isArray(b.observations)?b.observations:[];
@@ -966,21 +933,28 @@ function subscribeFirebase(){
 
   unsubscribeFirebase.push(
     db.collection('profissionais').onSnapshot(snap=>{
-      if(!snap.empty){
-        professionals=snap.docs.map(d=>({id:d.id,active:true,pinHash:DEFAULT_PIN_HASH,...d.data()}));
-        snap.docs.forEach(d=>{
-          const data=d.data();
-          if(!data.pinHash){
-            db.collection('profissionais').doc(d.id).set({pinHash:DEFAULT_PIN_HASH},{merge:true}).catch(console.error);
-          }
-        });
-        const order={admin:0,luana:1,ana:2,bruna:3};
-        professionals.sort((a,b)=>(order[a.id]??99)-(order[b.id]??99));
-        buildLogin();
-        if(currentUser){
-          currentUser=professionals.find(p=>p.id===currentUser.id)||currentUser;
+      professionals=snap.docs.map(d=>({id:d.id,active:true,...d.data()}));
+
+      professionals.sort((a,b)=>{
+        if(a.role==='admin'&&b.role!=='admin')return -1;
+        if(b.role==='admin'&&a.role!=='admin')return 1;
+        return String(a.name||'').localeCompare(String(b.name||''),'pt-BR');
+      });
+
+      buildLogin();
+
+      if(currentUser){
+        const refreshed=professionals.find(p=>p.id===currentUser.id);
+        if(refreshed){
+          currentUser=refreshed;
           fillSelects();
           renderAll();
+        }else{
+          // If the currently logged-in user was deleted in Firebase,
+          // immediately return to login rather than keeping a ghost session.
+          currentUser=null;
+          $('app').classList.add('hidden');
+          $('login').classList.remove('hidden');
         }
       }
     },err=>firebaseListenerError(err))
@@ -988,21 +962,19 @@ function subscribeFirebase(){
 
   unsubscribeFirebase.push(
     db.collection('servicos').onSnapshot(snap=>{
-      if(!snap.empty){
-        services=snap.docs.map(d=>({id:d.id,active:true,...d.data()}));
-        if(currentUser){fillSelects();renderServices();}
-      }
+      services=snap.docs.map(d=>({id:d.id,active:true,...d.data()}));
+      if(currentUser){fillSelects();renderServices();}
     },err=>firebaseListenerError(err))
   );
 
   unsubscribeFirebase.push(
     db.collection('configuracoes').doc('geral').onSnapshot(doc=>{
-      if(doc.exists){
-        salonSettings={...salonSettings,...doc.data(),id:'geral'};
-        rebuildTimes();
-        applySalonBrand();
-        if(currentUser){fillSelects();renderSettings();renderAgenda();}
-      }
+      salonSettings=doc.exists
+        ? {id:'geral',...doc.data()}
+        : {id:'geral',salonName:'',openTime:'',closeTime:'',lunchStart:'',lunchEnd:'',workingDays:[]};
+      rebuildTimes();
+      applySalonBrand();
+      if(currentUser){fillSelects();renderSettings();renderAgenda();}
     },err=>firebaseListenerError(err))
   );
 }
@@ -1015,18 +987,6 @@ function firebaseListenerError(err){
 async function initFirebase(){
   setSyncStatus('connecting','Conectando');
   try{
-    // Cria automaticamente as coleções base na primeira execução.
-    rebuildTimes();
-    await seedCollectionIfEmpty('profissionais',professionals);
-    await seedCollectionIfEmpty('servicos',services);
-    await seedCollectionIfEmpty('configuracoes',[salonSettings]);
-
-    // Se havia dados no protótipo local e o Firestore ainda está vazio,
-    // leva esses dados para a nuvem uma única vez.
-    await migrateLocalCollectionIfCloudEmpty('agendamentos',bookings);
-    await migrateLocalCollectionIfCloudEmpty('clientes',clients);
-    await migrateLocalCollectionIfCloudEmpty('pagamentosComissao',commissionPayments);
-
     firebaseReady=true;
     subscribeFirebase();
     setSyncStatus('online','Online');
@@ -1034,14 +994,16 @@ async function initFirebase(){
     console.error('Falha ao iniciar Firebase:',err);
     firebaseReady=false;
     setSyncStatus('error','Firebase bloqueado');
-    // O app continua abrindo pelo cache local para facilitar diagnóstico.
   }
 }
 
 function buildLogin(){
-  $('people').innerHTML=professionals.filter(p=>p.role==='admin'||p.active!==false).map(p=>`<button class="person" onclick="requestPin('${p.id}')">
-    <div class="person-avatar">${initials(p.name)}</div><strong>${safe(p.name)}</strong>
-    <small>${p.role==='admin'?'Administradora':'Colaboradora'}</small></button>`).join('');
+  const active=professionals.filter(p=>p.role==='admin'||p.active!==false);
+  $('people').innerHTML=active.length
+    ? active.map(p=>`<button class="person" onclick="requestPin('${p.id}')">
+        <div class="person-avatar">${initials(p.name)}</div><strong>${safe(p.name)}</strong>
+        <small>${p.role==='admin'?'Administradora':'Colaboradora'}</small></button>`).join('')
+    : `<div class="report-placeholder" style="grid-column:1/-1">Nenhum usuário ativo cadastrado.</div>`;
 }
 
 function requestPin(id){
@@ -1069,8 +1031,12 @@ async function confirmPinLogin(){
     $('pinError').textContent='Digite exatamente 4 números.';
     return;
   }
+  if(!user.pinHash){
+    $('pinError').textContent='PIN ainda não configurado para este usuário.';
+    return;
+  }
   const hash=await sha256(pin);
-  const expected=user.pinHash||DEFAULT_PIN_HASH;
+  const expected=user.pinHash;
   if(hash!==expected){
     $('pinError').textContent='PIN incorreto.';
     $('loginPinInput').value='';
@@ -1318,6 +1284,10 @@ function renderCalendarSummary(){
 }
 
 function openBooking(profId,time){
+  if(!salonSettings.openTime||!salonSettings.closeTime||!Array.isArray(salonSettings.workingDays)||!salonSettings.workingDays.length){
+    alert('Configure os dias e horários de funcionamento antes de criar agendamentos.');
+    return;
+  }
   if(!isWorkingDay(currentDate)){alert('O salão está marcado como fechado neste dia. Altere em Configurações se necessário.');return}
   const activeServices=services.filter(s=>s.active!==false);
   if(!activeServices.length){alert('Cadastre ou ative pelo menos um serviço antes de criar um agendamento.');return}
@@ -1763,7 +1733,11 @@ async function saveProfessional(){
     return;
   }
 
-  const pinHash=pin?await sha256(pin):(old?.pinHash||DEFAULT_PIN_HASH);
+  const pinHash=pin?await sha256(pin):(old?.pinHash||'');
+  if(!pinHash){
+    alert('Este profissional ainda não possui PIN. Defina um PIN de 4 números.');
+    return;
+  }
   const data={
     id,
     name,
@@ -2026,7 +2000,7 @@ function renderReports(){
 
 rebuildTimes();
 applySalonBrand();
-buildLogin();
+$('people').innerHTML=`<div class="report-placeholder" style="grid-column:1/-1">Carregando usuários...</div>`;
 $('fab').style.display='none';
 $('loginPinInput').addEventListener('input',e=>{
   e.target.value=e.target.value.replace(/\D/g,'').slice(0,4);
