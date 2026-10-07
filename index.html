@@ -382,10 +382,95 @@ body{
 .status-info-box.cancelado{background:#fff1f2;border:1px solid #fecdd3;color:#be123c}
 .status-info-box.nao_compareceu{background:#fff7ed;border:1px solid #fed7aa;color:#c2410c}
 
+
+/* ===== LOGIN GERAL DO STUDIO (FIREBASE AUTH) ===== */
+.auth-screen{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 18% 0%,rgba(233,45,111,.12),transparent 28%),
+    linear-gradient(180deg,#fff7fa 0%,#fff 42%,#fffdfd 100%);
+  display:flex;align-items:center;justify-content:center;padding:22px
+}
+.auth-card{
+  width:100%;max-width:430px;background:#fff;border:1px solid var(--line);
+  border-radius:26px;padding:24px;box-shadow:0 22px 60px rgba(77,35,51,.10)
+}
+.auth-brand{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:22px}
+.auth-brand .logo-icon{width:42px;height:42px;border-radius:14px;font-size:20px}
+.auth-brand strong{font-family:Georgia,serif;font-size:27px}
+.auth-card h1{font-family:Georgia,serif;text-align:center;font-size:23px;margin:0 0 6px}
+.auth-card>p{text-align:center;color:var(--muted);font-size:11px;line-height:1.45;margin:0 0 20px}
+.auth-field{margin-bottom:11px}
+.auth-field label{display:block;font-size:9px;font-weight:900;color:#806873;margin-bottom:5px;letter-spacing:.04em}
+.auth-field input{
+  width:100%;height:46px;border:1px solid var(--line);border-radius:12px;background:#fff;
+  padding:0 12px;outline:none;font-size:13px
+}
+.auth-field input:focus{border-color:#ec9ab7;box-shadow:0 0 0 3px rgba(233,45,111,.08)}
+.auth-submit{
+  width:100%;border:none;border-radius:12px;background:linear-gradient(135deg,var(--pink),#c92469);
+  color:#fff;padding:12px 14px;font-weight:900;font-size:12px;
+  box-shadow:0 9px 22px rgba(233,45,111,.20)
+}
+.auth-error{
+  min-height:18px;margin-top:9px;text-align:center;color:#be123c;font-size:10px;font-weight:800
+}
+.auth-info{
+  margin-top:12px;padding:10px;border-radius:12px;background:#fff8fb;border:1px solid #f1e1e7;
+  color:#896d77;font-size:9px;line-height:1.4;text-align:center
+}
+.profile-auth-bar{
+  margin:0 0 14px;padding:9px 11px;border:1px solid var(--line);border-radius:12px;background:#fff;
+  display:flex;align-items:center;justify-content:space-between;gap:10px
+}
+.profile-auth-bar div{min-width:0}
+.profile-auth-bar strong{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profile-auth-bar span{display:block;color:var(--muted);font-size:8px;margin-top:2px}
+.profile-auth-bar button{
+  border:1px solid var(--line);background:#fff;border-radius:9px;padding:6px 8px;
+  color:#8b6673;font-size:9px;font-weight:800;white-space:nowrap
+}
+
 </style>
 </head>
 <body>
-<section id="login" class="login"><div class="login-inner"><div class="login-logo"><div class="logo-icon">✦</div><strong>Studio Thiago Hair</strong></div><h1>Quem é você?</h1><p>Toque no seu nome para entrar</p><div id="people" class="people"></div></div></section>
+<section id="authScreen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-brand"><div class="logo-icon">✦</div><strong>Studio Thiago Hair</strong></div>
+    <h1>Entrar no Studio</h1>
+    <p>Use o e-mail e a senha geral do Studio. Depois cada pessoa escolhe o próprio nome e entra com seu PIN de 4 números.</p>
+
+    <div class="auth-field">
+      <label>E-MAIL DO STUDIO</label>
+      <input id="studioEmailInput" type="email" autocomplete="username" placeholder="Digite o e-mail">
+    </div>
+
+    <div class="auth-field">
+      <label>SENHA DO STUDIO</label>
+      <input id="studioPasswordInput" type="password" autocomplete="current-password" placeholder="Digite a senha">
+    </div>
+
+    <button id="studioLoginButton" class="auth-submit" onclick="loginStudio()">Entrar no Studio</button>
+    <div id="studioAuthError" class="auth-error"></div>
+
+    <div class="auth-info">
+      Este é o acesso geral do Studio. Depois do login, cada profissional continua protegido pelo próprio PIN individual.
+    </div>
+  </div>
+</section>
+
+<section id="login" class="login hidden">
+  <div class="login-inner">
+    <div class="login-logo"><div class="logo-icon">✦</div><strong>Studio Thiago Hair</strong></div>
+    <div id="authenticatedStudioInfo" class="profile-auth-bar">
+      <div><strong id="authenticatedStudioEmail">Studio conectado</strong><span>Agora escolha quem está entrando</span></div>
+      <button onclick="logoutStudio()">Sair do Studio</button>
+    </div>
+    <h1>Quem é você?</h1>
+    <p>Toque no seu nome e digite seu PIN</p>
+    <div id="people" class="people"></div>
+  </div>
+</section>
 
 <div id="app" class="app hidden">
 <header class="top"><div class="logo"><div class="logo-icon">✦</div><span>Studio Thiago Hair</span></div><div class="userbox"><span id="syncStatus" class="sync-status connecting">Conectando</span><div class="usertext"><strong id="topName"></strong><span id="topRole"></span></div><button class="logout" onclick="logout()">↪</button></div></header>
@@ -681,6 +766,7 @@ body{
 </div></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 const firebaseConfig = {
@@ -693,8 +779,13 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 const db = firebase.firestore();
 db.settings({ ignoreUndefinedProperties: true });
+
+const STUDIO_AUTH_UID = "LDUcSQ5BcwS064zxt0V8rtlArrw1";
+let authenticatedStudioUser = null;
+let authFlowInitialized = false;
 
 let firebaseReady = false;
 let unsubscribeFirebase = [];
@@ -907,6 +998,11 @@ function subscribeFirebase(){
   unsubscribeFirebase.forEach(fn=>{try{fn()}catch(e){}});
   unsubscribeFirebase=[];
 
+  if(!auth.currentUser||auth.currentUser.uid!==STUDIO_AUTH_UID){
+    firebaseReady=false;
+    return;
+  }
+
   unsubscribeFirebase.push(
     db.collection('agendamentos').onSnapshot(snap=>{
       bookings=snap.docs.map(d=>normalizeBooking({id:d.id,...d.data()}));
@@ -984,9 +1080,119 @@ function firebaseListenerError(err){
   setSyncStatus('error','Sem acesso');
 }
 
+
+function authErrorMessage(code){
+  const map={
+    'auth/invalid-email':'E-mail inválido.',
+    'auth/user-disabled':'Este acesso foi desativado.',
+    'auth/user-not-found':'E-mail ou senha incorretos.',
+    'auth/wrong-password':'E-mail ou senha incorretos.',
+    'auth/invalid-credential':'E-mail ou senha incorretos.',
+    'auth/too-many-requests':'Muitas tentativas. Aguarde um pouco e tente novamente.',
+    'auth/network-request-failed':'Sem conexão com a internet.'
+  };
+  return map[code]||'Não foi possível entrar. Confira o e-mail e a senha.';
+}
+
+async function loginStudio(){
+  const email=$('studioEmailInput').value.trim();
+  const password=$('studioPasswordInput').value;
+  $('studioAuthError').textContent='';
+
+  if(!email||!password){
+    $('studioAuthError').textContent='Digite o e-mail e a senha do Studio.';
+    return;
+  }
+
+  const btn=$('studioLoginButton');
+  btn.disabled=true;
+  btn.textContent='Entrando...';
+
+  try{
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    const cred=await auth.signInWithEmailAndPassword(email,password);
+
+    if(cred.user.uid!==STUDIO_AUTH_UID){
+      await auth.signOut();
+      $('studioAuthError').textContent='Este usuário não é o acesso autorizado do Studio.';
+      return;
+    }
+  }catch(err){
+    console.error('Authentication:',err);
+    $('studioAuthError').textContent=authErrorMessage(err.code);
+  }finally{
+    btn.disabled=false;
+    btn.textContent='Entrar no Studio';
+  }
+}
+
+async function logoutStudio(){
+  currentUser=null;
+  pendingLoginUserId=null;
+  $('app').classList.add('hidden');
+  $('login').classList.add('hidden');
+
+  unsubscribeFirebase.forEach(fn=>{try{fn()}catch(e){}});
+  unsubscribeFirebase=[];
+  firebaseReady=false;
+
+  try{
+    await auth.signOut();
+  }catch(err){
+    console.error(err);
+  }
+}
+
+function showStudioAuthScreen(){
+  $('app').classList.add('hidden');
+  $('login').classList.add('hidden');
+  $('authScreen').classList.remove('hidden');
+  $('studioPasswordInput').value='';
+  $('studioAuthError').textContent='';
+  setTimeout(()=>$('studioEmailInput').focus(),120);
+}
+
+async function showProfileChooser(user){
+  authenticatedStudioUser=user;
+  $('authScreen').classList.add('hidden');
+  $('app').classList.add('hidden');
+  $('login').classList.remove('hidden');
+  $('authenticatedStudioEmail').textContent=user.email||'Studio conectado';
+  $('people').innerHTML=`<div class="report-placeholder" style="grid-column:1/-1">Carregando usuários...</div>`;
+
+  await initFirebase();
+}
+
+function initAuthFlow(){
+  if(authFlowInitialized)return;
+  authFlowInitialized=true;
+
+  auth.onAuthStateChanged(async user=>{
+    if(!user){
+      authenticatedStudioUser=null;
+      showStudioAuthScreen();
+      return;
+    }
+
+    if(user.uid!==STUDIO_AUTH_UID){
+      authenticatedStudioUser=null;
+      try{await auth.signOut();}catch(e){}
+      showStudioAuthScreen();
+      $('studioAuthError').textContent='Este usuário não pertence ao Studio Thiago Hair.';
+      return;
+    }
+
+    await showProfileChooser(user);
+  });
+}
+
 async function initFirebase(){
   setSyncStatus('connecting','Conectando');
   try{
+    if(!authenticatedStudioUser){
+      firebaseReady=false;
+      return;
+    }
     firebaseReady=true;
     subscribeFirebase();
     setSyncStatus('online','Online');
@@ -1007,6 +1213,10 @@ function buildLogin(){
 }
 
 function requestPin(id){
+  if(!auth.currentUser||auth.currentUser.uid!==STUDIO_AUTH_UID){
+    showStudioAuthScreen();
+    return;
+  }
   const user=professionals.find(p=>p.id===id);if(!user)return;
   pendingLoginUserId=id;
   $('pinUserCard').innerHTML=`<div class="pin-user-avatar">${initials(user.name)}</div>
@@ -1049,7 +1259,12 @@ async function confirmPinLogin(){
 }
 
 function login(id){
+  if(!auth.currentUser||auth.currentUser.uid!==STUDIO_AUTH_UID){
+    showStudioAuthScreen();
+    return;
+  }
   currentUser=professionals.find(p=>p.id===id);
+  if(!currentUser)return;
   selectedProfessional=currentUser.role==='admin'?'todos':currentUser.id;
   $('login').classList.add('hidden');$('app').classList.remove('hidden');
   $('topName').textContent=currentUser.name;
@@ -1061,8 +1276,14 @@ function login(id){
 function logout(){
   currentUser=null;
   $('app').classList.add('hidden');
-  $('login').classList.remove('hidden');
-  buildLogin();
+
+  if(auth.currentUser&&auth.currentUser.uid===STUDIO_AUTH_UID){
+    $('authScreen').classList.add('hidden');
+    $('login').classList.remove('hidden');
+    buildLogin();
+  }else{
+    showStudioAuthScreen();
+  }
 }
 
 function buildNav(){
@@ -2000,8 +2221,8 @@ function renderReports(){
 
 rebuildTimes();
 applySalonBrand();
-$('people').innerHTML=`<div class="report-placeholder" style="grid-column:1/-1">Carregando usuários...</div>`;
 $('fab').style.display='none';
+
 $('loginPinInput').addEventListener('input',e=>{
   e.target.value=e.target.value.replace(/\D/g,'').slice(0,4);
   $('pinError').textContent='';
@@ -2009,7 +2230,15 @@ $('loginPinInput').addEventListener('input',e=>{
 });
 $('professionalPin').addEventListener('input',e=>e.target.value=e.target.value.replace(/\D/g,'').slice(0,4));
 $('adminPinInput').addEventListener('input',e=>e.target.value=e.target.value.replace(/\D/g,'').slice(0,4));
-initFirebase();
+
+$('studioPasswordInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter')loginStudio();
+});
+$('studioEmailInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter')$('studioPasswordInput').focus();
+});
+
+initAuthFlow();
 </script>
 </body>
 </html>
