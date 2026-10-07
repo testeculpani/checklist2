@@ -1020,6 +1020,13 @@ input,select,textarea{
 <div id="clientPaymentModal" class="modal"><div class="sheet">
 <div class="sheet-head"><h2>Finalizar atendimento</h2><button class="close" onclick="closeClientPayment()">✕</button></div>
 <div id="clientPaymentInfo" class="payment-hero"></div>
+
+<div class="field">
+  <label>VALOR COBRADO (R$)</label>
+  <input id="clientChargedAmount" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00">
+  <div class="pin-field-note">Se cobrou um valor diferente do agendado, altere aqui antes de confirmar.</div>
+</div>
+
 <div class="field"><label>FORMA DE PAGAMENTO</label>
 <select id="clientPaymentMethod" class="select-modern" onchange="toggleInstallments()">
 <option value="Pix">Pix</option><option value="Dinheiro">Dinheiro</option><option value="Cartão de débito">Cartão de débito</option><option value="Cartão de crédito">Cartão de crédito</option><option value="Transferência">Transferência</option><option value="Outro">Outro</option>
@@ -2006,7 +2013,7 @@ function openDetails(id){
         <div class="detail-cell"><small>Profissional</small><strong>${safe(b.professionalName)}</strong></div>
         <div class="detail-cell"><small>Horário</small><strong>${b.time}</strong></div>
         <div class="detail-cell"><small>Serviço</small><strong>${safe(b.serviceName)}</strong></div>
-        <div class="detail-cell"><small>Valor</small><strong>${brl(b.price)}</strong></div>
+        <div class="detail-cell"><small>${b.status==='finalizado'?'Valor cobrado':'Valor'}</small><strong>${brl(b.price)}</strong>${b.status==='finalizado'&&b.scheduledPrice!==undefined&&Number(b.scheduledPrice)!==Number(b.price)?`<span style="display:block;font-size:8px;color:var(--muted);margin-top:2px">Previsto: ${brl(b.scheduledPrice)}</span>`:''}</div>
         <div class="detail-cell"><small>Comissão</small><strong>${b.commission}% • ${brl(Number(b.price)*Number(b.commission)/100)}</strong></div>
         ${payment}
       </div>
@@ -2102,21 +2109,47 @@ async function markNoShow(){
 }
 function finishCurrent(){
   const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
-  $('clientPaymentInfo').innerHTML=`<small>Recebimento da cliente</small><strong>${brl(b.price)}</strong><small>${safe(b.client)} • ${safe(b.serviceName)}</small>`;
-  $('clientPaymentMethod').value='Pix';$('clientInstallments').value='1';$('clientPaymentNote').value='';
-  toggleInstallments();$('detailsModal').classList.remove('show');$('clientPaymentModal').classList.add('show');
+  $('clientPaymentInfo').innerHTML=`<small>Valor previsto do atendimento</small><strong>${brl(b.price)}</strong><small>${safe(b.client)} • ${safe(b.serviceName)}</small>`;
+  $('clientChargedAmount').value=Number(b.price||0).toFixed(2);
+  $('clientPaymentMethod').value='Pix';
+  $('clientInstallments').value='1';
+  $('clientPaymentNote').value='';
+  toggleInstallments();
+  $('detailsModal').classList.remove('show');
+  $('clientPaymentModal').classList.add('show');
 }
 function toggleInstallments(){$('installmentField').classList.toggle('hidden',$('clientPaymentMethod').value!=='Cartão de crédito')}
 function closeClientPayment(){$('clientPaymentModal').classList.remove('show');if(currentBookingId)$('detailsModal').classList.add('show')}
 async function confirmClientPayment(){
   const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
-  b.status='finalizado';b.paymentMethod=$('clientPaymentMethod').value;
+
+  const chargedAmount=Number(String($('clientChargedAmount').value||'').replace(',','.'));
+  if(!Number.isFinite(chargedAmount)||chargedAmount<0){
+    alert('Informe um valor cobrado válido.');
+    $('clientChargedAmount').focus();
+    return;
+  }
+
+  if(b.scheduledPrice===undefined||b.scheduledPrice===null){
+    b.scheduledPrice=Number(b.price||0);
+  }
+
+  b.price=chargedAmount;
+  b.status='finalizado';
+  b.paymentMethod=$('clientPaymentMethod').value;
   b.paymentInstallments=b.paymentMethod==='Cartão de crédito'?Number($('clientInstallments').value):1;
-  b.paymentNote=$('clientPaymentNote').value.trim();b.paidAt=new Date().toISOString();
+  b.paymentNote=$('clientPaymentNote').value.trim();
+  b.paidAt=new Date().toISOString();
+  b.finalizedBy=currentUser?.name||'';
+  b.finalizedById=currentUser?.id||'';
+
   saveLocal();
   try{await cloudReplace('agendamentos',b.id,b);}
   catch(err){console.error(err);setSyncStatus('error','Erro ao salvar');}
-  $('clientPaymentModal').classList.remove('show');currentBookingId=null;renderAll();
+
+  $('clientPaymentModal').classList.remove('show');
+  currentBookingId=null;
+  renderAll();
 }
 
 function renderClients(){
