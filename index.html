@@ -658,6 +658,56 @@ input,select,textarea{
   .day-btn{font-size:8px}
 }
 
+
+/* ===== BUSCA DE CLIENTES NO AGENDAMENTO ===== */
+.client-search-wrap{position:relative}
+.client-suggestions{
+  display:none;
+  position:absolute;
+  top:calc(100% + 4px);
+  left:0;
+  right:0;
+  z-index:120;
+  max-height:230px;
+  overflow-y:auto;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  box-shadow:0 14px 34px rgba(70,38,49,.16);
+}
+.client-suggestions.show{display:block}
+.client-suggestion{
+  width:100%;
+  border:0;
+  border-bottom:1px solid #f3e7eb;
+  background:#fff;
+  padding:10px 11px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  text-align:left;
+}
+.client-suggestion:last-child{border-bottom:0}
+.client-suggestion:active{background:#fff6f9}
+.client-suggestion strong{display:block;font-size:11px;color:#503e45}
+.client-suggestion span{display:block;font-size:9px;color:var(--muted);margin-top:2px}
+.client-suggestion em{
+  font-style:normal;
+  font-size:9px;
+  font-weight:900;
+  color:var(--pink);
+  white-space:nowrap;
+}
+.client-new-hint{
+  display:none;
+  font-size:8px;
+  color:#8c6f79;
+  margin-top:5px;
+  line-height:1.35;
+}
+.client-new-hint.show{display:block}
+
 </style>
 </head>
 <body>
@@ -835,7 +885,13 @@ input,select,textarea{
 
 <div id="bookingModal" class="modal"><div class="sheet"><div class="sheet-head"><h2>Novo agendamento</h2><button class="close" onclick="closeBooking()">✕</button></div>
 <div class="grid2">
-<div class="field"><label>Cliente</label><input id="bName" placeholder="Nome da cliente"></div>
+<div class="field client-search-wrap">
+  <label>Cliente</label>
+  <input id="bName" placeholder="Digite o nome da cliente" autocomplete="off"
+         oninput="searchClientsForBooking()" onfocus="searchClientsForBooking()">
+  <div id="clientSuggestions" class="client-suggestions"></div>
+  <div id="clientNewHint" class="client-new-hint">Cliente nova — será cadastrada automaticamente ao salvar.</div>
+</div>
 <div class="field"><label>WhatsApp</label><input id="bPhone" placeholder="(00) 00000-0000"></div>
 <div class="field"><label>Profissional</label><select id="bProfessional"></select></div>
 <div class="field"><label>Horário</label><select id="bTime"></select></div>
@@ -1052,6 +1108,7 @@ let agendaView='list';
 let reportPeriod='today';
 let reportCustomStart='';
 let reportCustomEnd='';
+let selectedBookingClientId=null;
 
 let salonSettings={
   id:'geral',
@@ -1749,6 +1806,86 @@ function renderCalendarSummary(){
     </div>`;
 }
 
+
+function normalizeClientSearch(value){
+  return String(value||'')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase()
+    .trim();
+}
+
+function getClientPhone(client){
+  return client?.phone||client?.whatsapp||client?.telefone||'';
+}
+
+function searchClientsForBooking(){
+  const input=$('bName');
+  const suggestions=$('clientSuggestions');
+  const hint=$('clientNewHint');
+  if(!input||!suggestions)return;
+
+  // Se a pessoa editar o nome depois de selecionar, volta a ser uma nova busca.
+  selectedBookingClientId=null;
+
+  const query=normalizeClientSearch(input.value);
+  if(!query){
+    suggestions.classList.remove('show');
+    suggestions.innerHTML='';
+    if(hint)hint.classList.remove('show');
+    return;
+  }
+
+  const matches=clients
+    .filter(client=>{
+      const name=normalizeClientSearch(client.name||client.nome);
+      const phone=normalizeClientSearch(getClientPhone(client));
+      return name.includes(query)||phone.includes(query);
+    })
+    .sort((a,b)=>String(a.name||a.nome||'').localeCompare(String(b.name||b.nome||''),'pt-BR'))
+    .slice(0,8);
+
+  if(!matches.length){
+    suggestions.classList.remove('show');
+    suggestions.innerHTML='';
+    if(hint)hint.classList.add('show');
+    return;
+  }
+
+  suggestions.innerHTML=matches.map(client=>{
+    const name=client.name||client.nome||'Sem nome';
+    const phone=getClientPhone(client);
+    return `<button type="button" class="client-suggestion" onclick="selectBookingClient('${client.id}')">
+      <div>
+        <strong>${safe(name)}</strong>
+        <span>${phone?safe(phone):'Sem WhatsApp cadastrado'}</span>
+      </div>
+      <em>Selecionar</em>
+    </button>`;
+  }).join('');
+
+  suggestions.classList.add('show');
+  if(hint)hint.classList.remove('show');
+}
+
+function selectBookingClient(id){
+  const client=clients.find(c=>c.id===id);
+  if(!client)return;
+
+  selectedBookingClientId=id;
+  $('bName').value=client.name||client.nome||'';
+  $('bPhone').value=getClientPhone(client);
+
+  $('clientSuggestions').classList.remove('show');
+  $('clientSuggestions').innerHTML='';
+  $('clientNewHint').classList.remove('show');
+}
+
+function closeClientSuggestions(){
+  const el=$('clientSuggestions');
+  if(el)el.classList.remove('show');
+}
+
 function openBooking(profId,time){
   if(!salonSettings.openTime||!salonSettings.closeTime||!Array.isArray(salonSettings.workingDays)||!salonSettings.workingDays.length){
     alert('Configure os dias e horários de funcionamento antes de criar agendamentos.');
@@ -1758,7 +1895,12 @@ function openBooking(profId,time){
   const activeServices=services.filter(s=>s.active!==false);
   if(!activeServices.length){alert('Cadastre ou ative pelo menos um serviço antes de criar um agendamento.');return}
   const pid=profId||(currentUser.role==='admin'?(selectedProfessional==='todos'?(professionals.find(p=>p.role==='collab'&&p.active!==false)?.id||'admin'):selectedProfessional):currentUser.id);
-  $('bName').value='';$('bPhone').value='';$('bProfessional').value=pid;$('bTime').value=time||'08:00';$('bService').value=activeServices[0].id;
+  selectedBookingClientId=null;
+  $('bName').value='';
+  $('bPhone').value='';
+  if($('clientSuggestions')){$('clientSuggestions').classList.remove('show');$('clientSuggestions').innerHTML='';}
+  if($('clientNewHint'))$('clientNewHint').classList.remove('show');
+  $('bProfessional').value=pid;$('bTime').value=time||'08:00';$('bService').value=activeServices[0].id;
   $('bObservation').value='';
   syncService();$('bProfessional').disabled=currentUser.role!=='admin';
   updateObservationHint();
@@ -1772,7 +1914,7 @@ function updateObservationHint(){
     ? '<strong style="color:#be123c">Atenção:</strong> como é uma observação da administração para outra profissional, ela aparecerá em vermelho na agenda.'
     : 'A observação ficará visível nos detalhes do agendamento.';
 }
-function closeBooking(){$('bookingModal').classList.remove('show')}
+function closeBooking(){closeClientSuggestions();$('bookingModal').classList.remove('show')}
 async function saveBooking(){
   const name=$('bName').value.trim();if(!name){alert('Informe o nome da cliente.');return}
   const profId=$('bProfessional').value,time=$('bTime').value,duration=Number($('bDuration').value),price=Number($('bPrice').value||0),
@@ -1791,7 +1933,7 @@ async function saveBooking(){
     createdAt:new Date().toISOString()
   }]:[];
   bookings.push({
-    id:String(Date.now()),date:dateKey(),client:name,phone:$('bPhone').value.trim(),
+    id:String(Date.now()),date:dateKey(),clientId:null,client:name,phone:$('bPhone').value.trim(),
     professionalId:profId,professionalName:professionals.find(p=>p.id===profId).name,time,
     serviceId:service.id,serviceName:service.name,duration,price,commission,status:'agendado',
     observation,
@@ -1802,14 +1944,45 @@ async function saveBooking(){
     commissionPaid:false,commissionPaymentId:null
   });
   const newBooking=bookings[bookings.length-1];
-  let found=clients.find(c=>c.name.toLowerCase()===name.toLowerCase());
+  const typedPhone=$('bPhone').value.trim();
+  let found=selectedBookingClientId
+    ? clients.find(c=>c.id===selectedBookingClientId)
+    : clients.find(c=>{
+        const sameName=normalizeClientSearch(c.name||c.nome)===normalizeClientSearch(name);
+        const existingPhone=getClientPhone(c);
+        const samePhone=Boolean(typedPhone&&existingPhone&&typedPhone===existingPhone);
+        return sameName||samePhone;
+      });
+
   let clientChanged=false;
+
   if(!found){
-    found={id:'c'+Date.now(),name,phone:$('bPhone').value.trim()};
-    clients.push(found);clientChanged=true;
-  }else if(!found.phone&&$('bPhone').value.trim()){
-    found.phone=$('bPhone').value.trim();clientChanged=true;
+    found={
+      id:'c'+Date.now(),
+      name,
+      phone:typedPhone,
+      whatsapp:typedPhone,
+      createdAt:new Date().toISOString(),
+      updatedAt:new Date().toISOString()
+    };
+    clients.push(found);
+    clientChanged=true;
+  }else{
+    if(name&&(found.name||'')!==name){
+      found.name=name;
+      clientChanged=true;
+    }
+    if(typedPhone&&getClientPhone(found)!==typedPhone){
+      found.phone=typedPhone;
+      found.whatsapp=typedPhone;
+      clientChanged=true;
+    }
+    if(clientChanged)found.updatedAt=new Date().toISOString();
   }
+  newBooking.clientId=found.id;
+  newBooking.client=found.name||name;
+  newBooking.phone=getClientPhone(found)||typedPhone;
+
   saveLocal();closeBooking();renderAll();
   try{
     await cloudReplace('agendamentos',newBooking.id,newBooking);
@@ -2481,6 +2654,10 @@ $('studioPasswordInput').addEventListener('keydown',e=>{
 });
 $('studioEmailInput').addEventListener('keydown',e=>{
   if(e.key==='Enter')$('studioPasswordInput').focus();
+});
+
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.client-search-wrap'))closeClientSuggestions();
 });
 
 initAuthFlow();
