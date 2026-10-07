@@ -38,7 +38,7 @@ body{padding-bottom:78px}button,input,select,textarea{font:inherit}button{cursor
 .slot-box.free button{border:none;background:var(--pink-soft);color:var(--pink);border-radius:10px;padding:7px 10px;font-weight:800;font-size:11px}
 .appt{display:flex;align-items:center;justify-content:space-between;gap:10px}.appt-main{min-width:0}.appt-name{font-weight:800;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .appt-meta{color:var(--muted);font-size:10px;margin-top:3px}.price{font-size:12px;font-weight:800;text-align:right}
-.badge{display:inline-block;margin-top:4px;padding:4px 7px;border-radius:999px;font-size:9px;font-weight:800}.badge.agendado{background:var(--blue-soft);color:var(--blue)}.badge.finalizado{background:var(--green-soft);color:var(--green)}.badge.cancelado{background:#fff0f0;color:#d94b4b}
+.badge{display:inline-block;margin-top:4px;padding:4px 7px;border-radius:999px;font-size:9px;font-weight:800}.badge.agendado{background:var(--blue-soft);color:var(--blue)}.badge.finalizado{background:var(--green-soft);color:var(--green)}.badge.cancelado{background:#fff0f0;color:#d94b4b}.badge.nao_compareceu{background:#fff7ed;color:#c2410c}
 .list-card{border:1px solid var(--line);border-radius:16px;background:#fff;padding:13px;margin-bottom:9px}.list-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.list-title{font-weight:800;font-size:14px}.list-sub{color:var(--muted);font-size:10px;margin-top:3px}
 .row-btns{display:flex;gap:7px;margin-top:9px}.btn{border:none;border-radius:10px;padding:9px 12px;font-weight:800;font-size:11px}.btn-pink{background:var(--pink);color:#fff}.btn-light{background:#fff;border:1px solid var(--line);color:#5f4d54}.btn-danger{background:#fff0f2;color:#d62959}.btn-grow{flex:1}
 .new-btn{border:none;background:var(--pink2);color:#fff;border-radius:8px;padding:9px 13px;font-size:11px;font-weight:800}.money{color:var(--pink);font-weight:900;font-size:16px;margin-top:4px}.active-dot{font-size:9px;color:var(--green);background:var(--green-soft);padding:4px 7px;border-radius:999px}
@@ -369,6 +369,18 @@ body{
 .closed-day strong{display:block;color:#624d55;font-size:13px;margin-bottom:4px}
 .service-inactive{opacity:.68}
 .report-period-label{font-size:9px;color:rgba(255,255,255,.8)}
+
+
+.btn-noshow{
+  background:#fff7ed!important;
+  color:#c2410c!important;
+  border:1px solid #fed7aa!important;
+}
+.status-info-box{
+  margin-top:9px;padding:9px 10px;border-radius:11px;font-size:10px;font-weight:700
+}
+.status-info-box.cancelado{background:#fff1f2;border:1px solid #fecdd3;color:#be123c}
+.status-info-box.nao_compareceu{background:#fff7ed;border:1px solid #fed7aa;color:#c2410c}
 
 </style>
 </head>
@@ -792,6 +804,15 @@ function parseKey(key){const [y,m,d]=key.split('-').map(Number);return new Date(
 function brl(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
 function initials(n){return n.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase()}
 function cap(s){return s?s[0].toUpperCase()+s.slice(1):''}
+function statusLabel(status){
+  const labels={
+    agendado:'Agendado',
+    finalizado:'Finalizado',
+    cancelado:'Cancelado',
+    nao_compareceu:'Não compareceu'
+  };
+  return labels[status]||cap(status);
+}
 function timeToMin(t){const [h,m]=t.split(':').map(Number);return h*60+m}
 function shortDate(key){return parseKey(key).toLocaleDateString('pt-BR')}
 function fullDate(key){return parseKey(key).toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'})}
@@ -1140,7 +1161,7 @@ function goToday(){currentDate=new Date();renderDates();renderAgenda()}
 function changeMonth(n){currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth()+n,1);renderDates();renderCalendar()}
 
 function scopeBookingsForDate(key){
-  return bookings.filter(b=>b.date===key&&b.status!=='cancelado'&&
+  return bookings.filter(b=>b.date===key&&
     (currentUser.role==='admin' ? (selectedProfessional==='todos'||b.professionalId===selectedProfessional) : b.professionalId===currentUser.id));
 }
 
@@ -1197,7 +1218,7 @@ function renderGeneral(){
       <div class="list-top">
         <div><div class="list-title">${b.time} • ${safe(b.client)}</div>
         <div class="list-sub">${safe(b.professionalName)} • ${safe(b.serviceName)} ${b.status==='finalizado'&&b.paymentMethod?'• '+safe(b.paymentMethod):''}</div></div>
-        <div style="text-align:right"><div class="price">${brl(b.price)}</div><span class="badge ${b.status}">${cap(b.status)}</span></div>
+        <div style="text-align:right"><div class="price">${brl(b.price)}</div><span class="badge ${b.status}">${statusLabel(b.status)}</span></div>
       </div>
       ${renderAgendaNote(b)}
     </div>`).join(''):`<div class="report-placeholder">Nenhum agendamento neste dia.</div>`;
@@ -1215,7 +1236,7 @@ function renderTimeline(profId){
       <div class="slot-box" onclick="openDetails('${b.id}')"><div class="appt">
       <div class="appt-main"><div class="appt-name">${safe(b.client)}</div>
       <div class="appt-meta">${safe(b.serviceName)} • ${b.duration} min ${b.status==='finalizado'&&b.paymentMethod?'• '+safe(b.paymentMethod):''}</div></div>
-      <div><div class="price">${brl(b.price)}</div><span class="badge ${b.status}">${cap(b.status)}</span></div>
+      <div><div class="price">${brl(b.price)}</div><span class="badge ${b.status}">${statusLabel(b.status)}</span></div>
       </div>
       ${renderAgendaNote(b)}
       </div></div>`;
@@ -1225,12 +1246,29 @@ function renderTimeline(profId){
       html+=`<div class="slot"><div class="slot-time">${t}</div><div class="slot-box free"><span>Horário livre</span><button onclick="event.stopPropagation();openBooking('${profId}','${t}')">+ Agendar</button></div></div>`;
     }
   });
-  $('timeline').innerHTML=html;
+  $('timeline').innerHTML=html+renderDayExceptions(profId);
 }
+function renderDayExceptions(profId){
+  const arr=bookings.filter(b=>b.date===dateKey()&&b.professionalId===profId&&['cancelado','nao_compareceu'].includes(b.status))
+    .sort((a,b)=>a.time.localeCompare(b.time));
+  if(!arr.length)return '';
+  return `<div style="margin-top:14px">
+    <div class="section-head"><h3>Cancelados / não compareceram</h3><small>${arr.length}</small></div>
+    ${arr.map(b=>`<div class="list-card" onclick="openDetails('${b.id}')">
+      <div class="list-top">
+        <div><div class="list-title">${b.time} • ${safe(b.client)}</div>
+        <div class="list-sub">${safe(b.serviceName)} • ${safe(b.professionalName)}</div></div>
+        <div style="text-align:right"><div class="price">${brl(b.price)}</div><span class="badge ${b.status}">${statusLabel(b.status)}</span></div>
+      </div>
+      ${renderAgendaNote(b)}
+    </div>`).join('')}
+  </div>`;
+}
+
 function getBookingForSlot(profId,time){
   const target=timeToMin(time);
   return bookings.find(b=>{
-    if(b.date!==dateKey()||b.professionalId!==profId||b.status==='cancelado')return false;
+    if(b.date!==dateKey()||b.professionalId!==profId||['cancelado','nao_compareceu'].includes(b.status))return false;
     const s=timeToMin(b.time);return target>=s&&target<s+Number(b.duration);
   });
 }
@@ -1270,8 +1308,10 @@ function renderCalendarSummary(){
       <button class="btn btn-pink" onclick="setAgendaView('list')">Abrir dia</button>
     </div>
     <div class="summary-chips">
-      <span class="summary-chip">📅 ${arr.length} agendados</span>
+      <span class="summary-chip">📅 ${arr.filter(b=>b.status==='agendado').length} agendados</span>
       <span class="summary-chip">✓ ${done.length} concluídos</span>
+      ${arr.some(b=>b.status==='nao_compareceu')?`<span class="summary-chip">⚠ ${arr.filter(b=>b.status==='nao_compareceu').length} não compareceu</span>`:''}
+      ${arr.some(b=>b.status==='cancelado')?`<span class="summary-chip">✕ ${arr.filter(b=>b.status==='cancelado').length} cancelado</span>`:''}
       <span class="summary-chip">💰 ${brl(revenue)}</span>
       ${profs.slice(0,3).map(p=>`<span class="summary-chip">👤 ${safe(p)}</span>`).join('')}
     </div>`;
@@ -1352,7 +1392,7 @@ function openDetails(id){
     : `<div class="detail-cell"><small>Pagamento</small><strong>A receber</strong></div>`;
   $('detailsBody').innerHTML=`
     <div class="panel">
-      <div class="list-top"><div><div class="list-title">${safe(b.client)}</div><div class="list-sub">${safe(b.phone||'Sem telefone')}</div></div><span class="badge ${b.status}">${cap(b.status)}</span></div>
+      <div class="list-top"><div><div class="list-title">${safe(b.client)}</div><div class="list-sub">${safe(b.phone||'Sem telefone')}</div></div><span class="badge ${b.status}">${statusLabel(b.status)}</span></div>
       <div class="details-grid">
         <div class="detail-cell"><small>Profissional</small><strong>${safe(b.professionalName)}</strong></div>
         <div class="detail-cell"><small>Horário</small><strong>${b.time}</strong></div>
@@ -1361,11 +1401,18 @@ function openDetails(id){
         <div class="detail-cell"><small>Comissão</small><strong>${b.commission}% • ${brl(Number(b.price)*Number(b.commission)/100)}</strong></div>
         ${payment}
       </div>
+      ${['cancelado','nao_compareceu'].includes(b.status)?`<div class="status-info-box ${b.status}">
+        ${b.status==='cancelado'?'Atendimento cancelado.':'Cliente não compareceu ao horário agendado.'}
+        ${b.statusUpdatedAt?`<div style="font-size:8px;margin-top:3px;opacity:.72">${new Date(b.statusUpdatedAt).toLocaleString('pt-BR')}</div>`:''}
+      </div>`:''}
       ${renderObservationHistory(b)}
       ${b.paymentNote?`<div class="soft-box" style="margin-top:9px"><div class="list-sub">Observação do pagamento</div><div style="font-size:11px;margin-top:3px">${safe(b.paymentNote)}</div></div>`:''}
     </div>`;
   $('detailsActions').innerHTML=b.status==='agendado'
-    ? `<button class="btn btn-note" onclick="openObservationModal()">＋ Adicionar observação</button><button class="btn btn-danger" onclick="cancelCurrent()">Cancelar</button><button class="btn btn-pink" onclick="finishCurrent()">Finalizar e receber</button>`
+    ? `<button class="btn btn-note" onclick="openObservationModal()">＋ Adicionar observação</button>
+       <button class="btn btn-danger" onclick="cancelCurrent()">Cancelado</button>
+       <button class="btn btn-noshow" onclick="markNoShow()">Não compareceu</button>
+       <button class="btn btn-pink" onclick="finishCurrent()">Finalizar e receber</button>`
     : `<button class="btn btn-note" onclick="openObservationModal()">＋ Adicionar observação</button><button class="btn btn-light" onclick="closeDetails()">Fechar</button>`;
   $('detailsModal').classList.add('show');
 }
@@ -1425,8 +1472,22 @@ async function saveNewObservation(){
 function closeDetails(){$('detailsModal').classList.remove('show');currentBookingId=null}
 async function cancelCurrent(){
   const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
-  if(!confirm('Cancelar este atendimento?'))return;
-  b.status='cancelado';saveLocal();closeDetails();renderAll();
+  if(!confirm('Marcar este atendimento como CANCELADO?'))return;
+  b.status='cancelado';
+  b.statusUpdatedAt=new Date().toISOString();
+  b.statusUpdatedBy=currentUser?.name||'';
+  saveLocal();closeDetails();renderAll();
+  try{await cloudReplace('agendamentos',b.id,b);}
+  catch(err){console.error(err);setSyncStatus('error','Erro ao salvar');}
+}
+
+async function markNoShow(){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  if(!confirm('Confirmar que a cliente NÃO COMPARECEU ao horário?'))return;
+  b.status='nao_compareceu';
+  b.statusUpdatedAt=new Date().toISOString();
+  b.statusUpdatedBy=currentUser?.name||'';
+  saveLocal();closeDetails();renderAll();
   try{await cloudReplace('agendamentos',b.id,b);}
   catch(err){console.error(err);setSyncStatus('error','Erro ao salvar');}
 }
