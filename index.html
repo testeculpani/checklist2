@@ -1532,17 +1532,35 @@ function buildNav(){
 }
 function goScreen(name,btn){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  $('screen-'+name).classList.add('active');
+  const target=$('screen-'+name);
+  target.classList.add('active');
+
   $('bottom').querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));
   const n=btn||$('bottom').querySelector(`[data-screen="${name}"]`);
   if(n)n.classList.add('active');
+
   $('fab').style.display=name==='agenda'?'block':'none';
+
   if(name==='agenda')renderAgenda();
   if(name==='comissoes')renderCommissions();
   if(name==='clientes')renderClients();
   if(name==='servicos')renderServices();
   if(name==='relatorios')renderReports();
   if(name==='config')renderSettings();
+
+  // Sempre abre a nova aba no início da página.
+  requestAnimationFrame(()=>{
+    window.scrollTo({top:0,left:0,behavior:'auto'});
+    document.documentElement.scrollTop=0;
+    document.body.scrollTop=0;
+    target.scrollTop=0;
+
+    // Reforço para navegadores móveis que restauram a rolagem após renderizar.
+    requestAnimationFrame(()=>{
+      window.scrollTo({top:0,left:0,behavior:'auto'});
+      target.scrollTop=0;
+    });
+  });
 }
 
 function fillSelects(){
