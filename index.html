@@ -912,6 +912,27 @@ input,select,textarea{
 <div id="detailsBody"></div><div id="detailsActions" class="actions details-actions"></div>
 </div></div>
 
+<div id="clientEditModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2>Editar cliente</h2><button class="close" onclick="closeClientEdit()">✕</button></div>
+
+<div class="field">
+  <label>NOME DA CLIENTE</label>
+  <input id="editClientName" placeholder="Nome da cliente">
+</div>
+
+<div class="field">
+  <label>WHATSAPP</label>
+  <input id="editClientPhone" inputmode="tel" placeholder="(00) 00000-0000">
+</div>
+
+<div class="pin-field-note">Somente a administração pode alterar dados de clientes já cadastrados.</div>
+
+<div class="actions" style="margin-top:14px">
+  <button class="btn btn-light" onclick="closeClientEdit()">Cancelar</button>
+  <button class="btn btn-pink" onclick="saveClientEdit()">Salvar alterações</button>
+</div>
+</div></div>
+
 <div id="serviceModal" class="modal"><div class="sheet">
 <div class="sheet-head"><h2 id="serviceModalTitle">Novo serviço</h2><button class="close" onclick="closeServiceModal()">✕</button></div>
 <div class="service-form-head">
@@ -1116,6 +1137,7 @@ let reportPeriod='today';
 let reportCustomStart='';
 let reportCustomEnd='';
 let selectedBookingClientId=null;
+let currentEditingClientId=null;
 
 let salonSettings={
   id:'geral',
@@ -1883,6 +1905,12 @@ function selectBookingClient(id){
   $('bName').value=client.name||client.nome||'';
   $('bPhone').value=getClientPhone(client);
 
+  if(currentUser?.role!=='admin'){
+    // Colaborador usa os dados cadastrados sem alterar o registro da cliente.
+    $('bName').dataset.existingClient='1';
+    $('bPhone').dataset.existingClient='1';
+  }
+
   $('clientSuggestions').classList.remove('show');
   $('clientSuggestions').innerHTML='';
   $('clientNewHint').classList.remove('show');
@@ -1905,6 +1933,8 @@ function openBooking(profId,time){
   selectedBookingClientId=null;
   $('bName').value='';
   $('bPhone').value='';
+  delete $('bName').dataset.existingClient;
+  delete $('bPhone').dataset.existingClient;
   if($('clientSuggestions')){$('clientSuggestions').classList.remove('show');$('clientSuggestions').innerHTML='';}
   if($('clientNewHint'))$('clientNewHint').classList.remove('show');
   $('bProfessional').value=pid;$('bTime').value=time||'08:00';$('bService').value=activeServices[0].id;
@@ -1964,27 +1994,38 @@ async function saveBooking(){
   let clientChanged=false;
 
   if(!found){
+    // Todos podem cadastrar uma cliente nova.
     found={
       id:'c'+Date.now(),
       name,
       phone:typedPhone,
       whatsapp:typedPhone,
       createdAt:new Date().toISOString(),
+      createdBy:currentUser?.name||'',
+      createdById:currentUser?.id||'',
       updatedAt:new Date().toISOString()
     };
     clients.push(found);
     clientChanged=true;
   }else{
-    if(name&&(found.name||'')!==name){
-      found.name=name;
-      clientChanged=true;
+    // Cliente existente: colaboradores não alteram cadastro.
+    // Somente a administração pode editar os dados já salvos.
+    if(currentUser?.role==='admin'){
+      if(name&&(found.name||'')!==name){
+        found.name=name;
+        clientChanged=true;
+      }
+      if(typedPhone&&getClientPhone(found)!==typedPhone){
+        found.phone=typedPhone;
+        found.whatsapp=typedPhone;
+        clientChanged=true;
+      }
+      if(clientChanged){
+        found.updatedAt=new Date().toISOString();
+        found.updatedBy=currentUser?.name||'';
+        found.updatedById=currentUser?.id||'';
+      }
     }
-    if(typedPhone&&getClientPhone(found)!==typedPhone){
-      found.phone=typedPhone;
-      found.whatsapp=typedPhone;
-      clientChanged=true;
-    }
-    if(clientChanged)found.updatedAt=new Date().toISOString();
   }
   newBooking.clientId=found.id;
   newBooking.client=found.name||name;
@@ -2152,6 +2193,64 @@ async function confirmClientPayment(){
   renderAll();
 }
 
+
+function openClientEdit(id){
+  if(currentUser?.role!=='admin'){
+    alert('Somente o administrador pode editar clientes.');
+    return;
+  }
+
+  const client=clients.find(c=>c.id===id);
+  if(!client)return;
+
+  currentEditingClientId=id;
+  $('editClientName').value=client.name||client.nome||'';
+  $('editClientPhone').value=getClientPhone(client);
+  $('clientEditModal').classList.add('show');
+}
+
+function closeClientEdit(){
+  $('clientEditModal').classList.remove('show');
+  currentEditingClientId=null;
+}
+
+async function saveClientEdit(){
+  if(currentUser?.role!=='admin'){
+    alert('Somente o administrador pode editar clientes.');
+    return;
+  }
+
+  const client=clients.find(c=>c.id===currentEditingClientId);
+  if(!client)return;
+
+  const name=$('editClientName').value.trim();
+  const phone=$('editClientPhone').value.trim();
+
+  if(!name){
+    alert('Informe o nome da cliente.');
+    return;
+  }
+
+  client.name=name;
+  client.phone=phone;
+  client.whatsapp=phone;
+  client.updatedAt=new Date().toISOString();
+  client.updatedBy=currentUser?.name||'';
+  client.updatedById=currentUser?.id||'';
+
+  try{
+    await cloudReplace('clientes',client.id,client);
+    closeClientEdit();
+    renderClients();
+    fillSelects();
+    setSyncStatus('online','Online');
+  }catch(err){
+    console.error(err);
+    setSyncStatus('error','Erro ao salvar');
+    alert('Não foi possível salvar as alterações da cliente.');
+  }
+}
+
 function renderClients(){
   const q=($('clientSearch').value||'').toLowerCase();
   const arr=clients.filter(c=>c.name.toLowerCase().includes(q)||(c.phone||'').includes(q));
@@ -2160,7 +2259,7 @@ function renderClients(){
     const spent=hist.reduce((s,b)=>s+Number(b.price||0),0);
     const last=[...hist].sort((a,b)=>(b.paidAt||'').localeCompare(a.paidAt||''))[0];
     return `<div class="list-card" onclick="openClientHistory('${c.id}')">
-      <div class="list-top"><div><div class="list-title">${safe(c.name)}</div><div class="list-sub">${safe(c.phone||'Sem telefone')}</div></div>
+      <div class="list-top"><div><div class="list-title">${safe(c.name)}</div><div class="list-sub">${safe(c.phone||'Sem telefone')}${currentUser?.role==='admin'?`<div style="margin-top:8px"><button class="btn btn-light" onclick="event.stopPropagation();openClientEdit('${c.id}')">✎ Editar cliente</button></div>`:''}</div></div>
       ${c.phone?`<a class="btn btn-light" onclick="event.stopPropagation()" target="_blank" style="text-decoration:none" href="https://wa.me/55${c.phone.replace(/\D/g,'')}">WhatsApp</a>`:''}</div>
       <div class="client-kpis"><span class="client-kpi">${hist.length} atendimento${hist.length===1?'':'s'}</span><span class="client-kpi">${brl(spent)} recebido</span>${last?.paymentMethod?`<span class="client-kpi">Último: ${safe(last.paymentMethod)}</span>`:''}</div>
     </div>`;
