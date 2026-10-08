@@ -768,6 +768,47 @@ input,select,textarea{
   .payment-command-item{grid-template-columns:minmax(0,1fr) 95px}
 }
 
+
+/* ===== HISTÓRICO DE MOVIMENTAÇÕES ===== */
+.history-toolbar{
+  display:flex;gap:8px;align-items:center;margin-bottom:12px
+}
+.history-toolbar input{
+  flex:1;min-width:0
+}
+.history-card{
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:11px;margin-bottom:8px
+}
+.history-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px
+}
+.history-action{
+  display:flex;align-items:center;gap:8px;min-width:0
+}
+.history-icon{
+  width:32px;height:32px;flex:none;border-radius:10px;background:#fff2f6;
+  color:var(--pink);display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:900
+}
+.history-action strong{display:block;font-size:10px;color:#4f3d44}
+.history-action span{display:block;font-size:8px;color:var(--muted);margin-top:2px}
+.history-time{
+  font-size:8px;color:var(--muted);white-space:nowrap;text-align:right
+}
+.history-desc{
+  margin-top:8px;padding-top:8px;border-top:1px solid #f2e7eb;
+  font-size:9px;color:#705963;line-height:1.45
+}
+.history-user{
+  display:inline-flex;margin-top:7px;padding:4px 7px;border-radius:999px;
+  background:#f8f5f6;color:#765f68;font-size:8px;font-weight:800
+}
+.history-empty{
+  padding:28px 14px;text-align:center;border:1px dashed #e6d5db;
+  border-radius:14px;color:var(--muted);font-size:10px
+}
+
 </style>
 </head>
 <body>
@@ -876,6 +917,26 @@ input,select,textarea{
 <div class="more-item" onclick="goScreen('servicos')"><div class="more-left"><div class="more-ico" style="background:#ef3367">✂</div><div class="more-text"><strong>Serviços</strong><span>Valores, durações e comissões</span></div></div><span>›</span></div>
 <div class="more-item" onclick="goScreen('relatorios')"><div class="more-left"><div class="more-ico" style="background:#228cdf">▥</div><div class="more-text"><strong>Relatórios</strong><span>Faturamento e desempenho</span></div></div><span>›</span></div>
 <div class="more-item" onclick="goScreen('config')"><div class="more-left"><div class="more-ico" style="background:#f47b00">⚙</div><div class="more-text"><strong>Configurações</strong><span>Horários e funcionamento</span></div></div><span>›</span></div>
+<div class="more-item" onclick="goScreen('historico')"><div class="more-left"><div class="more-ico" style="background:#374151">≡</div><div class="more-text"><strong>Histórico do app</strong><span>Movimentações realizadas pela equipe</span></div></div><span>›</span></div>
+</section>
+
+<section id="screen-historico" class="screen">
+  <div class="title-row">
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="back" onclick="goScreen('mais')">‹</button>
+      <h1>Histórico do app</h1>
+    </div>
+  </div>
+
+  <div class="history-toolbar">
+    <input id="historySearch" placeholder="Buscar por pessoa, cliente ou ação..." oninput="renderHistoryList()">
+  </div>
+
+  <div class="pin-field-note" style="margin-bottom:10px">
+    Exibe as últimas 200 movimentações registradas no aplicativo.
+  </div>
+
+  <div id="historyList"></div>
 </section>
 
 <section id="screen-profissionais" class="screen"><div class="title-row"><div style="display:flex;align-items:center;gap:8px"><button class="back" onclick="goScreen('mais')">‹</button><h1>Profissionais</h1></div><button class="new-btn" onclick="addProfessional()">+ Novo</button></div><div id="professionalsList"></div></section>
@@ -1239,6 +1300,8 @@ let reportCustomEnd='';
 let selectedBookingClientId=null;
 let currentEditingClientId=null;
 let bookingDraftItems=[];
+let appHistory=[];
+let historyLoading=false;
 
 let salonSettings={
   id:'geral',
@@ -1285,6 +1348,143 @@ bookings=bookings.map(b=>{
 const $=id=>document.getElementById(id);
 
 function saveLocal(){ /* Dados persistidos somente no Firebase. */ }
+
+function historyLabel(type){
+  const labels={
+    login:'Acesso ao app',
+    agendamento_criado:'Comanda criada',
+    agendamento_finalizado:'Comanda finalizada',
+    agendamento_cancelado:'Comanda cancelada',
+    nao_compareceu:'Não compareceu',
+    agendamento_excluido:'Agendamento excluído',
+    servico_comanda_adicionado:'Serviço adicionado',
+    servico_comanda_removido:'Serviço removido',
+    observacao_adicionada:'Observação adicionada',
+    observacao_editada:'Observação editada',
+    cliente_criado:'Cliente cadastrado',
+    cliente_editado:'Cliente editado',
+    comissao_paga:'Comissão paga',
+    configuracao_editada:'Configurações alteradas',
+    profissional_criado:'Profissional cadastrado',
+    profissional_editado:'Profissional editado',
+    profissional_desativado:'Profissional desativado',
+    profissional_excluido:'Profissional excluído',
+    servico_criado:'Serviço cadastrado',
+    servico_editado:'Serviço editado',
+    servico_desativado:'Serviço desativado',
+    servico_excluido:'Serviço excluído'
+  };
+  return labels[type]||'Movimentação';
+}
+
+function historyIcon(type){
+  if(type.includes('excluido')||type.includes('cancelado'))return '×';
+  if(type.includes('finalizado')||type==='comissao_paga')return '✓';
+  if(type.includes('criado')||type.includes('adicionado'))return '+';
+  if(type.includes('editado')||type.includes('configuracao'))return '✎';
+  if(type==='login')return '↪';
+  if(type==='nao_compareceu')return '!';
+  return '•';
+}
+
+function buildAppLog(type,description,details={}){
+  return {
+    id:'log_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
+    type,
+    description,
+    details,
+    userId:currentUser?.id||'',
+    userName:currentUser?.name||'Usuário',
+    userRole:currentUser?.role||'',
+    createdAt:new Date().toISOString()
+  };
+}
+
+async function logAppAction(type,description,details={}){
+  if(!firebaseReady||!auth.currentUser||!currentUser)return;
+  const log=buildAppLog(type,description,details);
+  try{
+    await db.collection('historicoApp').doc(log.id).set(firestoreClean(log));
+    appHistory.unshift(log);
+    if(appHistory.length>200)appHistory=appHistory.slice(0,200);
+    if($('screen-historico')?.classList.contains('active'))renderHistoryList();
+  }catch(err){
+    console.warn('Histórico não pôde ser gravado:',err);
+  }
+}
+
+async function loadAppHistory(){
+  if(currentUser?.role!=='admin')return;
+  if(historyLoading)return;
+
+  historyLoading=true;
+  if($('historyList'))$('historyList').innerHTML='<div class="history-empty">Carregando histórico...</div>';
+
+  try{
+    const snap=await db.collection('historicoApp')
+      .orderBy('createdAt','desc')
+      .limit(200)
+      .get();
+
+    appHistory=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderHistoryList();
+  }catch(err){
+    console.error(err);
+    if($('historyList'))$('historyList').innerHTML='<div class="history-empty">Não foi possível carregar o histórico. Confira as regras do Firebase para a coleção historicoApp.</div>';
+  }finally{
+    historyLoading=false;
+  }
+}
+
+function renderHistory(){
+  if(currentUser?.role!=='admin'){
+    alert('Somente o administrador pode acessar o histórico do app.');
+    goScreen('home');
+    return;
+  }
+  loadAppHistory();
+}
+
+function renderHistoryList(){
+  const el=$('historyList');if(!el)return;
+  if(currentUser?.role!=='admin'){
+    el.innerHTML='';
+    return;
+  }
+
+  const q=String($('historySearch')?.value||'').toLowerCase().trim();
+  const arr=appHistory.filter(log=>{
+    if(!q)return true;
+    return [
+      log.userName,
+      log.description,
+      historyLabel(log.type),
+      log.details?.client,
+      log.details?.professional,
+      log.details?.service
+    ].some(v=>String(v||'').toLowerCase().includes(q));
+  });
+
+  el.innerHTML=arr.length?arr.map(log=>{
+    const dt=log.createdAt?new Date(log.createdAt):null;
+    const valid=dt&&!Number.isNaN(dt.getTime());
+    return `<div class="history-card">
+      <div class="history-head">
+        <div class="history-action">
+          <div class="history-icon">${historyIcon(log.type||'')}</div>
+          <div>
+            <strong>${safe(historyLabel(log.type||''))}</strong>
+            <span>${safe(log.userName||'Usuário')}</span>
+          </div>
+        </div>
+        <div class="history-time">${valid?dt.toLocaleDateString('pt-BR')+'<br>'+dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):''}</div>
+      </div>
+      <div class="history-desc">${safe(log.description||'Movimentação registrada.')}</div>
+      <div class="history-user">${log.userRole==='admin'?'Admin':'Colaborador'} • ${safe(log.userName||'')}</div>
+    </div>`;
+  }).join(''):`<div class="history-empty">Nenhuma movimentação encontrada.</div>`;
+}
+
 function dateKey(d=currentDate){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function parseKey(key){const [y,m,d]=key.split('-').map(Number);return new Date(y,m-1,d)}
 function brl(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
@@ -1813,6 +2013,7 @@ function login(id){
   $('topRole').textContent=currentUser.role==='admin'?'Administradora':'Colaboradora';
   $('panelLabel').textContent=currentUser.role==='admin'?'Painel da administradora':'Meu painel';
   buildNav();fillSelects();renderAll();
+  logAppAction('login',`${currentUser.name} entrou no painel do aplicativo.`);
 }
 
 function logout(){
@@ -1846,6 +2047,10 @@ function buildNav(){
   $('bottom').querySelectorAll('.nav').forEach(b=>b.onclick=()=>goScreen(b.dataset.screen,b));
 }
 function goScreen(name,btn){
+  if(name==='historico'&&currentUser?.role!=='admin'){
+    alert('Somente o administrador pode acessar o histórico do app.');
+    return;
+  }
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const target=$('screen-'+name);
   target.classList.add('active');
@@ -1862,6 +2067,7 @@ function goScreen(name,btn){
   if(name==='servicos')renderServices();
   if(name==='relatorios')renderReports();
   if(name==='config')renderSettings();
+  if(name==='historico')renderHistory();
 
   // Sempre abre a nova aba no início da página.
   requestAnimationFrame(()=>{
@@ -2446,8 +2652,10 @@ async function saveBooking(){
       });
 
   let clientChanged=false;
+  let clientWasNew=false;
 
   if(!found){
+    clientWasNew=true;
     found={
       id:'c'+Date.now(),
       name,
@@ -2488,6 +2696,14 @@ async function saveBooking(){
   try{
     await cloudReplace('agendamentos',newBooking.id,newBooking);
     if(clientChanged)await cloudSet('clientes',found.id,found);
+
+    logAppAction('agendamento_criado',`Criou uma comanda para ${newBooking.client} com ${bookingItems(newBooking).length} serviço(s), total previsto de ${brl(newBooking.price)}.`,{bookingId:newBooking.id,client:newBooking.client,date:newBooking.date,time:newBooking.time,total:Number(newBooking.price||0),services:bookingItems(newBooking).length});
+
+    if(clientWasNew){
+      logAppAction('cliente_criado',`Cadastrou a cliente ${found.name}.`,{client:found.name,clientId:found.id});
+    }else if(clientChanged&&currentUser?.role==='admin'){
+      logAppAction('cliente_editado',`Atualizou dados da cliente ${found.name} durante o agendamento.`,{client:found.name,clientId:found.id});
+    }
   }catch(err){
     console.error(err);
     setSyncStatus('error','Erro ao salvar');
@@ -2564,12 +2780,19 @@ function openDetails(id){
       ${b.paymentNote?`<div class="soft-box" style="margin-top:9px"><div class="list-sub">Observação do pagamento</div><div style="font-size:11px;margin-top:3px">${safe(b.paymentNote)}</div></div>`:''}
     </div>`;
 
+  const deleteBookingButton=currentUser?.role==='admin'
+    ? `<button class="btn btn-danger" onclick="deleteCurrentBooking()">🗑 Excluir agendamento</button>`
+    : '';
+
   $('detailsActions').innerHTML=b.status==='agendado'
     ? `<button class="btn btn-note" onclick="openObservationModal()">＋ Adicionar observação</button>
        <button class="btn btn-danger" onclick="cancelCurrent()">Cancelado</button>
        <button class="btn btn-noshow" onclick="markNoShow()">Não compareceu</button>
-       <button class="btn btn-pink" onclick="finishCurrent()">Finalizar comanda</button>`
-    : `<button class="btn btn-note" onclick="openObservationModal()">＋ Adicionar observação</button><button class="btn btn-light" onclick="closeDetails()">Fechar</button>`;
+       <button class="btn btn-pink" onclick="finishCurrent()">Finalizar comanda</button>
+       ${deleteBookingButton}`
+    : `<button class="btn btn-note" onclick="openObservationModal()">＋ Adicionar observação</button>
+       <button class="btn btn-light" onclick="closeDetails()">Fechar</button>
+       ${deleteBookingButton}`;
 
   $('detailsModal').classList.add('show');
 }
@@ -2679,6 +2902,7 @@ async function saveCommandItem(){
 
   try{
     await cloudReplace('agendamentos',b.id,b);
+    logAppAction('servico_comanda_adicionado',`Adicionou ${service.name} com ${professional.name} à comanda de ${b.client}.`,{bookingId:b.id,client:b.client,service:service.name,professional:professional.name,price});
     $('commandItemModal').classList.remove('show');
     renderAll();
     openDetails(b.id);
@@ -2704,6 +2928,7 @@ async function removeCommandItem(itemId){
 
   try{
     await cloudReplace('agendamentos',b.id,b);
+    logAppAction('servico_comanda_removido',`Removeu ${item.serviceName} de ${item.professionalName} da comanda de ${b.client}.`,{bookingId:b.id,client:b.client,service:item.serviceName,professional:item.professionalName,price:Number(item.price||0)});
     renderAll();
     openDetails(b.id);
   }catch(err){
@@ -2732,6 +2957,7 @@ function closeObservationModal(){
 }
 async function saveNewObservation(){
   const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  const wasEditing=Boolean(currentObservationId);
   const text=$('newObservationText').value.trim();
   if(!text){alert('Digite a observação.');return}
   if(!Array.isArray(b.observations))b.observations=[];
@@ -2757,7 +2983,10 @@ async function saveNewObservation(){
   b.observationByAdmin=Boolean(last?.byAdmin);
   b.observationAuthor=last?.author||'';
   saveLocal();
-  try{await cloudReplace('agendamentos',b.id,b);}
+  try{
+    await cloudReplace('agendamentos',b.id,b);
+    logAppAction(wasEditing?'observacao_editada':'observacao_adicionada',`${wasEditing?'Editou':'Adicionou'} uma observação na comanda de ${b.client}.`,{bookingId:b.id,client:b.client});
+  }
   catch(err){console.error(err);setSyncStatus('error','Erro ao salvar');}
   $('observationModal').classList.remove('show');
   currentObservationId=null;
@@ -2766,6 +2995,59 @@ async function saveNewObservation(){
 }
 
 function closeDetails(){$('detailsModal').classList.remove('show');currentBookingId=null}
+
+async function deleteCurrentBooking(){
+  if(currentUser?.role!=='admin'){
+    alert('Somente o administrador pode excluir um agendamento.');
+    return;
+  }
+
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  syncBookingFromItems(b);
+
+  const paidCommissionItems=bookingItems(b).filter(item=>item.commissionPaid).length;
+  let message=`Excluir definitivamente o agendamento de ${b.client}?\n\nData: ${shortDate(b.date)} às ${b.time}\nStatus: ${statusLabel(b.status)}\nTotal: ${brl(b.price)}\n\nEssa ação não poderá ser desfeita.`;
+
+  if(paidCommissionItems){
+    message+=`\n\nAtenção: existem ${paidCommissionItems} comissão(ões) já marcadas como pagas. O histórico do pagamento de comissão será preservado.`;
+  }
+
+  if(!confirm(message))return;
+
+  const deletedDetails={
+    bookingId:b.id,
+    client:b.client,
+    date:b.date,
+    time:b.time,
+    status:b.status,
+    total:Number(b.price||0),
+    services:bookingItems(b).map(item=>({
+      service:item.serviceName,
+      professional:item.professionalName,
+      price:Number(item.price||0)
+    }))
+  };
+
+  try{
+    if(firebaseReady)await db.collection('agendamentos').doc(b.id).delete();
+
+    bookings=bookings.filter(x=>x.id!==b.id);
+    $('detailsModal').classList.remove('show');
+    currentBookingId=null;
+    renderAll();
+
+    logAppAction(
+      'agendamento_excluido',
+      `Excluiu o agendamento de ${b.client}, de ${shortDate(b.date)} às ${b.time}, que estava como ${statusLabel(b.status)}.`,
+      deletedDetails
+    );
+  }catch(err){
+    console.error(err);
+    setSyncStatus('error','Erro ao excluir');
+    alert('Não foi possível excluir o agendamento no Firebase.');
+  }
+}
+
 async function cancelCurrent(){
   const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
   if(!confirm('Marcar este atendimento como CANCELADO?'))return;
@@ -2773,7 +3055,10 @@ async function cancelCurrent(){
   b.statusUpdatedAt=new Date().toISOString();
   b.statusUpdatedBy=currentUser?.name||'';
   saveLocal();closeDetails();renderAll();
-  try{await cloudReplace('agendamentos',b.id,b);}
+  try{
+    await cloudReplace('agendamentos',b.id,b);
+    logAppAction('agendamento_cancelado',`Marcou a comanda de ${b.client} como cancelada.`,{bookingId:b.id,client:b.client,date:b.date,time:b.time,total:Number(b.price||0)});
+  }
   catch(err){console.error(err);setSyncStatus('error','Erro ao salvar');}
 }
 
@@ -2784,7 +3069,10 @@ async function markNoShow(){
   b.statusUpdatedAt=new Date().toISOString();
   b.statusUpdatedBy=currentUser?.name||'';
   saveLocal();closeDetails();renderAll();
-  try{await cloudReplace('agendamentos',b.id,b);}
+  try{
+    await cloudReplace('agendamentos',b.id,b);
+    logAppAction('nao_compareceu',`Marcou ${b.client} como não compareceu.`,{bookingId:b.id,client:b.client,date:b.date,time:b.time,total:Number(b.price||0)});
+  }
   catch(err){console.error(err);setSyncStatus('error','Erro ao salvar');}
 }
 function finishCurrent(){
@@ -2855,6 +3143,7 @@ async function confirmClientPayment(){
 
   try{
     await cloudReplace('agendamentos',b.id,b);
+    logAppAction('agendamento_finalizado',`Finalizou a comanda de ${b.client} no valor de ${brl(b.price)} via ${b.paymentMethod}.`,{bookingId:b.id,client:b.client,total:Number(b.price||0),paymentMethod:b.paymentMethod,services:bookingItems(b).length});
     $('clientPaymentModal').classList.remove('show');
     currentBookingId=null;
     renderAll();
@@ -2911,6 +3200,7 @@ async function saveClientEdit(){
 
   try{
     await cloudReplace('clientes',client.id,client);
+    logAppAction('cliente_editado',`Editou os dados da cliente ${client.name}.`,{client:client.name,clientId:client.id});
     closeClientEdit();
     renderClients();
     fillSelects();
@@ -3048,6 +3338,7 @@ async function confirmCommissionPayment(){
       touched.forEach(b=>batch.set(db.collection('agendamentos').doc(b.id),firestoreClean(b)));
       await batch.commit();
     }
+    logAppAction('comissao_paga',`Registrou pagamento de comissão para ${p.name} no valor de ${brl(total)} via ${payment.method}.`,{professional:p.name,professionalId:p.id,amount:total,method:payment.method});
   }catch(err){
     console.error(err);setSyncStatus('error','Erro ao salvar');
     alert('Não foi possível sincronizar o pagamento de comissão.');
@@ -3119,6 +3410,7 @@ async function saveAdminSettings(){
     setSyncStatus('online','Online');
     $('configSaved').classList.add('show');
     setTimeout(()=>$('configSaved')?.classList.remove('show'),2600);
+    logAppAction('configuracao_editada',`Atualizou as configurações do salão${pin?' e alterou o PIN do administrador':''}.`,{openTime,closeTime,lunchStart,lunchEnd,workingDays,pinChanged:Boolean(pin)});
   }catch(err){
     console.error(err);
     setSyncStatus('error','Erro ao salvar');
@@ -3245,6 +3537,7 @@ async function saveProfessional(){
 
   try{
     await cloudReplace('profissionais',id,data);
+    logAppAction(old?'profissional_editado':'profissional_criado',`${old?'Editou':'Cadastrou'} o profissional ${data.name}.`,{professional:data.name,professionalId:id,commission:data.commission,active:data.active});
     setSyncStatus('online','Online');
   }catch(err){
     console.error(err);
@@ -3264,7 +3557,10 @@ async function removeProfessional(id){
     p.active=false;
     p.updatedAt=new Date().toISOString();
     renderProfessionals();buildLogin();fillSelects();renderAgenda();
-    try{await cloudReplace('profissionais',id,p);}
+    try{
+      await cloudReplace('profissionais',id,p);
+      logAppAction('profissional_desativado',`Desativou o profissional ${p.name}.`,{professional:p.name,professionalId:p.id});
+    }
     catch(err){console.error(err);setSyncStatus('error','Erro ao salvar');}
     return;
   }
@@ -3275,6 +3571,7 @@ async function removeProfessional(id){
 
   try{
     if(firebaseReady)await db.collection('profissionais').doc(id).delete();
+    logAppAction('profissional_excluido',`Excluiu o profissional ${p.name}.`,{professional:p.name,professionalId:p.id});
   }catch(err){
     console.error(err);setSyncStatus('error','Erro ao excluir');
     alert('Não foi possível excluir no Firebase.');
@@ -3358,6 +3655,7 @@ async function saveService(){
 
   try{
     await cloudReplace('servicos',id,data);
+    logAppAction(old?'servico_editado':'servico_criado',`${old?'Editou':'Cadastrou'} o serviço ${data.name}.`,{service:data.name,serviceId:id,price:data.price,duration:data.duration,commission:data.commission,active:data.active});
     setSyncStatus('online','Online');
   }catch(err){
     console.error(err);setSyncStatus('error','Erro ao salvar');
@@ -3368,20 +3666,26 @@ async function saveService(){
 async function removeService(id){
   if(currentUser?.role!=='admin'){alert('Somente a administração pode excluir serviços.');return}
   const s=services.find(x=>x.id===id);if(!s)return;
-  const related=bookings.filter(b=>b.serviceId===id);
+  const related=bookings.filter(b=>bookingItems(b).some(item=>item.serviceId===id));
 
   if(related.length){
     if(!confirm(`${s.name} já aparece em ${related.length} atendimento(s). Para preservar o histórico, ele será apenas DESATIVADO. Deseja continuar?`))return;
     s.active=false;s.updatedAt=new Date().toISOString();
     renderServices();fillSelects();
-    try{await cloudReplace('servicos',id,s);}catch(err){console.error(err);setSyncStatus('error','Erro ao salvar')}
+    try{
+      await cloudReplace('servicos',id,s);
+      logAppAction('servico_desativado',`Desativou o serviço ${s.name}.`,{service:s.name,serviceId:s.id});
+    }catch(err){console.error(err);setSyncStatus('error','Erro ao salvar')}
     return;
   }
 
   if(!confirm(`Excluir o serviço "${s.name}" definitivamente?`))return;
   services=services.filter(x=>x.id!==id);
   renderServices();fillSelects();
-  try{if(firebaseReady)await db.collection('servicos').doc(id).delete();}
+  try{
+    if(firebaseReady)await db.collection('servicos').doc(id).delete();
+    logAppAction('servico_excluido',`Excluiu o serviço ${s.name}.`,{service:s.name,serviceId:s.id});
+  }
   catch(err){console.error(err);setSyncStatus('error','Erro ao excluir');alert('Não foi possível excluir o serviço no Firebase.')}
 }
 
