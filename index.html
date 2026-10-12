@@ -1,0 +1,4422 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Studio Thiago Hair</title>
+<style>
+:root{
+  --pink:#e92d6f;--pink2:#d52d79;--pink-soft:#fff3f7;--bg:#fffdfd;--card:#fff;
+  --text:#141414;--muted:#987783;--line:#ecdfe4;--green:#21b573;--green-soft:#ebfbf4;
+  --orange:#ff8a1f;--orange-soft:#fff6e9;--blue:#2f80ed;--blue-soft:#eef6ff;
+  --purple:#8b5cf6;--purple-soft:#f4efff;--shadow:0 2px 8px rgba(30,20,24,.04);
+}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{padding-bottom:78px}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}.app{min-height:100vh}
+.top{height:48px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:30}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}.logo-icon{width:26px;height:26px;border-radius:9px;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px}
+.userbox{display:flex;align-items:center;gap:10px}.usertext{text-align:right;line-height:1.05}.usertext strong{display:block;font-size:11px}.usertext span{font-size:9px;color:var(--muted)}
+.logout{width:30px;height:30px;border-radius:50%;border:none;background:#f7f3f4;color:#aa8e98}
+.page{max-width:820px;margin:0 auto;padding:16px 18px 24px}.title-row{display:flex;align-items:center;justify-content:space-between;margin:2px 0 14px}.title-row h1,.more-title{font-family:Georgia,serif;margin:0;font-size:26px}
+.subtle{color:var(--muted);font-size:12px}.back{border:none;background:transparent;font-size:22px;padding:0 6px 0 0}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.card-stat{border:1px solid var(--line);background:#fff;border-radius:16px;padding:13px}.card-stat .icon{width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.card-stat small{display:block;color:var(--muted);font-size:11px}.card-stat strong{font-size:20px}.section{margin-top:14px}.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.section-head h3{font-size:14px;margin:0}
+.link{color:var(--pink);font-size:12px;border:none;background:none}
+.hello{margin:4px 0 12px}.hello small{color:var(--muted)}.hello h2{font-family:Georgia,serif;font-size:24px;margin:0}
+.notice{border:1px dashed var(--line);background:#fffafa;border-radius:16px;padding:16px;margin-bottom:12px;color:var(--muted);font-size:12px}.notice a{color:var(--pink);text-decoration:none;font-weight:700}
+.wide-stat{border:1px solid var(--line);border-radius:16px;background:#fff;padding:13px;margin-top:10px}
+.date-strip{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);background:#fff;border-radius:16px;padding:10px 12px;margin-bottom:12px}
+.date-center{text-align:center}.date-center strong{display:block;font-size:14px}.date-center span{color:var(--muted);font-size:11px}
+.date-arrow{width:36px;height:36px;border:1px solid var(--line);background:#fff;border-radius:12px;font-size:20px}
+.pro-tabs{display:flex;gap:8px;overflow:auto;padding-bottom:5px;scrollbar-width:none}.pro-tabs::-webkit-scrollbar{display:none}
+.pro-tab{white-space:nowrap;border:1px solid var(--line);background:#fff;color:#8c6d78;border-radius:999px;padding:8px 13px;font-size:12px;font-weight:700}.pro-tab.active{background:var(--pink);border-color:var(--pink);color:#fff}
+.timeline{margin-top:10px;display:grid;gap:8px}.slot{display:grid;grid-template-columns:52px 1fr;gap:9px;align-items:stretch}.slot-time{padding-top:13px;text-align:right;font-size:11px;font-weight:800;color:#947984}
+.slot-box{min-height:58px;border:1px solid var(--line);border-radius:15px;background:#fff;padding:10px 12px}.slot-box.free{border-style:dashed;display:flex;align-items:center;justify-content:space-between;color:#a88a95}
+.slot-box.free button{border:none;background:var(--pink-soft);color:var(--pink);border-radius:10px;padding:7px 10px;font-weight:800;font-size:11px}
+.appt{display:flex;align-items:center;justify-content:space-between;gap:10px}.appt-main{min-width:0}.appt-name{font-weight:800;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.appt-meta{color:var(--muted);font-size:10px;margin-top:3px}.price{font-size:12px;font-weight:800;text-align:right}
+.badge{display:inline-block;margin-top:4px;padding:4px 7px;border-radius:999px;font-size:9px;font-weight:800}.badge.agendado{background:var(--blue-soft);color:var(--blue)}.badge.finalizado{background:var(--green-soft);color:var(--green)}.badge.cancelado{background:#fff0f0;color:#d94b4b}.badge.nao_compareceu{background:#fff7ed;color:#c2410c}
+.list-card{border:1px solid var(--line);border-radius:16px;background:#fff;padding:13px;margin-bottom:9px}.list-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.list-title{font-weight:800;font-size:14px}.list-sub{color:var(--muted);font-size:10px;margin-top:3px}
+.row-btns{display:flex;gap:7px;margin-top:9px}.btn{border:none;border-radius:10px;padding:9px 12px;font-weight:800;font-size:11px}.btn-pink{background:var(--pink);color:#fff}.btn-light{background:#fff;border:1px solid var(--line);color:#5f4d54}.btn-danger{background:#fff0f2;color:#d62959}.btn-grow{flex:1}
+.new-btn{border:none;background:var(--pink2);color:#fff;border-radius:8px;padding:9px 13px;font-size:11px;font-weight:800}.money{color:var(--pink);font-weight:900;font-size:16px;margin-top:4px}.active-dot{font-size:9px;color:var(--green);background:var(--green-soft);padding:4px 7px;border-radius:999px}
+.more-item{border:1px solid var(--line);border-radius:15px;background:#fff;padding:12px 13px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between}.more-left{display:flex;align-items:center;gap:11px}.more-ico{width:35px;height:35px;border-radius:10px;color:#fff;display:flex;align-items:center;justify-content:center}.more-text strong{display:block;font-size:14px}.more-text span{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.field{margin-bottom:11px}.field label{display:block;font-size:10px;font-weight:700;margin-bottom:5px}.field input,.field select{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px;background:#fff}
+.setting-box{border:1px solid var(--line);border-radius:16px;padding:13px;margin-bottom:10px;background:#fff}.setting-box h3{font-size:13px;margin:0 0 11px}.day-row{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.day-btn{border:1px solid var(--line);background:#fff;padding:9px 2px;border-radius:7px;font-size:10px}.day-btn.active{background:var(--pink2);color:#fff;border-color:var(--pink2)}.save-wide{width:100%;border:none;background:var(--pink2);color:#fff;border-radius:7px;padding:11px;font-size:11px;font-weight:800}
+.period{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}.period button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:7px;font-size:10px}.period button.active{background:var(--pink2);color:#fff;border-color:var(--pink2)}
+.report-hero{background:linear-gradient(90deg,#f23767,#e72574);color:#fff;border-radius:14px;padding:15px;margin-bottom:10px}.report-hero small{font-size:11px}.report-hero strong{display:block;font-size:24px;margin:2px 0}.report-placeholder{border:1px solid var(--line);border-radius:14px;padding:22px;text-align:center;color:var(--muted);font-size:11px;background:#fff}
+.bottom{position:fixed;left:0;right:0;bottom:0;z-index:50;height:58px;border-top:1px solid var(--line);background:rgba(255,255,255,.97);display:grid;padding-bottom:env(safe-area-inset-bottom)}.bottom.admin{grid-template-columns:repeat(5,1fr)}.bottom.collab{grid-template-columns:repeat(4,1fr)}
+.nav{border:none;background:transparent;color:#8f7b83;font-size:9px;font-weight:700}.nav span{display:block;font-size:18px;margin-bottom:1px}.nav.active{color:var(--pink)}
+.fab{position:fixed;right:17px;bottom:70px;width:50px;height:50px;border-radius:50%;border:none;background:var(--pink);color:#fff;font-size:26px;box-shadow:0 10px 24px rgba(233,45,111,.26);z-index:45}
+.login{min-height:100vh;background:linear-gradient(180deg,#fff5f7 0%,#fff 32%);display:flex;justify-content:center;padding:18px}.login-inner{width:100%;max-width:460px}.login-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:34px}.login-logo strong{font-family:Georgia,serif;font-size:28px}.login-logo .logo-icon{width:40px;height:40px;border-radius:14px;font-size:20px}
+.login h1{text-align:center;font-family:Georgia,serif;font-size:24px;margin:0}.login p{text-align:center;color:var(--muted);margin:7px 0 24px}.people{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.person{border:1px solid var(--line);background:#fff;border-radius:18px;padding:18px;text-align:center}.person-avatar{width:56px;height:56px;border-radius:50%;background:var(--pink);color:#fff;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800}.person strong{display:block;font-size:13px}.person small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.modal{position:fixed;inset:0;background:rgba(28,18,22,.42);z-index:100;display:none;align-items:flex-end;justify-content:center}.modal.show{display:flex}.sheet{width:100%;max-width:600px;background:#fff;border-radius:22px 22px 0 0;padding:16px;max-height:92vh;overflow:auto}.sheet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.sheet-head h2{font-family:Georgia,serif;margin:0;font-size:21px}.close{width:34px;height:34px;border:none;background:#f7f2f4;border-radius:10px}.actions{display:flex;gap:8px;margin-top:10px}.actions .btn{flex:1}
+.screen{display:none}.screen.active{display:block}
+@media(max-width:600px){.top{padding:0 12px}.page{padding:14px 12px 20px}.grid2{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}.people{grid-template-columns:1fr}}
+
+/* ===== BOOM VISUAL + CALENDÁRIO + PAGAMENTOS ===== */
+body{
+  background:
+    radial-gradient(circle at 12% -10%, rgba(233,45,111,.07), transparent 27%),
+    linear-gradient(180deg,#fffafb 0,#fffdfd 220px,#fff 100%);
+}
+.top{
+  box-shadow:0 1px 0 rgba(88,45,60,.03),0 8px 25px rgba(71,36,48,.035);
+  backdrop-filter:blur(18px);
+  background:rgba(255,255,255,.94);
+}
+.logo-icon{box-shadow:0 7px 16px rgba(233,45,111,.22)}
+.panel,.list-card,.card-stat,.wide-stat,.setting-box,.date-strip{
+  box-shadow:0 7px 24px rgba(67,36,48,.045);
+}
+.card-stat,.wide-stat,.list-card,.panel,.setting-box{transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}
+.list-card:active,.slot-box:active{transform:scale(.995)}
+.title-row h1,.more-title,.hello h2{letter-spacing:-.025em}
+.new-btn{
+  padding:10px 14px;border-radius:12px;
+  box-shadow:0 8px 18px rgba(213,45,121,.18)
+}
+.agenda-topline{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px
+}
+.view-toggle{
+  display:inline-grid;grid-template-columns:1fr 1fr;gap:3px;
+  background:#f8f1f4;border:1px solid #f0e2e7;padding:4px;border-radius:13px;
+  min-width:210px
+}
+.view-toggle button{
+  border:none;background:transparent;color:#8c727b;border-radius:9px;padding:8px 12px;
+  font-size:11px;font-weight:800
+}
+.view-toggle button.active{
+  background:#fff;color:var(--pink);box-shadow:0 3px 10px rgba(72,38,50,.08)
+}
+.calendar-shell{
+  margin-top:10px;border:1px solid var(--line);background:rgba(255,255,255,.95);
+  border-radius:20px;padding:13px;box-shadow:0 10px 30px rgba(75,38,52,.055)
+}
+.calendar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.calendar-head strong{font-family:Georgia,serif;font-size:19px;text-transform:capitalize}
+.calendar-nav{
+  width:34px;height:34px;border:1px solid var(--line);background:#fff;border-radius:11px;
+  color:#6f5660;font-size:19px
+}
+.calendar-weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.calendar-weekdays div{text-align:center;font-size:9px;color:#a08790;font-weight:800;padding:4px 0 6px}
+.cal-day{
+  position:relative;min-height:65px;border:1px solid transparent;background:#fff;border-radius:13px;
+  padding:7px;text-align:left;color:#3f3036
+}
+.cal-day:hover{background:#fff7fa}
+.cal-day.outside{opacity:.32}
+.cal-day.today{border-color:#f5bfd1;background:#fff8fb}
+.cal-day.selected{background:var(--pink);color:#fff;box-shadow:0 8px 18px rgba(233,45,111,.22)}
+.cal-day .num{font-size:11px;font-weight:900}
+.cal-day .count{
+  position:absolute;right:6px;top:6px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;background:#f7edf1;color:var(--pink);
+  font-size:8px;font-weight:900
+}
+.cal-day.selected .count{background:rgba(255,255,255,.2);color:#fff}
+.cal-dots{display:flex;gap:3px;flex-wrap:wrap;margin-top:13px}
+.cal-dot{width:5px;height:5px;border-radius:50%;background:#e92d6f}
+.cal-day.selected .cal-dot{background:#fff}
+.calendar-summary{
+  margin-top:11px;padding:12px;border-radius:15px;background:linear-gradient(135deg,#fff7fa,#fff);
+  border:1px solid var(--line)
+}
+.calendar-summary-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.calendar-summary strong{font-size:13px}.calendar-summary span{font-size:10px;color:var(--muted)}
+.summary-chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.summary-chip{
+  padding:6px 8px;border-radius:999px;background:#fff;border:1px solid var(--line);
+  font-size:9px;font-weight:800;color:#725a63
+}
+.pay-tag{
+  display:inline-flex;align-items:center;gap:4px;padding:4px 7px;border-radius:999px;
+  background:#f8f3f5;color:#806771;font-size:9px;font-weight:800
+}
+.payment-hero{
+  border-radius:18px;padding:14px;color:#fff;margin-bottom:10px;
+  background:linear-gradient(135deg,#1e1b2e,#3b2840 58%,#d72d76 130%);
+  box-shadow:0 12px 27px rgba(43,28,38,.13)
+}
+.payment-hero small{opacity:.76;font-size:10px}.payment-hero strong{display:block;font-size:24px;margin-top:3px}
+.history-title{font-size:13px;font-weight:900;margin:18px 0 8px}
+.payment-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;
+  border-bottom:1px solid var(--line)
+}
+.payment-row:last-child{border-bottom:none}
+.payment-icon{
+  width:34px;height:34px;border-radius:11px;background:var(--pink-soft);color:var(--pink);
+  display:flex;align-items:center;justify-content:center;font-size:15px;flex:none
+}
+.payment-left{display:flex;align-items:center;gap:9px;min-width:0}
+.payment-left strong{display:block;font-size:11px}.payment-left span{display:block;font-size:9px;color:var(--muted);margin-top:2px}
+.payment-value{text-align:right}.payment-value strong{display:block;font-size:11px}.payment-value span{font-size:9px;color:var(--muted)}
+.payment-breakdown{display:grid;gap:7px}
+.break-row{display:flex;align-items:center;justify-content:space-between;font-size:11px}
+.break-bar{height:6px;border-radius:999px;background:#f4edf0;overflow:hidden;margin-top:4px}
+.break-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--pink),#f35a8b)}
+.soft-box{border:1px solid var(--line);background:#fff;border-radius:15px;padding:12px}
+.details-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.detail-cell{background:#fff9fb;border:1px solid #f2e5e9;border-radius:12px;padding:9px}
+.detail-cell small{display:block;color:var(--muted);font-size:9px}.detail-cell strong{display:block;font-size:11px;margin-top:2px}
+.modal .sheet{box-shadow:0 -18px 60px rgba(41,23,30,.17)}
+.modal .sheet:before{
+  content:"";display:block;width:42px;height:4px;border-radius:999px;background:#e7d9de;margin:-5px auto 12px
+}
+.select-modern{
+  width:100%;border:1px solid var(--line);border-radius:11px;padding:11px;background:#fff;outline:none
+}
+.note-box{width:100%;border:1px solid var(--line);border-radius:11px;padding:10px;resize:vertical;min-height:70px}
+.client-kpis{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.client-kpi{font-size:9px;border-radius:999px;padding:5px 7px;background:#fff7fa;color:#87636f}
+@media(max-width:600px){
+  .agenda-topline{align-items:stretch;flex-direction:column}
+  .view-toggle{width:100%;min-width:0}
+  .cal-day{min-height:57px;padding:6px}
+  .calendar-grid,.calendar-weekdays{gap:3px}
+  .cal-day .count{right:4px;top:4px}
+  .details-grid{grid-template-columns:1fr 1fr}
+}
+
+
+/* ===== OBSERVAÇÕES DE AGENDAMENTO ===== */
+.booking-note-field{grid-column:1/-1}
+.booking-note-field textarea{
+  width:100%;min-height:82px;resize:vertical;border:1px solid var(--line);
+  border-radius:12px;padding:11px 12px;background:#fff;outline:none;line-height:1.35
+}
+.booking-note-field textarea:focus{
+  border-color:#ef9db9;box-shadow:0 0 0 3px rgba(233,45,111,.08)
+}
+.booking-note-hint{font-size:9px;color:var(--muted);margin-top:5px;line-height:1.35}
+.agenda-note{
+  margin-top:8px;padding:7px 9px;border-radius:10px;background:#fff8fb;
+  border:1px solid #f2e3e9;color:#765c65;font-size:10px;line-height:1.35
+}
+.agenda-note.admin{
+  background:#fff1f2;border-color:#fecdd3;color:#b42332;font-weight:700
+}
+.agenda-note.admin:before{content:"⚠ ";font-weight:900}
+.note-label{
+  display:block;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.045em;
+  margin-bottom:3px;opacity:.78
+}
+.detail-note{
+  margin-top:10px;border-radius:13px;padding:11px 12px;border:1px solid #f0e0e6;
+  background:#fff9fb;font-size:11px;line-height:1.45;color:#654e57
+}
+.detail-note.admin{
+  background:#fff1f2;border-color:#fda4af;color:#a61b2b;
+  box-shadow:0 5px 15px rgba(220,38,38,.06)
+}
+.detail-note.admin .note-label{color:#be123c;opacity:1}
+
+
+/* ===== HISTÓRICO / NOVAS OBSERVAÇÕES ===== */
+.note-history{margin-top:12px}
+.note-history-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px
+}
+.note-history-head strong{font-size:12px}
+.note-count{
+  min-width:22px;height:22px;padding:0 7px;border-radius:999px;background:#f7eef2;
+  color:#8b6673;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900
+}
+.note-item{
+  position:relative;margin-top:7px;padding:10px 11px;border-radius:12px;
+  border:1px solid #f0e0e6;background:#fff9fb;color:#654e57;font-size:11px;line-height:1.42
+}
+.note-item.admin{
+  background:#fff1f2;border-color:#fda4af;color:#a61b2b;
+}
+.note-meta{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px;
+  font-size:8px;opacity:.72
+}
+.note-edit{
+  border:none;background:rgba(255,255,255,.78);color:inherit;border-radius:8px;
+  padding:4px 7px;font-size:8px;font-weight:900
+}
+.details-actions{flex-wrap:wrap}
+.details-actions .btn-note{
+  flex:1 0 100%;background:#fff7fa;color:var(--pink);border:1px solid #f4cfdb
+}
+.note-modal-info{
+  padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:#fff9fb;
+  margin-bottom:11px
+}
+.note-modal-info strong{display:block;font-size:12px}
+.note-modal-info span{display:block;color:var(--muted);font-size:9px;margin-top:3px}
+.note-admin-warning{
+  display:none;margin-top:7px;padding:8px 9px;border-radius:10px;background:#fff1f2;
+  border:1px solid #fecdd3;color:#b42332;font-size:9px;font-weight:800;line-height:1.35
+}
+.note-admin-warning.show{display:block}
+
+
+/* ===== FIREBASE / SINCRONIZAÇÃO ===== */
+.sync-status{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 8px;border-radius:999px;
+  background:#f7f3f4;color:#8d737c;
+  font-size:8px;font-weight:900;white-space:nowrap
+}
+.sync-status:before{content:"";width:6px;height:6px;border-radius:50%;background:#d2bfc6}
+.sync-status.online{background:#ecfdf5;color:#137b50}
+.sync-status.online:before{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.10)}
+.sync-status.error{background:#fff1f2;color:#b42332}
+.sync-status.error:before{background:#ef4444}
+.sync-status.connecting{background:#fff7ed;color:#a85b16}
+.sync-status.connecting:before{background:#f59e0b}
+
+
+/* ===== CADASTRO / EDIÇÃO DE PROFISSIONAIS ===== */
+.prof-form-avatar{
+  width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:900;
+  box-shadow:0 8px 18px rgba(109,40,217,.18)
+}
+.prof-form-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.prof-form-head strong{display:block;font-size:14px}
+.prof-form-head span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.switch-row{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border:1px solid var(--line);border-radius:13px;padding:11px 12px;background:#fff
+}
+.switch-row strong{display:block;font-size:11px}
+.switch-row span{display:block;font-size:9px;color:var(--muted);margin-top:2px}
+.switch{
+  position:relative;width:44px;height:25px;flex:none
+}
+.switch input{display:none}
+.switch i{
+  position:absolute;inset:0;border-radius:999px;background:#e8dde1;transition:.18s
+}
+.switch i:after{
+  content:"";position:absolute;width:19px;height:19px;left:3px;top:3px;border-radius:50%;
+  background:#fff;box-shadow:0 2px 7px rgba(0,0,0,.14);transition:.18s
+}
+.switch input:checked+i{background:var(--pink)}
+.switch input:checked+i:after{transform:translateX(19px)}
+.inactive-dot{
+  font-size:9px;color:#8b6f79;background:#f4eef1;padding:4px 7px;border-radius:999px
+}
+
+
+/* ===== PIN DE ACESSO ===== */
+.pin-sheet{max-width:420px}
+.pin-user-card{
+  display:flex;align-items:center;gap:11px;padding:11px 12px;margin-bottom:13px;
+  border:1px solid var(--line);border-radius:14px;background:#fff9fb
+}
+.pin-user-avatar{
+  width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--pink),#b72167);
+  color:white;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;
+  box-shadow:0 7px 17px rgba(233,45,111,.19)
+}
+.pin-user-card strong{display:block;font-size:13px}
+.pin-user-card span{display:block;color:var(--muted);font-size:9px;margin-top:2px}
+.pin-input{
+  width:100%;height:58px;border:1px solid var(--line);border-radius:14px;background:#fff;
+  text-align:center;font-size:25px;font-weight:900;letter-spacing:12px;padding-left:12px;outline:none
+}
+.pin-input:focus{border-color:#ed9bb8;box-shadow:0 0 0 4px rgba(233,45,111,.08)}
+.pin-error{
+  min-height:17px;text-align:center;color:#be123c;font-size:10px;font-weight:800;margin-top:7px
+}
+.pin-help{font-size:9px;color:var(--muted);text-align:center;line-height:1.4;margin-top:7px}
+.pin-field-note{
+  font-size:9px;color:var(--muted);line-height:1.35;margin-top:5px
+}
+.pin-admin-badge{
+  display:inline-flex;align-items:center;gap:4px;background:#fff1f2;color:#be123c;
+  border:1px solid #fecdd3;border-radius:999px;padding:4px 7px;font-size:8px;font-weight:900
+}
+
+
+/* ===== SERVIÇOS / RELATÓRIOS / CONFIGURAÇÕES FUNCIONAIS ===== */
+.service-form-head{
+  display:flex;align-items:center;gap:12px;padding:11px 12px;margin-bottom:12px;
+  border:1px solid var(--line);border-radius:14px;background:#fff9fb
+}
+.service-form-icon{
+  width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#ef3367,#c91d5c);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;
+  box-shadow:0 8px 18px rgba(233,45,111,.18)
+}
+.service-form-head strong{display:block;font-size:13px}
+.service-form-head span{display:block;color:var(--muted);font-size:9px;margin-top:3px}
+.custom-report{
+  margin:-2px 0 11px;padding:11px;border:1px solid var(--line);border-radius:13px;background:#fff
+}
+.custom-report .grid2{align-items:end}
+.custom-report .btn{width:100%}
+.config-saved{
+  display:none;margin:9px 0 0;padding:9px 10px;border-radius:10px;background:#ecfdf5;
+  border:1px solid #bbf7d0;color:#137b50;font-size:10px;font-weight:800;text-align:center
+}
+.config-saved.show{display:block}
+.closed-day{
+  border:1px dashed #eccfd9;background:#fff8fa;border-radius:15px;padding:24px;text-align:center;
+  color:#987783;font-size:11px
+}
+.closed-day strong{display:block;color:#624d55;font-size:13px;margin-bottom:4px}
+.service-inactive{opacity:.68}
+.report-period-label{font-size:9px;color:rgba(255,255,255,.8)}
+
+
+.btn-noshow{
+  background:#fff7ed!important;
+  color:#c2410c!important;
+  border:1px solid #fed7aa!important;
+}
+.status-info-box{
+  margin-top:9px;padding:9px 10px;border-radius:11px;font-size:10px;font-weight:700
+}
+.status-info-box.cancelado{background:#fff1f2;border:1px solid #fecdd3;color:#be123c}
+.status-info-box.nao_compareceu{background:#fff7ed;border:1px solid #fed7aa;color:#c2410c}
+
+
+/* ===== LOGIN GERAL DO STUDIO (FIREBASE AUTH) ===== */
+.auth-screen{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 18% 0%,rgba(233,45,111,.12),transparent 28%),
+    linear-gradient(180deg,#fff7fa 0%,#fff 42%,#fffdfd 100%);
+  display:flex;align-items:center;justify-content:center;padding:22px
+}
+.auth-card{
+  width:100%;max-width:430px;background:#fff;border:1px solid var(--line);
+  border-radius:26px;padding:24px;box-shadow:0 22px 60px rgba(77,35,51,.10)
+}
+.auth-brand{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:22px}
+.auth-brand .logo-icon{width:42px;height:42px;border-radius:14px;font-size:20px}
+.auth-brand strong{font-family:Georgia,serif;font-size:27px}
+.auth-card h1{font-family:Georgia,serif;text-align:center;font-size:23px;margin:0 0 6px}
+.auth-card>p{text-align:center;color:var(--muted);font-size:11px;line-height:1.45;margin:0 0 20px}
+.auth-field{margin-bottom:11px}
+.auth-field label{display:block;font-size:9px;font-weight:900;color:#806873;margin-bottom:5px;letter-spacing:.04em}
+.auth-field input{
+  width:100%;height:46px;border:1px solid var(--line);border-radius:12px;background:#fff;
+  padding:0 12px;outline:none;font-size:13px
+}
+.auth-field input:focus{border-color:#ec9ab7;box-shadow:0 0 0 3px rgba(233,45,111,.08)}
+.auth-submit{
+  width:100%;border:none;border-radius:12px;background:linear-gradient(135deg,var(--pink),#c92469);
+  color:#fff;padding:12px 14px;font-weight:900;font-size:12px;
+  box-shadow:0 9px 22px rgba(233,45,111,.20)
+}
+.auth-error{
+  min-height:18px;margin-top:9px;text-align:center;color:#be123c;font-size:10px;font-weight:800
+}
+.auth-info{
+  margin-top:12px;padding:10px;border-radius:12px;background:#fff8fb;border:1px solid #f1e1e7;
+  color:#896d77;font-size:9px;line-height:1.4;text-align:center
+}
+.profile-auth-bar{
+  margin:0 0 14px;padding:9px 11px;border:1px solid var(--line);border-radius:12px;background:#fff;
+  display:flex;align-items:center;justify-content:space-between;gap:10px
+}
+.profile-auth-bar div{min-width:0}
+.profile-auth-bar strong{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profile-auth-bar span{display:block;color:var(--muted);font-size:8px;margin-top:2px}
+.profile-auth-bar button{
+  border:1px solid var(--line);background:#fff;border-radius:9px;padding:6px 8px;
+  color:#8b6673;font-size:9px;font-weight:800;white-space:nowrap
+}
+
+
+/* ===== RESPONSIVIDADE AUTOMÁTICA PARA CELULAR ===== */
+html{
+  width:100%;
+  min-width:0;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+body{
+  width:100%;
+  min-width:0;
+  max-width:100vw;
+  overflow-x:hidden;
+  overscroll-behavior-x:none;
+}
+.app,.screen,.page,.top,.bottom,.login,.auth-screen{
+  max-width:100%;
+  min-width:0;
+}
+.page{
+  width:100%;
+}
+img,svg,video,canvas{
+  max-width:100%;
+  height:auto;
+}
+input,select,textarea,button{
+  max-width:100%;
+}
+input,select,textarea{
+  font-size:16px; /* evita zoom automático do iPhone ao focar campos */
+}
+.auth-card,.login-inner,.sheet{
+  width:min(100%,600px);
+  max-width:100%;
+}
+.auth-card{
+  width:min(100%,430px);
+}
+.list-top,.appt,.userbox,.agenda-topline,.calendar-summary-top,
+.profile-auth-bar,.payment-row,.title-row,.section-head{
+  min-width:0;
+}
+.list-top>*,.appt>*,.userbox>*,.payment-row>*,.profile-auth-bar>*{
+  min-width:0;
+}
+.list-title,.list-sub,.more-text strong,.more-text span,
+.usertext strong,.usertext span,.payment-left strong,.payment-left span{
+  overflow-wrap:anywhere;
+}
+.pro-tabs{
+  width:100%;
+  max-width:100%;
+}
+.calendar-shell{
+  width:100%;
+  overflow:hidden;
+}
+.calendar-grid,.calendar-weekdays{
+  min-width:0;
+}
+.cal-day{
+  min-width:0;
+}
+.day-row{
+  width:100%;
+}
+.bottom{
+  width:100%;
+  padding-left:env(safe-area-inset-left);
+  padding-right:env(safe-area-inset-right);
+}
+.top{
+  padding-left:max(12px,env(safe-area-inset-left));
+  padding-right:max(12px,env(safe-area-inset-right));
+}
+.auth-screen,.login{
+  padding-left:max(14px,env(safe-area-inset-left));
+  padding-right:max(14px,env(safe-area-inset-right));
+}
+.sheet{
+  padding-left:max(16px,env(safe-area-inset-left));
+  padding-right:max(16px,env(safe-area-inset-right));
+}
+
+@media (max-width:480px){
+  body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+  .top{
+    height:52px;
+    padding-left:10px;
+    padding-right:10px;
+  }
+  .logo{gap:7px;font-size:15px}
+  .logo-icon{width:25px;height:25px}
+  .userbox{gap:6px}
+  .usertext strong{font-size:10px;max-width:110px}
+  .usertext span{font-size:8px}
+  .logout{width:28px;height:28px}
+
+  .page{padding:12px 10px 20px}
+  .title-row h1,.more-title{font-size:23px}
+  .hello h2{font-size:21px}
+
+  .grid2{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  .grid3{
+    grid-template-columns:1fr;
+  }
+
+  .card-stat{padding:11px}
+  .card-stat strong{font-size:18px}
+  .panel,.list-card,.setting-box{border-radius:14px}
+
+  .date-strip{padding:8px 9px}
+  .date-arrow{width:33px;height:33px}
+  .slot{grid-template-columns:42px minmax(0,1fr);gap:7px}
+  .slot-time{font-size:10px}
+  .slot-box{padding:9px;min-width:0}
+  .appt-name{font-size:12px}
+  .price{font-size:11px}
+
+  .period{
+    grid-template-columns:1fr 1fr;
+  }
+  .period button{
+    min-height:36px;
+  }
+
+  .day-row{
+    grid-template-columns:repeat(7,minmax(0,1fr));
+    gap:3px;
+  }
+  .day-btn{
+    padding:8px 0;
+    font-size:9px;
+  }
+
+  .calendar-shell{padding:9px}
+  .calendar-weekdays,.calendar-grid{gap:2px}
+  .cal-day{
+    min-height:49px;
+    padding:5px 3px;
+    border-radius:10px;
+  }
+  .cal-day .num{font-size:10px}
+  .cal-day .count{
+    min-width:15px;height:15px;font-size:7px;right:3px;top:3px
+  }
+  .cal-dots{margin-top:10px;gap:2px}
+
+  .bottom{
+    min-height:60px;
+    height:calc(60px + env(safe-area-inset-bottom));
+  }
+  .nav{font-size:8px;padding:3px 1px}
+  .nav span{font-size:17px}
+  .fab{
+    right:13px;
+    bottom:calc(72px + env(safe-area-inset-bottom));
+    width:48px;height:48px
+  }
+
+  .auth-screen{align-items:flex-start;padding-top:max(22px,env(safe-area-inset-top))}
+  .auth-card{
+    padding:19px 15px;
+    border-radius:21px;
+  }
+  .auth-brand{margin-bottom:17px}
+  .auth-brand strong{font-size:23px}
+  .auth-card h1{font-size:21px}
+  .login{
+    padding-top:max(18px,env(safe-area-inset-top));
+  }
+  .login-logo{margin-bottom:23px}
+  .login-logo strong{font-size:23px}
+  .person{padding:15px 12px}
+  .person-avatar{width:52px;height:52px}
+
+  .sheet{
+    width:100%;
+    max-height:94dvh;
+    border-radius:20px 20px 0 0;
+    padding-top:13px;
+    padding-bottom:max(16px,env(safe-area-inset-bottom));
+  }
+  .sheet-head h2{font-size:19px}
+  .actions{
+    flex-wrap:wrap;
+  }
+  .actions .btn{
+    min-width:calc(50% - 5px);
+  }
+}
+
+@media (max-width:390px){
+  .grid2{
+    grid-template-columns:1fr;
+  }
+  .details-grid{
+    grid-template-columns:1fr 1fr;
+  }
+  .card-stat.grid-keep,
+  .booking-note-field{
+    grid-column:auto;
+  }
+  .people{
+    grid-template-columns:1fr;
+  }
+  .list-top{
+    gap:7px;
+  }
+  .new-btn{
+    padding:9px 10px;
+  }
+}
+
+@media (max-width:340px){
+  .logo span{display:none}
+  .title-row h1,.more-title{font-size:21px}
+  .details-grid{grid-template-columns:1fr}
+  .summary-chips{gap:4px}
+  .summary-chip{font-size:8px;padding:5px 6px}
+  .day-btn{font-size:8px}
+}
+
+
+/* ===== BUSCA DE CLIENTES NO AGENDAMENTO ===== */
+.client-search-wrap{position:relative}
+.client-suggestions{
+  display:none;
+  position:absolute;
+  top:calc(100% + 4px);
+  left:0;
+  right:0;
+  z-index:120;
+  max-height:230px;
+  overflow-y:auto;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  box-shadow:0 14px 34px rgba(70,38,49,.16);
+}
+.client-suggestions.show{display:block}
+.client-suggestion{
+  width:100%;
+  border:0;
+  border-bottom:1px solid #f3e7eb;
+  background:#fff;
+  padding:10px 11px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  text-align:left;
+}
+.client-suggestion:last-child{border-bottom:0}
+.client-suggestion:active{background:#fff6f9}
+.client-suggestion strong{display:block;font-size:11px;color:#503e45}
+.client-suggestion span{display:block;font-size:9px;color:var(--muted);margin-top:2px}
+.client-suggestion em{
+  font-style:normal;
+  font-size:9px;
+  font-weight:900;
+  color:var(--pink);
+  white-space:nowrap;
+}
+.client-new-hint{
+  display:none;
+  font-size:8px;
+  color:#8c6f79;
+  margin-top:5px;
+  line-height:1.35;
+}
+.client-new-hint.show{display:block}
+
+
+/* ===== COMANDA COM MÚLTIPLOS SERVIÇOS ===== */
+.command-summary{
+  margin:10px 0 12px;
+  padding:12px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#fff7fa,#fff);
+  border:1px solid #f1dce4;
+}
+.command-summary-top{
+  display:flex;align-items:center;justify-content:space-between;gap:10px
+}
+.command-summary small{display:block;color:var(--muted);font-size:8px;font-weight:800}
+.command-summary strong{display:block;font-size:18px;margin-top:2px}
+.command-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:5px 8px;border-radius:999px;background:#fce7f3;color:#be185d;
+  font-size:8px;font-weight:900;white-space:nowrap
+}
+.command-items{display:grid;gap:8px;margin-top:10px}
+.command-item{
+  border:1px solid var(--line);border-radius:13px;background:#fff;padding:10px
+}
+.command-item-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px
+}
+.command-item-title{font-size:11px;font-weight:900;color:#4f3d44}
+.command-item-sub{font-size:8px;color:var(--muted);margin-top:3px;line-height:1.4}
+.command-item-price{font-size:12px;font-weight:900;white-space:nowrap}
+.command-item-footer{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  margin-top:8px;padding-top:7px;border-top:1px dashed #eddde3
+}
+.command-item-footer span{font-size:8px;color:#806873}
+.command-remove{
+  border:0;background:#fff1f2;color:#be123c;border-radius:8px;
+  padding:5px 7px;font-size:8px;font-weight:900
+}
+.command-add-btn{
+  width:100%;margin-top:9px;border:1px dashed #e7a7bd;background:#fff7fa;
+  color:#c32462;border-radius:11px;padding:9px;font-size:9px;font-weight:900
+}
+.payment-command-item{
+  display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:10px;
+  align-items:center;padding:9px 0;border-bottom:1px solid var(--line)
+}
+.payment-command-item:last-child{border-bottom:0}
+.payment-command-item strong{display:block;font-size:10px}
+.payment-command-item span{display:block;font-size:8px;color:var(--muted);margin-top:2px}
+.payment-command-item input{width:100%;text-align:right}
+.payment-command-total{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:11px 0 2px;font-weight:900
+}
+.payment-command-total span{font-size:10px}
+.payment-command-total strong{font-size:18px;color:var(--pink)}
+@media(max-width:390px){
+  .payment-command-item{grid-template-columns:minmax(0,1fr) 95px}
+}
+
+
+/* ===== HISTÓRICO DE MOVIMENTAÇÕES ===== */
+.history-toolbar{
+  display:flex;gap:8px;align-items:center;margin-bottom:12px
+}
+.history-toolbar input{
+  flex:1;min-width:0
+}
+.history-card{
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:11px;margin-bottom:8px
+}
+.history-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px
+}
+.history-action{
+  display:flex;align-items:center;gap:8px;min-width:0
+}
+.history-icon{
+  width:32px;height:32px;flex:none;border-radius:10px;background:#fff2f6;
+  color:var(--pink);display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:900
+}
+.history-action strong{display:block;font-size:10px;color:#4f3d44}
+.history-action span{display:block;font-size:8px;color:var(--muted);margin-top:2px}
+.history-time{
+  font-size:8px;color:var(--muted);white-space:nowrap;text-align:right
+}
+.history-desc{
+  margin-top:8px;padding-top:8px;border-top:1px solid #f2e7eb;
+  font-size:9px;color:#705963;line-height:1.45
+}
+.history-user{
+  display:inline-flex;margin-top:7px;padding:4px 7px;border-radius:999px;
+  background:#f8f5f6;color:#765f68;font-size:8px;font-weight:800
+}
+.history-empty{
+  padding:28px 14px;text-align:center;border:1px dashed #e6d5db;
+  border-radius:14px;color:var(--muted);font-size:10px
+}
+
+
+/* ===== DASHBOARD FINANCEIRO — CONCEITO 2 ===== */
+.finance-screen{
+  padding-bottom:26px;
+}
+.finance-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+.finance-header h1{
+  margin:0;
+  font-size:27px;
+  line-height:1.05;
+  letter-spacing:-.6px;
+}
+.finance-header p{
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:10px;
+}
+.finance-date-badge{
+  min-width:122px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#fff;
+  padding:9px 10px;
+  text-align:left;
+  box-shadow:0 5px 16px rgba(57,35,44,.035);
+}
+.finance-date-badge strong{
+  display:block;
+  font-size:9px;
+}
+.finance-date-badge span{
+  display:block;
+  margin-top:2px;
+  color:var(--muted);
+  font-size:8px;
+}
+
+.finance-period{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
+  padding:5px;
+  margin-bottom:12px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#fff;
+}
+.finance-period button{
+  border:0;
+  border-radius:9px;
+  background:transparent;
+  padding:8px 5px;
+  color:#75636a;
+  font-size:9px;
+  font-weight:800;
+}
+.finance-period button.active{
+  background:#fde5ed;
+  color:#c51f58;
+  box-shadow:inset 0 0 0 1px #f5c8d7;
+}
+
+.finance-custom-range{
+  margin-bottom:12px;
+  padding:11px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#fff;
+}
+
+.finance-kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+  margin-bottom:10px;
+}
+.finance-kpi{
+  position:relative;
+  min-width:0;
+  border:1px solid rgba(229,211,217,.9);
+  border-radius:17px;
+  padding:12px;
+  overflow:hidden;
+  box-shadow:0 8px 24px rgba(68,42,52,.045);
+}
+.finance-kpi.forecast{background:linear-gradient(145deg,#fff3f7,#fde7ef)}
+.finance-kpi.received{background:linear-gradient(145deg,#f9fffb,#edf8f0)}
+.finance-kpi.lost{background:linear-gradient(145deg,#fff5f7,#fde9ec)}
+.finance-kpi .kpi-icon{
+  width:31px;height:31px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:9px;font-size:15px;font-weight:900
+}
+.finance-kpi.forecast .kpi-icon{background:#f8dce6;color:#bc2458}
+.finance-kpi.received .kpi-icon{background:#dff1e5;color:#278149}
+.finance-kpi.lost .kpi-icon{background:#f8dadd;color:#c0394e}
+.finance-kpi small{
+  display:block;
+  color:#78656d;
+  font-size:8px;
+  line-height:1.25
+}
+.finance-kpi strong{
+  display:block;
+  margin:4px 0 3px;
+  font-size:17px;
+  line-height:1.05;
+  overflow-wrap:anywhere
+}
+.finance-kpi .trend{
+  display:flex;align-items:center;gap:4px;
+  margin-top:9px;
+  font-size:8px;font-weight:800
+}
+.finance-kpi .trend.up{color:#238b4d}
+.finance-kpi .trend.down{color:#d43b55}
+.finance-kpi .spark{
+  position:absolute;right:8px;bottom:8px;
+  width:42px;height:18px;opacity:.45
+}
+
+.finance-status-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+  margin-bottom:12px;
+}
+.finance-status{
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:#fff;
+  padding:11px;
+  box-shadow:0 6px 18px rgba(68,42,52,.035)
+}
+.finance-status-top{
+  display:flex;align-items:center;gap:7px
+}
+.finance-status-icon{
+  width:29px;height:29px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  flex:none;font-size:13px;font-weight:900
+}
+.finance-status.scheduled .finance-status-icon{background:#fce8ef;color:#cb2d64}
+.finance-status.canceled .finance-status-icon{background:#fff0f2;color:#db4057}
+.finance-status.finished .finance-status-icon{background:#e9f6ed;color:#268b4d}
+.finance-status label{
+  font-size:9px;font-weight:800;color:#54434a
+}
+.finance-status strong{
+  display:block;margin-top:8px;font-size:20px
+}
+.finance-status .status-sub{
+  margin-top:2px;color:var(--muted);font-size:8px
+}
+
+.finance-charts{
+  display:grid;
+  grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+  gap:10px;
+  margin-bottom:11px;
+}
+.finance-card{
+  border:1px solid var(--line);
+  border-radius:17px;
+  background:#fff;
+  padding:13px;
+  box-shadow:0 8px 24px rgba(68,42,52,.04)
+}
+.finance-card-title{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  margin-bottom:11px
+}
+.finance-card-title h3{
+  margin:0;font-size:12px
+}
+.finance-card-title span{
+  color:var(--muted);font-size:8px
+}
+
+.finance-donut-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:3px 0 8px
+}
+.finance-donut{
+  position:relative;
+  width:142px;height:142px;
+  border-radius:50%;
+  background:conic-gradient(
+    #a45b70 0 var(--scheduled-pct),
+    #f1c7d1 var(--scheduled-pct) calc(var(--scheduled-pct) + var(--cancel-pct)),
+    #db7789 calc(var(--scheduled-pct) + var(--cancel-pct)) 100%
+  );
+}
+.finance-donut:after{
+  content:"";
+  position:absolute;inset:31px;
+  background:#fff;border-radius:50%;
+  box-shadow:0 0 0 1px #f2e5ea
+}
+.finance-donut-center{
+  position:absolute;inset:0;
+  z-index:2;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center
+}
+.finance-donut-center strong{font-size:24px;line-height:1}
+.finance-donut-center span{font-size:8px;color:var(--muted);margin-top:3px}
+.finance-legend{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:4px
+}
+.finance-legend-item{text-align:center}
+.finance-legend-dot{
+  width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:3px
+}
+.finance-legend-item div{font-size:8px;color:#66525a}
+.finance-legend-item strong{display:block;font-size:9px;margin-top:2px}
+
+.finance-bars{
+  height:164px;
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  padding:15px 3px 0;
+  border-bottom:1px solid #eadde2;
+  background:
+    linear-gradient(to top, transparent 24%, #f4ecef 25%, transparent 26%),
+    linear-gradient(to top, transparent 49%, #f4ecef 50%, transparent 51%),
+    linear-gradient(to top, transparent 74%, #f4ecef 75%, transparent 76%);
+}
+.finance-bar-col{
+  flex:1;min-width:0;
+  height:100%;
+  display:flex;flex-direction:column;
+  justify-content:flex-end;align-items:center
+}
+.finance-bar-value{
+  font-size:7px;font-weight:800;color:#765b65;
+  margin-bottom:4px;white-space:nowrap
+}
+.finance-bar{
+  width:64%;
+  min-width:12px;
+  border-radius:5px 5px 0 0;
+  background:linear-gradient(180deg,#e59aac,#d67c91);
+  min-height:2px
+}
+.finance-bar-day{
+  font-size:7px;color:#8c7780;margin-top:5px
+}
+
+.finance-commission-card{
+  margin-bottom:11px
+}
+.finance-commission-title{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px
+}
+.finance-commission-title h3{font-size:13px;margin:0}
+.finance-link{
+  border:0;background:#fdeaf0;color:#c4285d;border-radius:9px;
+  padding:7px 9px;font-size:8px;font-weight:900
+}
+.finance-commission-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:9px
+}
+.finance-commission-box{
+  padding:12px;border:1px solid var(--line);border-radius:13px;background:#fff
+}
+.finance-commission-box small{display:block;font-size:9px;color:#78666d}
+.finance-commission-box strong{display:block;font-size:18px;margin:3px 0 8px}
+.finance-progress{
+  height:6px;border-radius:999px;background:#f0ebed;overflow:hidden
+}
+.finance-progress i{display:block;height:100%;border-radius:999px;background:#d77c92}
+.finance-progress.green i{background:#69a77b}
+.finance-progress-row{
+  display:flex;justify-content:space-between;align-items:center;margin-top:5px;
+  color:var(--muted);font-size:8px
+}
+
+.finance-detail-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px
+}
+.finance-mini-section{margin-top:10px}
+.finance-mini-section .section-head h3{font-size:11px}
+
+@media(max-width:520px){
+  .finance-header{align-items:flex-start}
+  .finance-header h1{font-size:24px}
+  .finance-date-badge{min-width:108px;padding:8px}
+  .finance-kpi-grid,.finance-status-grid{grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .finance-kpi{padding:9px}
+  .finance-kpi strong{font-size:14px}
+  .finance-kpi .kpi-icon{width:27px;height:27px;font-size:13px}
+  .finance-status{padding:9px}
+  .finance-status strong{font-size:17px}
+  .finance-status label{font-size:8px}
+  .finance-charts{grid-template-columns:1fr}
+  .finance-card{padding:11px}
+}
+@media(max-width:360px){
+  .finance-kpi-grid,.finance-status-grid{grid-template-columns:1fr}
+  .finance-kpi strong{font-size:19px}
+  .finance-commission-grid,.finance-detail-grid{grid-template-columns:1fr}
+}
+
+
+/* ===== LOGO OFICIAL STUDIO THIAGO HAIR ===== */
+.brand-logo-img{
+  display:block;
+  width:34px;
+  height:34px;
+  object-fit:contain;
+  border-radius:10px;
+  background:#fffaf6;
+  flex:none;
+}
+.auth-brand .brand-logo-img{
+  width:62px;
+  height:62px;
+  border-radius:16px;
+}
+.login-logo .brand-logo-img{
+  width:68px;
+  height:68px;
+  border-radius:17px;
+}
+.top .brand-logo-img{
+  width:32px;
+  height:32px;
+  border-radius:9px;
+}
+@media(max-width:480px){
+  .top .brand-logo-img{width:30px;height:30px}
+  .auth-brand .brand-logo-img{width:58px;height:58px}
+  .login-logo .brand-logo-img{width:62px;height:62px}
+}
+
+</style>
+
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+
+<meta name="theme-color" content="#fffaf6">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Studio Thiago Hair">
+
+</head>
+<body>
+<section id="authScreen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-brand"><img src="logo-app.png" alt="Studio Thiago Hair" class="brand-logo-img"><strong>Studio Thiago Hair</strong></div>
+    <h1>Entrar no Studio</h1>
+    <p>Use o e-mail e a senha geral do Studio. Depois cada pessoa escolhe o próprio nome e entra com seu PIN de 4 números.</p>
+
+    <div class="auth-field">
+      <label>E-MAIL DO STUDIO</label>
+      <input id="studioEmailInput" type="email" autocomplete="username" placeholder="Digite o e-mail">
+    </div>
+
+    <div class="auth-field">
+      <label>SENHA DO STUDIO</label>
+      <input id="studioPasswordInput" type="password" autocomplete="current-password" placeholder="Digite a senha">
+    </div>
+
+    <button id="studioLoginButton" class="auth-submit" onclick="loginStudio()">Entrar no Studio</button>
+    <div id="studioAuthError" class="auth-error"></div>
+
+    <div class="auth-info">
+      Este é o acesso geral do Studio. Depois do login, cada profissional continua protegido pelo próprio PIN individual.
+    </div>
+  </div>
+</section>
+
+<section id="login" class="login hidden">
+  <div class="login-inner">
+    <div class="login-logo"><img src="logo-app.png" alt="Studio Thiago Hair" class="brand-logo-img"><strong>Studio Thiago Hair</strong></div>
+    <div id="authenticatedStudioInfo" class="profile-auth-bar">
+      <div><strong id="authenticatedStudioEmail">Studio conectado</strong><span>Agora escolha quem está entrando</span></div>
+      <button onclick="logoutStudio()">Sair do Studio</button>
+    </div>
+    <h1>Quem é você?</h1>
+    <p>Toque no seu nome e digite seu PIN</p>
+    <div id="people" class="people"></div>
+  </div>
+</section>
+
+<div id="app" class="app hidden">
+<header class="top"><div class="logo"><img src="logo-app.png" alt="Studio Thiago Hair" class="brand-logo-img"><span>Studio Thiago Hair</span></div><div class="userbox"><span id="syncStatus" class="sync-status connecting">Conectando</span><div class="usertext"><strong id="topName"></strong><span id="topRole"></span></div><button class="logout" onclick="logout()">↪</button></div></header>
+<main class="page">
+<section id="screen-home" class="screen active">
+<div class="hello"><small id="panelLabel">Painel da administradora</small><h2 id="homeDate"></h2></div>
+<div class="notice">Nenhum atendimento restante hoje.<br><a href="#" onclick="goScreen('agenda')">Ver agenda →</a></div>
+<div class="grid2">
+<div class="card-stat"><div class="icon" style="background:var(--blue-soft);color:var(--blue)">👥</div><small>Clientes hoje</small><strong id="stClients">0</strong></div>
+<div class="card-stat"><div class="icon" style="background:var(--green-soft);color:var(--green)">✓</div><small>Concluídos</small><strong id="stDone">0</strong></div>
+<div class="card-stat"><div class="icon" style="background:var(--orange-soft);color:var(--orange)">!</div><small>Pendentes</small><strong id="stPending">0</strong></div>
+<div class="card-stat"><div class="icon" style="background:var(--purple-soft);color:var(--purple)">↗</div><small>Total vendido</small><strong id="stSold">R$ 0,00</strong></div>
+</div>
+<div class="wide-stat"><small style="color:var(--muted)">Comissão gerada hoje</small><div style="font-size:20px;font-weight:900" id="stCommission">R$ 0,00</div></div>
+<div class="section"><div class="section-head"><h3>▦ Agenda de hoje</h3><button class="link" onclick="goScreen('agenda')">Ver tudo</button></div><div id="todayPreview" class="report-placeholder">Nenhum agendamento para hoje.</div></div>
+</section>
+
+<section id="screen-agenda" class="screen">
+<div class="title-row"><h1>Agenda</h1><button class="new-btn" onclick="openBooking()">+ Novo</button></div>
+
+<div class="agenda-topline">
+  <div class="view-toggle">
+    <button id="viewListBtn" class="active" onclick="setAgendaView('list')">☷ Lista</button>
+    <button id="viewCalendarBtn" onclick="setAgendaView('calendar')">▦ Calendário</button>
+  </div>
+  <button class="btn btn-light" onclick="goToday()">Hoje</button>
+</div>
+
+<div id="proTabs" class="pro-tabs"></div>
+
+<div id="agendaListView">
+  <div class="date-strip" style="margin-top:8px"><button class="date-arrow" onclick="changeDay(-1)">‹</button><div class="date-center"><strong id="agendaDate"></strong><span id="agendaDateLong"></span></div><button class="date-arrow" onclick="changeDay(1)">›</button></div>
+  <div id="timeline" class="timeline"></div>
+</div>
+
+<div id="agendaCalendarView" class="hidden">
+  <div class="calendar-shell">
+    <div class="calendar-head">
+      <button class="calendar-nav" onclick="changeMonth(-1)">‹</button>
+      <strong id="calendarMonthTitle"></strong>
+      <button class="calendar-nav" onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="calendar-weekdays"><div>DOM</div><div>SEG</div><div>TER</div><div>QUA</div><div>QUI</div><div>SEX</div><div>SÁB</div></div>
+    <div id="calendarGrid" class="calendar-grid"></div>
+    <div id="calendarSummary" class="calendar-summary"></div>
+  </div>
+</div>
+</section>
+
+<section id="screen-clientes" class="screen">
+<div class="title-row"><h1>Clientes</h1><button class="new-btn" onclick="quickClient()">+ Novo</button></div>
+<div class="panel"><input id="clientSearch" placeholder="Buscar cliente..." style="width:100%;border:1px solid var(--line);border-radius:10px;padding:11px;margin-bottom:10px"><div id="clientsList"></div></div>
+</section>
+
+<section id="screen-comissoes" class="screen">
+<div class="title-row"><h1>Comissões</h1></div>
+<div id="commissionSummary"></div>
+<div id="commissionList"></div>
+<div class="history-title">Histórico de pagamentos</div>
+<div id="commissionHistory" class="panel"></div>
+</section>
+
+<section id="screen-mais" class="screen">
+<h1 class="more-title">Mais</h1>
+<div class="more-item" onclick="goScreen('profissionais')"><div class="more-left"><div class="more-ico" style="background:#8b42ef">▣</div><div class="more-text"><strong>Profissionais</strong><span>Cadastro e comissões da equipe</span></div></div><span>›</span></div>
+<div class="more-item" onclick="goScreen('servicos')"><div class="more-left"><div class="more-ico" style="background:#ef3367">✂</div><div class="more-text"><strong>Serviços</strong><span>Valores, durações e comissões</span></div></div><span>›</span></div>
+<div class="more-item" onclick="goScreen('relatorios')"><div class="more-left"><div class="more-ico" style="background:#d64e7c">▥</div><div class="more-text"><strong>Financeiro</strong><span>Faturamento, status e desempenho</span></div></div><span>›</span></div>
+<div class="more-item" onclick="goScreen('comissoes')"><div class="more-left"><div class="more-ico" style="background:#c94b78">%</div><div class="more-text"><strong>Comissões</strong><span>Pagar e acompanhar comissões da equipe</span></div></div><span>›</span></div>
+<div class="more-item" onclick="goScreen('config')"><div class="more-left"><div class="more-ico" style="background:#f47b00">⚙</div><div class="more-text"><strong>Configurações</strong><span>Horários e funcionamento</span></div></div><span>›</span></div>
+<div class="more-item" onclick="goScreen('historico')"><div class="more-left"><div class="more-ico" style="background:#374151">≡</div><div class="more-text"><strong>Histórico do app</strong><span>Movimentações realizadas pela equipe</span></div></div><span>›</span></div>
+</section>
+
+<section id="screen-historico" class="screen">
+  <div class="title-row">
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="back" onclick="goScreen('mais')">‹</button>
+      <h1>Histórico do app</h1>
+    </div>
+  </div>
+
+  <div class="history-toolbar">
+    <input id="historySearch" placeholder="Buscar por pessoa, cliente ou ação..." oninput="renderHistoryList()">
+  </div>
+
+  <div class="pin-field-note" style="margin-bottom:10px">
+    Exibe as últimas 200 movimentações registradas no aplicativo.
+  </div>
+
+  <div id="historyList"></div>
+</section>
+
+<section id="screen-profissionais" class="screen"><div class="title-row"><div style="display:flex;align-items:center;gap:8px"><button class="back" onclick="goScreen('mais')">‹</button><h1>Profissionais</h1></div><button class="new-btn" onclick="addProfessional()">+ Novo</button></div><div id="professionalsList"></div></section>
+
+<section id="screen-servicos" class="screen"><div class="title-row"><div style="display:flex;align-items:center;gap:8px"><button class="back" onclick="goScreen('mais')">‹</button><h1>Serviços</h1></div><button class="new-btn" onclick="addService()">+ Novo</button></div><div id="servicesList"></div></section>
+
+<section id="screen-relatorios" class="screen finance-screen">
+  <div class="finance-header">
+    <div>
+      <h1>Dashboard Financeiro</h1>
+      <p>Acompanhe os resultados do salão em tempo real.</p>
+    </div>
+    <div class="finance-date-badge">
+      <strong id="finRangeTitle">Hoje</strong>
+      <span id="finRangeLabel">—</span>
+    </div>
+  </div>
+
+  <div class="finance-period">
+    <button class="active" data-period="today" onclick="setReportPeriod('today')">Hoje</button>
+    <button data-period="week" onclick="setReportPeriod('week')">Semana</button>
+    <button data-period="month" onclick="setReportPeriod('month')">Mês</button>
+    <button data-period="custom" onclick="setReportPeriod('custom')">Personalizado</button>
+  </div>
+
+  <div id="customReportRange" class="finance-custom-range hidden">
+    <div class="grid2">
+      <div class="field"><label>DATA INICIAL</label><input id="reportStartDate" type="date"></div>
+      <div class="field"><label>DATA FINAL</label><input id="reportEndDate" type="date"></div>
+    </div>
+    <button class="btn btn-pink" style="width:100%" onclick="applyCustomReport()">Aplicar período</button>
+  </div>
+
+  <div class="finance-kpi-grid">
+    <div class="finance-kpi forecast">
+      <div class="kpi-icon">▦</div>
+      <small>Receita prevista</small>
+      <strong id="finForecast">R$ 0,00</strong>
+      <small id="finForecastSub">0 agendamentos</small>
+      <div id="finForecastTrend" class="trend up">▲ 0%</div>
+    </div>
+
+    <div class="finance-kpi received">
+      <div class="kpi-icon">▣</div>
+      <small>Receita recebida</small>
+      <strong id="finReceived">R$ 0,00</strong>
+      <small id="finReceivedSub">0 finalizados</small>
+      <div id="finReceivedTrend" class="trend up">▲ 0%</div>
+    </div>
+
+    <div class="finance-kpi lost">
+      <div class="kpi-icon">×</div>
+      <small>Perdas por cancelamento</small>
+      <strong id="finLost">R$ 0,00</strong>
+      <small id="finLostSub">0 cancelamentos</small>
+      <div id="finLostTrend" class="trend down">▲ 0%</div>
+    </div>
+  </div>
+
+  <div class="finance-status-grid">
+    <div class="finance-status scheduled">
+      <div class="finance-status-top"><div class="finance-status-icon">▦</div><label>Agendados</label></div>
+      <strong id="finScheduledCount">0</strong>
+      <div id="finScheduledValue" class="status-sub">R$ 0,00</div>
+    </div>
+    <div class="finance-status canceled">
+      <div class="finance-status-top"><div class="finance-status-icon">×</div><label>Cancelados</label></div>
+      <strong id="finCanceledCount">0</strong>
+      <div id="finCanceledValue" class="status-sub">R$ 0,00</div>
+    </div>
+    <div class="finance-status finished">
+      <div class="finance-status-top"><div class="finance-status-icon">✓</div><label>Finalizados</label></div>
+      <strong id="finFinishedCount">0</strong>
+      <div id="finFinishedValue" class="status-sub">R$ 0,00</div>
+    </div>
+  </div>
+
+  <div class="finance-charts">
+    <div class="finance-card">
+      <div class="finance-card-title">
+        <h3>Distribuição de atendimentos</h3>
+        <span id="finTotalStatusLabel">0 total</span>
+      </div>
+      <div class="finance-donut-wrap">
+        <div id="finDonut" class="finance-donut" style="--scheduled-pct:0%;--cancel-pct:0%">
+          <div class="finance-donut-center">
+            <strong id="finDonutTotal">0</strong>
+            <span>total</span>
+          </div>
+        </div>
+      </div>
+      <div class="finance-legend">
+        <div class="finance-legend-item">
+          <div><i class="finance-legend-dot" style="background:#a45b70"></i>Agendados</div>
+          <strong id="finLegendScheduled">0 (0%)</strong>
+        </div>
+        <div class="finance-legend-item">
+          <div><i class="finance-legend-dot" style="background:#f1c7d1"></i>Cancelados</div>
+          <strong id="finLegendCanceled">0 (0%)</strong>
+        </div>
+        <div class="finance-legend-item">
+          <div><i class="finance-legend-dot" style="background:#db7789"></i>Finalizados</div>
+          <strong id="finLegendFinished">0 (0%)</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="finance-card">
+      <div class="finance-card-title">
+        <h3>Receita dos últimos 7 dias</h3>
+        <span>Finalizados</span>
+      </div>
+      <div id="finSevenDayBars" class="finance-bars"></div>
+    </div>
+  </div>
+
+  <div class="finance-card finance-commission-card">
+    <div class="finance-commission-title">
+      <h3>Comissão da equipe</h3>
+      <button class="finance-link" onclick="goScreen('comissoes')">Ver detalhes →</button>
+    </div>
+    <div class="finance-commission-grid">
+      <div class="finance-commission-box">
+        <small>Paga</small>
+        <strong id="finCommissionPaid">R$ 0,00</strong>
+        <div class="finance-progress green"><i id="finCommissionPaidBar" style="width:0%"></i></div>
+        <div class="finance-progress-row"><span id="finCommissionPaidCount">0 serviços</span><b id="finCommissionPaidPct">0%</b></div>
+      </div>
+      <div class="finance-commission-box">
+        <small>Pendente</small>
+        <strong id="finCommissionPending">R$ 0,00</strong>
+        <div class="finance-progress"><i id="finCommissionPendingBar" style="width:0%"></i></div>
+        <div class="finance-progress-row"><span id="finCommissionPendingCount">0 serviços</span><b id="finCommissionPendingPct">0%</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="finance-detail-grid">
+    <div class="finance-card">
+      <div class="finance-card-title"><h3>Formas de pagamento</h3><span>Finalizados</span></div>
+      <div id="repPayments" class="payment-breakdown"></div>
+    </div>
+    <div class="finance-card">
+      <div class="finance-card-title"><h3>Faturamento por profissional</h3><span>Período</span></div>
+      <div id="repByProfessional" class="payment-breakdown"></div>
+    </div>
+  </div>
+
+  <div class="finance-card finance-mini-section">
+    <div class="finance-card-title"><h3>Faturamento por serviço</h3><span>Período</span></div>
+    <div id="repByService" class="payment-breakdown"></div>
+  </div>
+</section>
+
+<section id="screen-config" class="screen">
+<div class="title-row"><div style="display:flex;align-items:center;gap:8px"><button class="back" onclick="goScreen('mais')">‹</button><h1>Configurações</h1></div></div>
+<div class="setting-box"><div class="field"><label>Nome do salão</label><input id="salonNameInput" value="Studio Thiago Hair"></div></div>
+<div class="setting-box">
+<h3>PIN da administradora</h3>
+<div class="field">
+  <label>NOVO PIN DE ACESSO (4 DÍGITOS)</label>
+  <input id="adminPinInput" type="password" inputmode="numeric" maxlength="4" placeholder="••••">
+  <div class="pin-field-note">Deixe em branco para manter o PIN atual. Somente a administradora consegue alterar PINs.</div>
+</div>
+</div>
+<div class="setting-box"><h3>Horário de funcionamento</h3>
+<div class="grid2">
+  <div class="field"><label>Abertura</label><input id="openTimeInput" type="time" value="08:00"></div>
+  <div class="field"><label>Fechamento</label><input id="closeTimeInput" type="time" value="18:00"></div>
+  <div class="field"><label>Almoço início</label><input id="lunchStartInput" type="time" value="12:00"></div>
+  <div class="field"><label>Almoço fim</label><input id="lunchEndInput" type="time" value="13:00"></div>
+</div>
+<div class="pin-field-note">Os horários da agenda são recalculados automaticamente em intervalos de 30 minutos.</div>
+</div>
+<div class="setting-box"><h3>Dias de funcionamento</h3>
+<div class="day-row">
+  <button class="day-btn" data-day="0" onclick="toggleWorkingDay(this)">Dom</button>
+  <button class="day-btn active" data-day="1" onclick="toggleWorkingDay(this)">Seg</button>
+  <button class="day-btn active" data-day="2" onclick="toggleWorkingDay(this)">Ter</button>
+  <button class="day-btn active" data-day="3" onclick="toggleWorkingDay(this)">Qua</button>
+  <button class="day-btn active" data-day="4" onclick="toggleWorkingDay(this)">Qui</button>
+  <button class="day-btn active" data-day="5" onclick="toggleWorkingDay(this)">Sex</button>
+  <button class="day-btn active" data-day="6" onclick="toggleWorkingDay(this)">Sáb</button>
+</div></div>
+<button class="save-wide" onclick="saveAdminSettings()">Salvar configurações</button>
+<div id="configSaved" class="config-saved">✓ Configurações salvas e sincronizadas.</div>
+</section>
+</main>
+<button id="fab" class="fab" onclick="openBooking()">+</button><nav id="bottom" class="bottom"></nav>
+</div>
+
+<div id="bookingModal" class="modal"><div class="sheet"><div class="sheet-head"><h2>Novo agendamento</h2><button class="close" onclick="closeBooking()">✕</button></div>
+<div class="grid2">
+<div class="field client-search-wrap">
+  <label>Cliente</label>
+  <input id="bName" placeholder="Digite o nome da cliente" autocomplete="off"
+         oninput="searchClientsForBooking()" onfocus="searchClientsForBooking()">
+  <div id="clientSuggestions" class="client-suggestions"></div>
+  <div id="clientNewHint" class="client-new-hint">Cliente nova — será cadastrada automaticamente ao salvar.</div>
+</div>
+<div class="field"><label>WhatsApp</label><input id="bPhone" placeholder="(00) 00000-0000"></div>
+<div class="field"><label>Profissional</label><select id="bProfessional"></select></div>
+<div class="field"><label>Horário</label><select id="bTime"></select></div>
+<div class="field"><label>Serviço</label><select id="bService"></select></div>
+<div class="field"><label>Valor</label><input id="bPrice" type="number"></div>
+<div class="field"><label>Duração</label><select id="bDuration">
+  <option value="30">30 min</option><option value="60">1 hora</option><option value="90">1h30</option>
+  <option value="120">2 horas</option><option value="150">2h30</option><option value="180">3 horas</option>
+  <option value="210">3h30</option><option value="240">4 horas</option>
+</select></div>
+<div class="field"><label>Comissão %</label><input id="bCommission" type="number"></div>
+<div class="field" style="grid-column:1/-1">
+  <button type="button" class="command-add-btn" onclick="addDraftBookingItem()">＋ Adicionar este serviço à comanda</button>
+  <div class="pin-field-note">Use este botão quando a mesma cliente fizer mais de um serviço, com a mesma profissional ou com outra.</div>
+  <div id="bookingDraftList"></div>
+</div>
+<div class="field booking-note-field">
+  <label>Observação do agendamento</label>
+  <textarea id="bObservation" placeholder="Ex.: cliente prefere atendimento mais rápido, alergia a determinado produto, encaixe, recado para a profissional..."></textarea>
+  <div id="observationHint" class="booking-note-hint">A observação ficará visível nos detalhes do agendamento.</div>
+</div>
+</div>
+<div class="actions"><button class="btn btn-light" onclick="closeBooking()">Cancelar</button><button id="saveBookingBtn" class="btn btn-pink" onclick="saveBooking()">Agendar</button></div></div></div>
+
+<div id="commandItemModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2>Adicionar serviço à comanda</h2><button class="close" onclick="closeCommandItemModal()">✕</button></div>
+
+<div id="commandItemClientInfo" class="service-form-head">
+  <div class="service-form-icon">＋</div>
+  <div><strong>Nova participação</strong><span>Escolha quem fará o serviço. Ele continuará dentro da mesma comanda.</span></div>
+</div>
+
+<div class="grid2">
+  <div class="field"><label>PROFISSIONAL</label><select id="cmdProfessional"></select></div>
+  <div class="field"><label>HORÁRIO</label><select id="cmdTime"></select></div>
+  <div class="field"><label>SERVIÇO</label><select id="cmdService" onchange="syncCommandService()"></select></div>
+  <div class="field"><label>VALOR</label><input id="cmdPrice" type="number" min="0" step="0.01"></div>
+  <div class="field"><label>DURAÇÃO</label>
+    <select id="cmdDuration">
+      <option value="30">30 min</option><option value="60">1 hora</option>
+      <option value="90">1h30</option><option value="120">2 horas</option>
+      <option value="150">2h30</option><option value="180">3 horas</option>
+      <option value="210">3h30</option><option value="240">4 horas</option>
+    </select>
+  </div>
+  <div class="field"><label>COMISSÃO %</label><input id="cmdCommission" type="number" min="0" max="100"></div>
+</div>
+
+<div class="actions">
+  <button class="btn btn-light" onclick="closeCommandItemModal()">Cancelar</button>
+  <button class="btn btn-pink" onclick="saveCommandItem()">Adicionar à comanda</button>
+</div>
+</div></div>
+
+<div id="detailsModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2>Atendimento</h2><button class="close" onclick="closeDetails()">✕</button></div>
+<div id="detailsBody"></div><div id="detailsActions" class="actions details-actions"></div>
+</div></div>
+
+<div id="clientEditModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2>Editar cliente</h2><button class="close" onclick="closeClientEdit()">✕</button></div>
+
+<div class="field">
+  <label>NOME DA CLIENTE</label>
+  <input id="editClientName" placeholder="Nome da cliente">
+</div>
+
+<div class="field">
+  <label>WHATSAPP</label>
+  <input id="editClientPhone" inputmode="tel" placeholder="(00) 00000-0000">
+</div>
+
+<div class="pin-field-note">Somente a administração pode alterar dados de clientes já cadastrados.</div>
+
+<div class="actions" style="margin-top:14px">
+  <button class="btn btn-light" onclick="closeClientEdit()">Cancelar</button>
+  <button class="btn btn-pink" onclick="saveClientEdit()">Salvar alterações</button>
+</div>
+</div></div>
+
+<div id="serviceModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2 id="serviceModalTitle">Novo serviço</h2><button class="close" onclick="closeServiceModal()">✕</button></div>
+<div class="service-form-head">
+  <div class="service-form-icon">✂</div>
+  <div><strong id="serviceFormHeading">Cadastrar serviço</strong><span>O serviço ficará disponível no agendamento de todos os celulares.</span></div>
+</div>
+<div class="grid2">
+  <div class="field"><label>NOME DO SERVIÇO</label><input id="serviceNameInput" placeholder="Ex.: Corte feminino"></div>
+  <div class="field"><label>VALOR (R$)</label><input id="servicePriceInput" type="number" min="0" step="0.01" placeholder="0,00"></div>
+  <div class="field"><label>DURAÇÃO</label>
+    <select id="serviceDurationInput">
+      <option value="30">30 minutos</option><option value="60">1 hora</option>
+      <option value="90">1h30</option><option value="120">2 horas</option>
+      <option value="150">2h30</option><option value="180">3 horas</option>
+      <option value="210">3h30</option><option value="240">4 horas</option>
+    </select>
+  </div>
+  <div class="field"><label>COMISSÃO (%)</label><input id="serviceCommissionInput" type="number" min="0" max="100" step="1" value="40"></div>
+</div>
+<div class="switch-row">
+  <div><strong>Serviço ativo</strong><span>Serviços inativos não aparecem em novos agendamentos.</span></div>
+  <label class="switch"><input id="serviceActiveInput" type="checkbox" checked><i></i></label>
+</div>
+<div class="actions" style="margin-top:14px">
+  <button class="btn btn-light" onclick="closeServiceModal()">Cancelar</button>
+  <button class="btn btn-pink" onclick="saveService()">Salvar serviço</button>
+</div>
+</div></div>
+
+<div id="pinModal" class="modal"><div class="sheet pin-sheet">
+<div class="sheet-head"><h2>Digite seu PIN</h2><button class="close" onclick="closePinModal()">✕</button></div>
+<div id="pinUserCard" class="pin-user-card"></div>
+<div class="field">
+  <label>PIN DE 4 DÍGITOS</label>
+  <input id="loginPinInput" class="pin-input" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••">
+  <div id="pinError" class="pin-error"></div>
+  <div class="pin-help">O PIN é individual. Se precisar trocar, solicite à administração.</div>
+</div>
+<div class="actions">
+  <button class="btn btn-light" onclick="closePinModal()">Cancelar</button>
+  <button class="btn btn-pink" onclick="confirmPinLogin()">Entrar</button>
+</div>
+</div></div>
+
+<div id="professionalModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2 id="professionalModalTitle">Novo profissional</h2><button class="close" onclick="closeProfessionalModal()">✕</button></div>
+
+<div class="prof-form-head">
+  <div id="professionalAvatarPreview" class="prof-form-avatar">P</div>
+  <div><strong id="professionalFormHeading">Cadastrar profissional</strong><span>Os dados serão salvos no Firebase e aparecerão em todos os celulares.</span></div>
+</div>
+
+<div class="grid2">
+  <div class="field">
+    <label>NOME DO PROFISSIONAL</label>
+    <input id="professionalName" placeholder="Ex.: Thiago">
+  </div>
+  <div class="field">
+    <label>TELEFONE / WHATSAPP</label>
+    <input id="professionalPhone" placeholder="(00) 00000-0000">
+  </div>
+  <div class="field">
+    <label>COMISSÃO PADRÃO (%)</label>
+    <input id="professionalCommission" type="number" min="0" max="100" step="1" value="40">
+  </div>
+  <div class="field">
+    <label>TIPO DE ACESSO</label>
+    <input value="Colaborador" disabled>
+  </div>
+  <div class="field">
+    <label>PIN DE ACESSO (4 DÍGITOS)</label>
+    <input id="professionalPin" type="password" inputmode="numeric" maxlength="4" placeholder="Ex.: 2580">
+    <div id="professionalPinHint" class="pin-field-note">Obrigatório para novo profissional.</div>
+  </div>
+  <div class="field">
+    <label>PERMISSÃO</label>
+    <div style="padding-top:8px"><span class="pin-admin-badge">🔒 PIN definido pela administração</span></div>
+  </div>
+</div>
+
+<div class="switch-row">
+  <div><strong>Profissional ativo</strong><span>Quando ativo, aparece na agenda e na tela de entrada.</span></div>
+  <label class="switch"><input id="professionalActive" type="checkbox" checked><i></i></label>
+</div>
+
+<div class="actions" style="margin-top:14px">
+  <button class="btn btn-light" onclick="closeProfessionalModal()">Cancelar</button>
+  <button class="btn btn-pink" onclick="saveProfessional()">Salvar profissional</button>
+</div>
+</div></div>
+
+<div id="observationModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2 id="observationModalTitle">Adicionar observação</h2><button class="close" onclick="closeObservationModal()">✕</button></div>
+<div id="observationBookingInfo" class="note-modal-info"></div>
+<div class="field">
+  <label>OBSERVAÇÃO</label>
+  <textarea id="newObservationText" class="note-box" placeholder="Digite uma nova observação sobre este agendamento..."></textarea>
+  <div id="newObservationWarning" class="note-admin-warning">⚠ Esta observação será destacada em vermelho para a profissional porque foi adicionada pela administração.</div>
+</div>
+<div class="actions">
+  <button class="btn btn-light" onclick="closeObservationModal()">Cancelar</button>
+  <button class="btn btn-pink" onclick="saveNewObservation()">Salvar observação</button>
+</div>
+</div></div>
+
+<div id="clientPaymentModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2>Finalizar atendimento</h2><button class="close" onclick="closeClientPayment()">✕</button></div>
+<div id="clientPaymentInfo" class="payment-hero"></div>
+
+<div class="field">
+  <label>SERVIÇOS DA COMANDA</label>
+  <div id="clientPaymentItems" class="panel" style="padding:4px 11px"></div>
+  <div class="payment-command-total"><span>Total a receber</span><strong id="clientPaymentTotal">R$ 0,00</strong></div>
+  <div class="pin-field-note">Você pode ajustar o valor de cada serviço antes de finalizar.</div>
+</div>
+
+<div class="field"><label>FORMA DE PAGAMENTO</label>
+<select id="clientPaymentMethod" class="select-modern" onchange="toggleInstallments()">
+<option value="Pix">Pix</option><option value="Dinheiro">Dinheiro</option><option value="Cartão de débito">Cartão de débito</option><option value="Cartão de crédito">Cartão de crédito</option><option value="Transferência">Transferência</option><option value="Outro">Outro</option>
+</select></div>
+<div id="installmentField" class="field hidden"><label>PARCELAS</label>
+<select id="clientInstallments" class="select-modern">
+<option value="1">1x</option><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option><option value="5">5x</option><option value="6">6x</option><option value="7">7x</option><option value="8">8x</option><option value="9">9x</option><option value="10">10x</option><option value="11">11x</option><option value="12">12x</option>
+</select></div>
+<div class="field"><label>OBSERVAÇÃO DO PAGAMENTO</label><textarea id="clientPaymentNote" class="note-box" placeholder="Opcional"></textarea></div>
+<div class="actions"><button class="btn btn-light" onclick="closeClientPayment()">Voltar</button><button class="btn btn-pink" onclick="confirmClientPayment()">Confirmar recebimento</button></div>
+</div></div>
+
+<div id="commissionPaymentModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2>Pagar comissão</h2><button class="close" onclick="closeCommissionPayment()">✕</button></div>
+<div id="commissionPaymentInfo" class="payment-hero"></div>
+<div class="field"><label>COMO A COMISSÃO FOI PAGA?</label>
+<select id="commissionPaymentMethod" class="select-modern">
+<option value="Pix">Pix</option><option value="Dinheiro">Dinheiro</option><option value="Transferência">Transferência</option><option value="Depósito">Depósito</option><option value="Outro">Outro</option>
+</select></div>
+<div class="field"><label>OBSERVAÇÃO</label><textarea id="commissionPaymentNote" class="note-box" placeholder="Ex.: pagamento referente à semana"></textarea></div>
+<div class="actions"><button class="btn btn-light" onclick="closeCommissionPayment()">Cancelar</button><button class="btn btn-pink" onclick="confirmCommissionPayment()">Confirmar pagamento</button></div>
+</div></div>
+
+<div id="clientHistoryModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2>Histórico da cliente</h2><button class="close" onclick="closeClientHistory()">✕</button></div>
+<div id="clientHistoryBody"></div>
+</div></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBMY_HP2McL-j5cMC3nsw9N53eEgZxE4_U",
+  authDomain: "studio-74a7d.firebaseapp.com",
+  projectId: "studio-74a7d",
+  storageBucket: "studio-74a7d.firebasestorage.app",
+  messagingSenderId: "981811079541",
+  appId: "1:981811079541:web:fda182c23ac45089bf0b3c"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+db.settings({ ignoreUndefinedProperties: true });
+
+const STUDIO_AUTH_UID = "LDUcSQ5BcwS064zxt0V8rtlArrw1";
+let authenticatedStudioUser = null;
+let authFlowInitialized = false;
+
+let firebaseReady = false;
+let unsubscribeFirebase = [];
+
+function setSyncStatus(type, text){
+  const el=document.getElementById('syncStatus');
+  if(!el)return;
+  el.className='sync-status '+type;
+  el.textContent=text;
+}
+function firestoreClean(value){
+  return JSON.parse(JSON.stringify(value));
+}
+async function cloudSet(collection,id,data){
+  if(!firebaseReady)return;
+  await db.collection(collection).doc(String(id)).set(firestoreClean(data),{merge:true});
+}
+async function cloudReplace(collection,id,data){
+  if(!firebaseReady)return;
+  await db.collection(collection).doc(String(id)).set(firestoreClean(data));
+}
+let professionals=[];
+
+let services=[];
+const times=[];
+
+let currentUser=null;
+let currentDate=new Date();
+let selectedProfessional='todos';
+let currentBookingId=null;
+let currentCommissionProfessional=null;
+let currentObservationId=null;
+let currentEditingProfessionalId=null;
+let currentEditingServiceId=null;
+let pendingLoginUserId=null;
+let agendaView='list';
+let reportPeriod='today';
+let reportCustomStart='';
+let reportCustomEnd='';
+let selectedBookingClientId=null;
+let currentEditingClientId=null;
+let bookingDraftItems=[];
+let appHistory=[];
+let historyLoading=false;
+
+let salonSettings={
+  id:'geral',
+  salonName:'',
+  openTime:'',
+  closeTime:'',
+  lunchStart:'',
+  lunchEnd:'',
+  workingDays:[]
+};
+
+let bookings=[];
+let clients=[];
+let commissionPayments=[];
+
+bookings=bookings.map(b=>{
+  const history=Array.isArray(b.observations)?[...b.observations]:[];
+  if(!history.length&&b.observation){
+    history.push({
+      id:'legacy-'+(b.id||Date.now()),
+      text:b.observation,
+      byAdmin:Boolean(b.observationByAdmin),
+      author:b.observationAuthor||'',
+      authorId:b.observationByAdmin?'admin':(b.professionalId||''),
+      createdAt:b.createdAt||null
+    });
+  }
+  return {
+    paymentMethod:'',
+    paymentInstallments:1,
+    paymentNote:'',
+    paidAt:null,
+    commissionPaid:false,
+    commissionPaymentId:null,
+    observation:'',
+    observationByAdmin:false,
+    observationAuthor:'',
+    observations:history,
+    ...b,
+    observations:history
+  };
+});
+
+const $=id=>document.getElementById(id);
+
+function saveLocal(){ /* Dados persistidos somente no Firebase. */ }
+
+function historyLabel(type){
+  const labels={
+    login:'Acesso ao app',
+    agendamento_criado:'Comanda criada',
+    agendamento_finalizado:'Comanda finalizada',
+    agendamento_cancelado:'Comanda cancelada',
+    nao_compareceu:'Não compareceu',
+    agendamento_excluido:'Agendamento excluído',
+    servico_comanda_adicionado:'Serviço adicionado',
+    servico_comanda_removido:'Serviço removido',
+    observacao_adicionada:'Observação adicionada',
+    observacao_editada:'Observação editada',
+    cliente_criado:'Cliente cadastrado',
+    cliente_editado:'Cliente editado',
+    comissao_paga:'Comissão paga',
+    configuracao_editada:'Configurações alteradas',
+    profissional_criado:'Profissional cadastrado',
+    profissional_editado:'Profissional editado',
+    profissional_desativado:'Profissional desativado',
+    profissional_excluido:'Profissional excluído',
+    servico_criado:'Serviço cadastrado',
+    servico_editado:'Serviço editado',
+    servico_desativado:'Serviço desativado',
+    servico_excluido:'Serviço excluído'
+  };
+  return labels[type]||'Movimentação';
+}
+
+function historyIcon(type){
+  if(type.includes('excluido')||type.includes('cancelado'))return '×';
+  if(type.includes('finalizado')||type==='comissao_paga')return '✓';
+  if(type.includes('criado')||type.includes('adicionado'))return '+';
+  if(type.includes('editado')||type.includes('configuracao'))return '✎';
+  if(type==='login')return '↪';
+  if(type==='nao_compareceu')return '!';
+  return '•';
+}
+
+function buildAppLog(type,description,details={}){
+  return {
+    id:'log_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
+    type,
+    description,
+    details,
+    userId:currentUser?.id||'',
+    userName:currentUser?.name||'Usuário',
+    userRole:currentUser?.role||'',
+    createdAt:new Date().toISOString()
+  };
+}
+
+async function logAppAction(type,description,details={}){
+  if(!firebaseReady||!auth.currentUser||!currentUser)return;
+  const log=buildAppLog(type,description,details);
+  try{
+    await db.collection('historicoApp').doc(log.id).set(firestoreClean(log));
+    appHistory.unshift(log);
+    if(appHistory.length>200)appHistory=appHistory.slice(0,200);
+    if($('screen-historico')?.classList.contains('active'))renderHistoryList();
+  }catch(err){
+    console.warn('Histórico não pôde ser gravado:',err);
+  }
+}
+
+async function loadAppHistory(){
+  if(currentUser?.role!=='admin')return;
+  if(historyLoading)return;
+
+  historyLoading=true;
+  if($('historyList'))$('historyList').innerHTML='<div class="history-empty">Carregando histórico...</div>';
+
+  try{
+    const snap=await db.collection('historicoApp')
+      .orderBy('createdAt','desc')
+      .limit(200)
+      .get();
+
+    appHistory=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderHistoryList();
+  }catch(err){
+    console.error(err);
+    if($('historyList'))$('historyList').innerHTML='<div class="history-empty">Não foi possível carregar o histórico. Confira as regras do Firebase para a coleção historicoApp.</div>';
+  }finally{
+    historyLoading=false;
+  }
+}
+
+function renderHistory(){
+  if(currentUser?.role!=='admin'){
+    alert('Somente o administrador pode acessar o histórico do app.');
+    goScreen('home');
+    return;
+  }
+  loadAppHistory();
+}
+
+function renderHistoryList(){
+  const el=$('historyList');if(!el)return;
+  if(currentUser?.role!=='admin'){
+    el.innerHTML='';
+    return;
+  }
+
+  const q=String($('historySearch')?.value||'').toLowerCase().trim();
+  const arr=appHistory.filter(log=>{
+    if(!q)return true;
+    return [
+      log.userName,
+      log.description,
+      historyLabel(log.type),
+      log.details?.client,
+      log.details?.professional,
+      log.details?.service
+    ].some(v=>String(v||'').toLowerCase().includes(q));
+  });
+
+  el.innerHTML=arr.length?arr.map(log=>{
+    const dt=log.createdAt?new Date(log.createdAt):null;
+    const valid=dt&&!Number.isNaN(dt.getTime());
+    return `<div class="history-card">
+      <div class="history-head">
+        <div class="history-action">
+          <div class="history-icon">${historyIcon(log.type||'')}</div>
+          <div>
+            <strong>${safe(historyLabel(log.type||''))}</strong>
+            <span>${safe(log.userName||'Usuário')}</span>
+          </div>
+        </div>
+        <div class="history-time">${valid?dt.toLocaleDateString('pt-BR')+'<br>'+dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):''}</div>
+      </div>
+      <div class="history-desc">${safe(log.description||'Movimentação registrada.')}</div>
+      <div class="history-user">${log.userRole==='admin'?'Admin':'Colaborador'} • ${safe(log.userName||'')}</div>
+    </div>`;
+  }).join(''):`<div class="history-empty">Nenhuma movimentação encontrada.</div>`;
+}
+
+function dateKey(d=currentDate){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function parseKey(key){const [y,m,d]=key.split('-').map(Number);return new Date(y,m-1,d)}
+function brl(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
+function initials(n){return n.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase()}
+function cap(s){return s?s[0].toUpperCase()+s.slice(1):''}
+function statusLabel(status){
+  const labels={
+    agendado:'Agendado',
+    finalizado:'Finalizado',
+    cancelado:'Cancelado',
+    nao_compareceu:'Não compareceu'
+  };
+  return labels[status]||cap(status);
+}
+function timeToMin(t){const [h,m]=t.split(':').map(Number);return h*60+m}
+function shortDate(key){return parseKey(key).toLocaleDateString('pt-BR')}
+function fullDate(key){return parseKey(key).toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'})}
+function safe(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+async function sha256(text){
+  const data=new TextEncoder().encode(String(text));
+  const hash=await crypto.subtle.digest('SHA-256',data);
+  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function validPin(pin){return /^\d{4}$/.test(String(pin||''))}
+function minutesToTime(min){
+  return `${String(Math.floor(min/60)).padStart(2,'0')}:${String(min%60).padStart(2,'0')}`;
+}
+function rebuildTimes(){
+  times.length=0;
+  if(!salonSettings.openTime||!salonSettings.closeTime)return;
+  const start=timeToMin(salonSettings.openTime);
+  const end=timeToMin(salonSettings.closeTime);
+  const lunchStart=salonSettings.lunchStart?timeToMin(salonSettings.lunchStart):null;
+  const lunchEnd=salonSettings.lunchEnd?timeToMin(salonSettings.lunchEnd):null;
+  for(let m=start;m<end;m+=30){
+    const inLunch=lunchStart!==null&&lunchEnd!==null&&lunchStart<lunchEnd&&m>=lunchStart&&m<lunchEnd;
+    if(!inLunch)times.push(minutesToTime(m));
+  }
+}
+function isWorkingDay(date=currentDate){
+  const days=Array.isArray(salonSettings.workingDays)?salonSettings.workingDays:[];
+  return days.includes(date.getDay());
+}
+function toggleWorkingDay(btn){
+  if(currentUser?.role!=='admin')return;
+  btn.classList.toggle('active');
+}
+function renderSettings(){
+  if(!$('salonNameInput'))return;
+  $('salonNameInput').value=salonSettings.salonName||'';
+  $('openTimeInput').value=salonSettings.openTime||'';
+  $('closeTimeInput').value=salonSettings.closeTime||'';
+  $('lunchStartInput').value=salonSettings.lunchStart||'';
+  $('lunchEndInput').value=salonSettings.lunchEnd||'';
+  document.querySelectorAll('.day-btn[data-day]').forEach(btn=>{
+    btn.classList.toggle('active',(salonSettings.workingDays||[]).includes(Number(btn.dataset.day)));
+  });
+}
+function applySalonBrand(){
+  const name=salonSettings.salonName||'';
+  if(name){
+    document.title=name;
+    const brand=document.querySelector('.top .logo span');
+    if(brand)brand.textContent=name;
+  }
+}
+
+
+function bookingNotes(b){return Array.isArray(b.observations)?b.observations:[]}
+function latestNote(b){
+  const arr=bookingNotes(b);
+  return arr.length?arr[arr.length-1]:null;
+}
+function noteDate(n){
+  if(!n?.createdAt)return '';
+  const d=new Date(n.createdAt);
+  return Number.isNaN(d.getTime())?'':d.toLocaleString('pt-BR');
+}
+function canEditNote(n){
+  return Boolean(currentUser&&n&&n.authorId===currentUser.id);
+}
+function renderAgendaNote(b){
+  const n=latestNote(b);
+  if(!n||!n.text)return '';
+  return `<div class="agenda-note ${n.byAdmin?'admin':''}">
+    <span class="note-label">${n.byAdmin?'Observação da administração':'Observação'}</span>${safe(n.text)}
+  </div>`;
+}
+function renderObservationHistory(b){
+  const arr=bookingNotes(b);
+  if(!arr.length)return `<div class="note-history"><div class="note-history-head"><strong>Observações</strong><span class="note-count">0</span></div><div class="subtle">Nenhuma observação neste agendamento.</div></div>`;
+  return `<div class="note-history">
+    <div class="note-history-head"><strong>Observações</strong><span class="note-count">${arr.length}</span></div>
+    ${arr.map(n=>`<div class="note-item ${n.byAdmin?'admin':''}">
+      <span class="note-label">${n.byAdmin?'⚠ Observação da administração':'Observação'}</span>
+      ${safe(n.text)}
+      <div class="note-meta">
+        <span>${safe(n.author||'Usuário')}${noteDate(n)?' • '+noteDate(n):''}</span>
+        ${canEditNote(n)?`<button class="note-edit" onclick="event.stopPropagation();openObservationModal('${n.id}')">Editar</button>`:''}
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+
+
+function bookingItems(b){
+  if(Array.isArray(b?.items)&&b.items.length)return b.items;
+  if(!b)return [];
+  return [{
+    id:'item_'+String(b.id||Date.now()),
+    professionalId:b.professionalId||'',
+    professionalName:b.professionalName||'',
+    serviceId:b.serviceId||'',
+    serviceName:b.serviceName||'Serviço',
+    time:b.time||'',
+    duration:Number(b.duration||30),
+    price:Number(b.price||0),
+    scheduledPrice:b.scheduledPrice!==undefined?Number(b.scheduledPrice):Number(b.price||0),
+    commission:Number(b.commission||0),
+    commissionPaid:Boolean(b.commissionPaid),
+    commissionPaymentId:b.commissionPaymentId||null,
+    createdAt:b.createdAt||null
+  }];
+}
+
+function syncBookingFromItems(b){
+  if(!b)return b;
+  const items=bookingItems(b);
+  b.items=items;
+
+  const first=items[0]||{};
+  const total=items.reduce((sum,item)=>sum+Number(item.price||0),0);
+  const scheduledTotal=items.reduce((sum,item)=>sum+Number(item.scheduledPrice!==undefined?item.scheduledPrice:item.price||0),0);
+
+  b.price=total;
+  b.scheduledPrice=scheduledTotal;
+  b.professionalId=first.professionalId||b.professionalId||'';
+  b.professionalName=first.professionalName||b.professionalName||'';
+  b.serviceId=first.serviceId||b.serviceId||'';
+  b.serviceName=items.length>1?`${items.length} serviços`:(first.serviceName||b.serviceName||'');
+  b.time=first.time||b.time||'';
+  b.duration=Number(first.duration||b.duration||30);
+
+  const commissionTotal=items.reduce((sum,item)=>sum+Number(item.price||0)*Number(item.commission||0)/100,0);
+  b.commission=total>0?(commissionTotal/total*100):0;
+  b.commissionPaid=items.length?items.every(item=>item.commissionPaid===true):Boolean(b.commissionPaid);
+  return b;
+}
+
+function bookingHasProfessional(b,professionalId){
+  return bookingItems(b).some(item=>item.professionalId===professionalId);
+}
+
+function bookingProfessionalsLabel(b){
+  const names=[...new Set(bookingItems(b).map(item=>item.professionalName).filter(Boolean))];
+  return names.join(', ');
+}
+
+function bookingServicesLabel(b){
+  const items=bookingItems(b);
+  if(items.length===1)return items[0].serviceName||'Serviço';
+  return `${items.length} serviços`;
+}
+
+function bookingCommissionAmount(b,professionalId=null,onlyPending=false){
+  return bookingItems(b)
+    .filter(item=>(!professionalId||item.professionalId===professionalId)&&(!onlyPending||!item.commissionPaid))
+    .reduce((sum,item)=>sum+Number(item.price||0)*Number(item.commission||0)/100,0);
+}
+
+function professionalItemsInBooking(b,professionalId){
+  return bookingItems(b).filter(item=>item.professionalId===professionalId);
+}
+
+function commandItemConflict(date,professionalId,time,duration){
+  const a1=timeToMin(time),a2=a1+Number(duration||30);
+  return bookings.some(booking=>{
+    if(booking.date!==date||['cancelado','nao_compareceu'].includes(booking.status))return false;
+    return bookingItems(booking).some(item=>{
+      if(item.professionalId!==professionalId)return false;
+      const b1=timeToMin(item.time),b2=b1+Number(item.duration||30);
+      return a1<b2&&a2>b1;
+    });
+  });
+}
+
+function draftItemConflict(candidate,ignoreIndex=-1){
+  const a1=timeToMin(candidate.time),a2=a1+Number(candidate.duration||30);
+  return bookingDraftItems.some((item,index)=>{
+    if(index===ignoreIndex||item.professionalId!==candidate.professionalId)return false;
+    const b1=timeToMin(item.time),b2=b1+Number(item.duration||30);
+    return a1<b2&&a2>b1;
+  });
+}
+
+function commandItemProjection(b,item){
+  return {
+    ...b,
+    professionalId:item.professionalId,
+    professionalName:item.professionalName,
+    serviceId:item.serviceId,
+    serviceName:item.serviceName,
+    time:item.time,
+    duration:Number(item.duration||30),
+    price:Number(item.price||0),
+    commission:Number(item.commission||0),
+    _commandItemId:item.id
+  };
+}
+
+function itemById(b,itemId){
+  return bookingItems(b).find(item=>item.id===itemId);
+}
+
+function normalizeBooking(b){
+  const history=Array.isArray(b.observations)?b.observations:[];
+  const normalized={
+    paymentMethod:'',
+    paymentInstallments:1,
+    paymentNote:'',
+    paidAt:null,
+    commissionPaid:false,
+    commissionPaymentId:null,
+    observation:'',
+    observationByAdmin:false,
+    observationAuthor:'',
+    observations:history,
+    ...b,
+    observations:history
+  };
+  normalized.items=Array.isArray(b.items)&&b.items.length
+    ? b.items.map((item,index)=>({
+        id:item.id||('item_'+String(b.id||'')+'_'+index),
+        professionalId:item.professionalId||'',
+        professionalName:item.professionalName||'',
+        serviceId:item.serviceId||'',
+        serviceName:item.serviceName||'Serviço',
+        time:item.time||b.time||'',
+        duration:Number(item.duration||30),
+        price:Number(item.price||0),
+        scheduledPrice:item.scheduledPrice!==undefined?Number(item.scheduledPrice):Number(item.price||0),
+        commission:Number(item.commission||0),
+        commissionPaid:Boolean(item.commissionPaid),
+        commissionPaymentId:item.commissionPaymentId||null,
+        createdAt:item.createdAt||null
+      }))
+    : bookingItems(normalized);
+  return syncBookingFromItems(normalized);
+}
+
+function subscribeFirebase(){
+  unsubscribeFirebase.forEach(fn=>{try{fn()}catch(e){}});
+  unsubscribeFirebase=[];
+
+  if(!auth.currentUser||auth.currentUser.uid!==STUDIO_AUTH_UID){
+    firebaseReady=false;
+    return;
+  }
+
+  unsubscribeFirebase.push(
+    db.collection('agendamentos').onSnapshot(snap=>{
+      bookings=snap.docs.map(d=>normalizeBooking({id:d.id,...d.data()}));
+      saveLocal();
+      if(currentUser)renderAll();
+    },err=>firebaseListenerError(err))
+  );
+
+  unsubscribeFirebase.push(
+    db.collection('clientes').onSnapshot(snap=>{
+      clients=snap.docs.map(d=>({id:d.id,...d.data()}));
+      saveLocal();
+      if(currentUser)renderClients();
+    },err=>firebaseListenerError(err))
+  );
+
+  unsubscribeFirebase.push(
+    db.collection('pagamentosComissao').onSnapshot(snap=>{
+      commissionPayments=snap.docs.map(d=>({id:d.id,...d.data()}));
+      saveLocal();
+      if(currentUser){renderCommissions();renderReports();}
+    },err=>firebaseListenerError(err))
+  );
+
+  unsubscribeFirebase.push(
+    db.collection('profissionais').onSnapshot(snap=>{
+      professionals=snap.docs.map(d=>({id:d.id,active:true,...d.data()}));
+
+      professionals.sort((a,b)=>{
+        if(a.role==='admin'&&b.role!=='admin')return -1;
+        if(b.role==='admin'&&a.role!=='admin')return 1;
+        return String(a.name||'').localeCompare(String(b.name||''),'pt-BR');
+      });
+
+      buildLogin();
+
+      if(currentUser){
+        const refreshed=professionals.find(p=>p.id===currentUser.id);
+        if(refreshed){
+          currentUser=refreshed;
+          fillSelects();
+          renderAll();
+        }else{
+          // If the currently logged-in user was deleted in Firebase,
+          // immediately return to login rather than keeping a ghost session.
+          currentUser=null;
+          $('app').classList.add('hidden');
+          $('login').classList.remove('hidden');
+        }
+      }
+    },err=>firebaseListenerError(err))
+  );
+
+  unsubscribeFirebase.push(
+    db.collection('servicos').onSnapshot(snap=>{
+      services=snap.docs.map(d=>({id:d.id,active:true,...d.data()}));
+      if(currentUser){fillSelects();renderServices();}
+    },err=>firebaseListenerError(err))
+  );
+
+  unsubscribeFirebase.push(
+    db.collection('configuracoes').doc('geral').onSnapshot(doc=>{
+      salonSettings=doc.exists
+        ? {id:'geral',...doc.data()}
+        : {id:'geral',salonName:'',openTime:'',closeTime:'',lunchStart:'',lunchEnd:'',workingDays:[]};
+      rebuildTimes();
+      applySalonBrand();
+      if(currentUser){fillSelects();renderSettings();renderAgenda();}
+    },err=>firebaseListenerError(err))
+  );
+}
+
+function firebaseListenerError(err){
+  console.error('Firebase:',err);
+  setSyncStatus('error','Sem acesso');
+}
+
+
+function authErrorMessage(code){
+  const map={
+    'auth/invalid-email':'E-mail inválido.',
+    'auth/user-disabled':'Este acesso foi desativado.',
+    'auth/user-not-found':'E-mail ou senha incorretos.',
+    'auth/wrong-password':'E-mail ou senha incorretos.',
+    'auth/invalid-credential':'E-mail ou senha incorretos.',
+    'auth/too-many-requests':'Muitas tentativas. Aguarde um pouco e tente novamente.',
+    'auth/network-request-failed':'Sem conexão com a internet.'
+  };
+  return map[code]||'Não foi possível entrar. Confira o e-mail e a senha.';
+}
+
+async function loginStudio(){
+  const email=$('studioEmailInput').value.trim();
+  const password=$('studioPasswordInput').value;
+  $('studioAuthError').textContent='';
+
+  if(!email||!password){
+    $('studioAuthError').textContent='Digite o e-mail e a senha do Studio.';
+    return;
+  }
+
+  const btn=$('studioLoginButton');
+  btn.disabled=true;
+  btn.textContent='Entrando...';
+
+  try{
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    const cred=await auth.signInWithEmailAndPassword(email,password);
+
+    if(cred.user.uid!==STUDIO_AUTH_UID){
+      await auth.signOut();
+      $('studioAuthError').textContent='Este usuário não é o acesso autorizado do Studio.';
+      return;
+    }
+  }catch(err){
+    console.error('Authentication:',err);
+    $('studioAuthError').textContent=authErrorMessage(err.code);
+  }finally{
+    btn.disabled=false;
+    btn.textContent='Entrar no Studio';
+  }
+}
+
+async function logoutStudio(){
+  currentUser=null;
+  pendingLoginUserId=null;
+  $('app').classList.add('hidden');
+  $('login').classList.add('hidden');
+
+  unsubscribeFirebase.forEach(fn=>{try{fn()}catch(e){}});
+  unsubscribeFirebase=[];
+  firebaseReady=false;
+
+  try{
+    await auth.signOut();
+  }catch(err){
+    console.error(err);
+  }
+}
+
+function showStudioAuthScreen(){
+  $('app').classList.add('hidden');
+  $('login').classList.add('hidden');
+  $('authScreen').classList.remove('hidden');
+  $('studioPasswordInput').value='';
+  $('studioAuthError').textContent='';
+  setTimeout(()=>$('studioEmailInput').focus(),120);
+}
+
+async function showProfileChooser(user){
+  authenticatedStudioUser=user;
+  $('authScreen').classList.add('hidden');
+  $('app').classList.add('hidden');
+  $('login').classList.remove('hidden');
+  $('authenticatedStudioEmail').textContent=user.email||'Studio conectado';
+  $('people').innerHTML=`<div class="report-placeholder" style="grid-column:1/-1">Carregando usuários...</div>`;
+
+  await initFirebase();
+}
+
+function initAuthFlow(){
+  if(authFlowInitialized)return;
+  authFlowInitialized=true;
+
+  auth.onAuthStateChanged(async user=>{
+    if(!user){
+      authenticatedStudioUser=null;
+      showStudioAuthScreen();
+      return;
+    }
+
+    if(user.uid!==STUDIO_AUTH_UID){
+      authenticatedStudioUser=null;
+      try{await auth.signOut();}catch(e){}
+      showStudioAuthScreen();
+      $('studioAuthError').textContent='Este usuário não pertence ao Studio Thiago Hair.';
+      return;
+    }
+
+    await showProfileChooser(user);
+  });
+}
+
+async function initFirebase(){
+  setSyncStatus('connecting','Conectando');
+  try{
+    if(!authenticatedStudioUser){
+      firebaseReady=false;
+      return;
+    }
+    firebaseReady=true;
+    subscribeFirebase();
+    setSyncStatus('online','Online');
+  }catch(err){
+    console.error('Falha ao iniciar Firebase:',err);
+    firebaseReady=false;
+    setSyncStatus('error','Firebase bloqueado');
+  }
+}
+
+function buildLogin(){
+  const active=professionals.filter(p=>p.role==='admin'||p.active!==false);
+  $('people').innerHTML=active.length
+    ? active.map(p=>`<button class="person" onclick="requestPin('${p.id}')">
+        <div class="person-avatar">${initials(p.name)}</div><strong>${safe(p.name)}</strong>
+        <small>${p.role==='admin'?'Administradora':'Colaboradora'}</small></button>`).join('')
+    : `<div class="report-placeholder" style="grid-column:1/-1">Nenhum usuário ativo cadastrado.</div>`;
+}
+
+function requestPin(id){
+  if(!auth.currentUser||auth.currentUser.uid!==STUDIO_AUTH_UID){
+    showStudioAuthScreen();
+    return;
+  }
+  const user=professionals.find(p=>p.id===id);if(!user)return;
+  pendingLoginUserId=id;
+  $('pinUserCard').innerHTML=`<div class="pin-user-avatar">${initials(user.name)}</div>
+    <div><strong>${safe(user.name)}</strong><span>${user.role==='admin'?'Administradora':'Colaboradora'}</span></div>`;
+  $('loginPinInput').value='';
+  $('pinError').textContent='';
+  $('pinModal').classList.add('show');
+  setTimeout(()=>$('loginPinInput').focus(),120);
+}
+
+function closePinModal(){
+  $('pinModal').classList.remove('show');
+  pendingLoginUserId=null;
+  $('loginPinInput').value='';
+  $('pinError').textContent='';
+}
+
+async function confirmPinLogin(){
+  const user=professionals.find(p=>p.id===pendingLoginUserId);if(!user)return;
+  const pin=$('loginPinInput').value.trim();
+  if(!validPin(pin)){
+    $('pinError').textContent='Digite exatamente 4 números.';
+    return;
+  }
+  if(!user.pinHash){
+    $('pinError').textContent='PIN ainda não configurado para este usuário.';
+    return;
+  }
+  const hash=await sha256(pin);
+  const expected=user.pinHash;
+  if(hash!==expected){
+    $('pinError').textContent='PIN incorreto.';
+    $('loginPinInput').value='';
+    $('loginPinInput').focus();
+    return;
+  }
+  $('pinModal').classList.remove('show');
+  pendingLoginUserId=null;
+  login(user.id);
+}
+
+function login(id){
+  if(!auth.currentUser||auth.currentUser.uid!==STUDIO_AUTH_UID){
+    showStudioAuthScreen();
+    return;
+  }
+  currentUser=professionals.find(p=>p.id===id);
+  if(!currentUser)return;
+  selectedProfessional=currentUser.role==='admin'?'todos':currentUser.id;
+  $('login').classList.add('hidden');$('app').classList.remove('hidden');
+  $('topName').textContent=currentUser.name;
+  $('topRole').textContent=currentUser.role==='admin'?'Administradora':'Colaboradora';
+  $('panelLabel').textContent=currentUser.role==='admin'?'Painel da administradora':'Meu painel';
+  buildNav();fillSelects();renderAll();
+  logAppAction('login',`${currentUser.name} entrou no painel do aplicativo.`);
+}
+
+function logout(){
+  currentUser=null;
+  $('app').classList.add('hidden');
+
+  if(auth.currentUser&&auth.currentUser.uid===STUDIO_AUTH_UID){
+    $('authScreen').classList.add('hidden');
+    $('login').classList.remove('hidden');
+    buildLogin();
+  }else{
+    showStudioAuthScreen();
+  }
+}
+
+function buildNav(){
+  if(currentUser.role==='admin'){
+    $('bottom').className='bottom admin';
+    $('bottom').innerHTML=`<button class="nav active" data-screen="home"><span>⌂</span>Início</button>
+    <button class="nav" data-screen="agenda"><span>▦</span>Agenda</button>
+    <button class="nav" data-screen="clientes"><span>♙</span>Clientes</button>
+    <button class="nav" data-screen="relatorios"><span>▥</span>Financeiro</button>
+    <button class="nav" data-screen="mais"><span>•••</span>Mais</button>`;
+  }else{
+    $('bottom').className='bottom collab';
+    $('bottom').innerHTML=`<button class="nav active" data-screen="home"><span>⌂</span>Início</button>
+    <button class="nav" data-screen="agenda"><span>▦</span>Agenda</button>
+    <button class="nav" data-screen="clientes"><span>♙</span>Clientes</button>
+    <button class="nav" data-screen="comissoes"><span>▣</span>Minha comissão</button>`;
+  }
+  $('bottom').querySelectorAll('.nav').forEach(b=>b.onclick=()=>goScreen(b.dataset.screen,b));
+}
+function goScreen(name,btn){
+  if(name==='historico'&&currentUser?.role!=='admin'){
+    alert('Somente o administrador pode acessar o histórico do app.');
+    return;
+  }
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const target=$('screen-'+name);
+  target.classList.add('active');
+
+  $('bottom').querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));
+  const n=btn||$('bottom').querySelector(`[data-screen="${name}"]`);
+  if(n)n.classList.add('active');
+
+  $('fab').style.display=name==='agenda'?'block':'none';
+
+  if(name==='agenda')renderAgenda();
+  if(name==='comissoes')renderCommissions();
+  if(name==='clientes')renderClients();
+  if(name==='servicos')renderServices();
+  if(name==='relatorios')renderReports();
+  if(name==='config')renderSettings();
+  if(name==='historico')renderHistory();
+
+  // Sempre abre a nova aba no início da página.
+  requestAnimationFrame(()=>{
+    window.scrollTo({top:0,left:0,behavior:'auto'});
+    document.documentElement.scrollTop=0;
+    document.body.scrollTop=0;
+    target.scrollTop=0;
+
+    // Reforço para navegadores móveis que restauram a rolagem após renderizar.
+    requestAnimationFrame(()=>{
+      window.scrollTo({top:0,left:0,behavior:'auto'});
+      target.scrollTop=0;
+    });
+  });
+}
+
+function fillSelects(){
+  const allowed=professionals.filter(p=>p.active!==false);
+  $('bProfessional').innerHTML=allowed.map(p=>`<option value="${p.id}">${safe(p.name)}</option>`).join('');
+  $('bTime').innerHTML=times.map(t=>`<option value="${t}">${t}</option>`).join('');
+  const activeServices=services.filter(s=>s.active!==false);
+  $('bService').innerHTML=activeServices.map(s=>`<option value="${s.id}">${safe(s.name)}</option>`).join('');
+  $('bService').onchange=syncService;
+  if(activeServices.length)syncService();
+}
+function syncService(){
+  const s=services.find(x=>x.id===$('bService').value);if(!s)return;
+  $('bPrice').value=s.price;$('bDuration').value=s.duration;$('bCommission').value=s.commission;
+}
+function renderAll(){
+  renderDates();renderHome();renderAgenda();renderClients();renderCommissions();
+  renderProfessionals();renderServices();renderReports();renderSettings();
+}
+function renderDates(){
+  const fmt=currentDate.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+  $('agendaDate').textContent=fmt.replace(/^./,c=>c.toUpperCase());
+  $('agendaDateLong').textContent=currentDate.toLocaleDateString('pt-BR',{year:'numeric'});
+  $('homeDate').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'}).replace(/^./,c=>c.toUpperCase());
+}
+function changeDay(n){currentDate.setDate(currentDate.getDate()+n);currentDate=new Date(currentDate);renderDates();renderAgenda()}
+function goToday(){currentDate=new Date();renderDates();renderAgenda()}
+function changeMonth(n){currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth()+n,1);renderDates();renderCalendar()}
+
+function scopeBookingsForDate(key){
+  return bookings.filter(b=>b.date===key&&
+    (currentUser.role==='admin'
+      ? (selectedProfessional==='todos'||bookingHasProfessional(b,selectedProfessional))
+      : bookingHasProfessional(b,currentUser.id)));
+}
+
+function renderHome(){
+  const today=dateKey(new Date());
+  const isAdmin=currentUser.role==='admin';
+  const scope=bookings.filter(b=>b.date===today&&b.status!=='cancelado'&&(isAdmin||bookingHasProfessional(b,currentUser.id)));
+  const done=scope.filter(b=>b.status==='finalizado');
+
+  $('stClients').textContent=new Set(scope.map(b=>b.client)).size;
+  $('stDone').textContent=done.length;
+  $('stPending').textContent=scope.filter(b=>b.status==='agendado').length;
+
+  const sold=isAdmin
+    ? done.reduce((sum,b)=>sum+Number(b.price||0),0)
+    : done.reduce((sum,b)=>sum+professionalItemsInBooking(b,currentUser.id).reduce((s,item)=>s+Number(item.price||0),0),0);
+
+  const commission=done.reduce((sum,b)=>sum+bookingCommissionAmount(b,isAdmin?null:currentUser.id),0);
+
+  $('stSold').textContent=brl(sold);
+  $('stCommission').textContent=brl(commission);
+
+  $('todayPreview').innerHTML=scope.length?scope.slice(0,3).map(b=>{
+    const relevant=isAdmin?bookingItems(b):professionalItemsInBooking(b,currentUser.id);
+    const serviceLabel=relevant.map(item=>item.serviceName).join(' + ');
+    const names=[...new Set(relevant.map(item=>item.professionalName))].join(', ');
+    const value=isAdmin?Number(b.price||0):relevant.reduce((s,item)=>s+Number(item.price||0),0);
+    return `<div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)">
+      <div><strong>${b.time} • ${safe(b.client)}</strong><div class="subtle">${safe(serviceLabel)} • ${safe(names)}</div></div>
+      <span>${brl(value)}</span>
+    </div>`;
+  }).join(''):'Nenhum agendamento para hoje.';
+}
+
+function setAgendaView(view){
+  agendaView=view;
+  $('viewListBtn').classList.toggle('active',view==='list');
+  $('viewCalendarBtn').classList.toggle('active',view==='calendar');
+  $('agendaListView').classList.toggle('hidden',view!=='list');
+  $('agendaCalendarView').classList.toggle('hidden',view!=='calendar');
+  renderAgenda();
+}
+function renderAgenda(){
+  if(currentUser.role==='admin'){
+    $('proTabs').innerHTML=[{id:'todos',name:'Todos'},...professionals].map(p=>`
+      <button class="pro-tab ${selectedProfessional===p.id?'active':''}" onclick="setPro('${p.id}')">${p.name==='Simples E Direto Informática'?'Chefe':safe(p.name)}</button>`).join('');
+  }else{
+    selectedProfessional=currentUser.id;
+    $('proTabs').innerHTML=`<button class="pro-tab active">${safe(currentUser.name)}</button>`;
+  }
+  $('agendaListView').classList.toggle('hidden',agendaView!=='list');
+  $('agendaCalendarView').classList.toggle('hidden',agendaView!=='calendar');
+  $('viewListBtn').classList.toggle('active',agendaView==='list');
+  $('viewCalendarBtn').classList.toggle('active',agendaView==='calendar');
+
+  if(agendaView==='calendar') renderCalendar();
+  else selectedProfessional==='todos'?renderGeneral():renderTimeline(selectedProfessional);
+}
+function setPro(id){selectedProfessional=id;renderAgenda()}
+
+function renderGeneral(){
+  if(!isWorkingDay(currentDate)){
+    $('timeline').innerHTML=`<div class="closed-day"><strong>Salão fechado neste dia</strong>Este dia está desativado nas configurações de funcionamento.</div>`;
+    return;
+  }
+  const arr=scopeBookingsForDate(dateKey()).sort((a,b)=>a.time.localeCompare(b.time));
+  $('timeline').innerHTML=arr.length?arr.map(b=>{
+    const items=bookingItems(b);
+    const itemText=items.length===1
+      ? `${safe(items[0].professionalName)} • ${safe(items[0].serviceName)}`
+      : `${items.length} serviços • ${[...new Set(items.map(i=>i.professionalName))].length} profissionais`;
+    return `<div class="list-card" onclick="openDetails('${b.id}')">
+      <div class="list-top">
+        <div><div class="list-title">${b.time} • ${safe(b.client)}</div>
+        <div class="list-sub">${itemText} ${b.status==='finalizado'&&b.paymentMethod?'• '+safe(b.paymentMethod):''}</div></div>
+        <div style="text-align:right"><div class="price">${brl(b.price)}</div><span class="badge ${b.status}">${statusLabel(b.status)}</span></div>
+      </div>
+      ${renderAgendaNote(b)}
+    </div>`;
+  }).join(''):`<div class="report-placeholder">Nenhum agendamento neste dia.</div>`;
+}
+
+function renderTimeline(profId){
+  if(!isWorkingDay(currentDate)){
+    $('timeline').innerHTML=`<div class="closed-day"><strong>Salão fechado neste dia</strong>Ative este dia em Configurações para liberar horários.</div>`;
+    return;
+  }
+
+  let html='';
+  times.forEach(t=>{
+    const b=getBookingForSlot(profId,t);
+
+    if(b&&b.time===t){
+      html+=`<div class="slot"><div class="slot-time">${t}</div>
+      <div class="slot-box" onclick="openDetails('${b.id}')"><div class="appt">
+      <div class="appt-main"><div class="appt-name">${safe(b.client)}</div>
+      <div class="appt-meta">${safe(b.serviceName)} • ${b.duration} min ${bookingItems(bookings.find(x=>x.id===b.id)).length>1?'• mesma comanda':''} ${b.status==='finalizado'&&b.paymentMethod?'• '+safe(b.paymentMethod):''}</div></div>
+      <div><div class="price">${brl(b.price)}</div><span class="badge ${b.status}">${statusLabel(b.status)}</span></div>
+      </div>
+      ${renderAgendaNote(b)}
+      </div></div>`;
+    }else if(b){
+      html+=`<div class="slot"><div class="slot-time">${t}</div><div class="slot-box" style="opacity:.45"><div class="appt-meta">Continuação de ${safe(b.client)} • ${safe(b.serviceName)}</div></div></div>`;
+    }else{
+      html+=`<div class="slot"><div class="slot-time">${t}</div><div class="slot-box free"><span>Horário livre</span><button onclick="event.stopPropagation();openBooking('${profId}','${t}')">+ Agendar</button></div></div>`;
+    }
+  });
+
+  $('timeline').innerHTML=html+renderDayExceptions(profId);
+}
+
+function renderDayExceptions(profId){
+  const arr=bookings
+    .filter(b=>b.date===dateKey()&&bookingHasProfessional(b,profId)&&['cancelado','nao_compareceu'].includes(b.status))
+    .sort((a,b)=>a.time.localeCompare(b.time));
+
+  if(!arr.length)return '';
+
+  return `<div style="margin-top:14px">
+    <div class="section-head"><h3>Cancelados / não compareceram</h3><small>${arr.length}</small></div>
+    ${arr.map(b=>{
+      const relevant=professionalItemsInBooking(b,profId);
+      return `<div class="list-card" onclick="openDetails('${b.id}')">
+        <div class="list-top">
+          <div><div class="list-title">${relevant[0]?.time||b.time} • ${safe(b.client)}</div>
+          <div class="list-sub">${safe(relevant.map(i=>i.serviceName).join(' + '))}</div></div>
+          <div style="text-align:right"><div class="price">${brl(relevant.reduce((s,i)=>s+Number(i.price||0),0))}</div><span class="badge ${b.status}">${statusLabel(b.status)}</span></div>
+        </div>
+        ${renderAgendaNote(b)}
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+function getBookingForSlot(profId,time){
+  const target=timeToMin(time);
+
+  for(const b of bookings){
+    if(b.date!==dateKey()||['cancelado','nao_compareceu'].includes(b.status))continue;
+
+    const item=bookingItems(b).find(item=>{
+      if(item.professionalId!==profId)return false;
+      const start=timeToMin(item.time);
+      return target>=start&&target<start+Number(item.duration||30);
+    });
+
+    if(item)return commandItemProjection(b,item);
+  }
+
+  return null;
+}
+
+function renderCalendar(){
+  const y=currentDate.getFullYear(),m=currentDate.getMonth();
+  $('calendarMonthTitle').textContent=currentDate.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  const first=new Date(y,m,1);
+  const start=new Date(y,m,1-first.getDay());
+  const today=dateKey(new Date());
+  let html='';
+  for(let i=0;i<42;i++){
+    const d=new Date(start);d.setDate(start.getDate()+i);
+    const key=dateKey(d);
+    const arr=scopeBookingsForDate(key);
+    const classes=['cal-day'];
+    if(d.getMonth()!==m)classes.push('outside');
+    if(key===today)classes.push('today');
+    if(key===dateKey())classes.push('selected');
+    html+=`<button class="${classes.join(' ')}" onclick="selectCalendarDay('${key}')">
+      <span class="num">${d.getDate()}</span>${arr.length?`<span class="count">${arr.length}</span>`:''}
+      <span class="cal-dots">${arr.slice(0,6).map(()=>'<i class="cal-dot"></i>').join('')}</span>
+    </button>`;
+  }
+  $('calendarGrid').innerHTML=html;
+  renderCalendarSummary();
+}
+function selectCalendarDay(key){currentDate=parseKey(key);renderDates();renderCalendar()}
+function renderCalendarSummary(){
+  const arr=scopeBookingsForDate(dateKey());
+  const done=arr.filter(b=>b.status==='finalizado');
+  const revenue=done.reduce((s,b)=>s+Number(b.price||0),0);
+  const profs=[...new Set(arr.flatMap(b=>bookingItems(b).map(item=>item.professionalName)).filter(Boolean))];
+  $('calendarSummary').innerHTML=`
+    <div class="calendar-summary-top">
+      <div><strong>${cap(fullDate(dateKey()))}</strong><br><span>${arr.length} atendimento${arr.length===1?'':'s'} neste dia</span></div>
+      <button class="btn btn-pink" onclick="setAgendaView('list')">Abrir dia</button>
+    </div>
+    <div class="summary-chips">
+      <span class="summary-chip">📅 ${arr.filter(b=>b.status==='agendado').length} agendados</span>
+      <span class="summary-chip">✓ ${done.length} concluídos</span>
+      ${arr.some(b=>b.status==='nao_compareceu')?`<span class="summary-chip">⚠ ${arr.filter(b=>b.status==='nao_compareceu').length} não compareceu</span>`:''}
+      ${arr.some(b=>b.status==='cancelado')?`<span class="summary-chip">✕ ${arr.filter(b=>b.status==='cancelado').length} cancelado</span>`:''}
+      <span class="summary-chip">💰 ${brl(revenue)}</span>
+      ${profs.slice(0,3).map(p=>`<span class="summary-chip">👤 ${safe(p)}</span>`).join('')}
+    </div>`;
+}
+
+
+function normalizeClientSearch(value){
+  return String(value||'')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase()
+    .trim();
+}
+
+function getClientPhone(client){
+  return client?.phone||client?.whatsapp||client?.telefone||'';
+}
+
+function searchClientsForBooking(){
+  const input=$('bName');
+  const suggestions=$('clientSuggestions');
+  const hint=$('clientNewHint');
+  if(!input||!suggestions)return;
+
+  // Se a pessoa editar o nome depois de selecionar, volta a ser uma nova busca.
+  selectedBookingClientId=null;
+
+  const query=normalizeClientSearch(input.value);
+  if(!query){
+    suggestions.classList.remove('show');
+    suggestions.innerHTML='';
+    if(hint)hint.classList.remove('show');
+    return;
+  }
+
+  const matches=clients
+    .filter(client=>{
+      const name=normalizeClientSearch(client.name||client.nome);
+      const phone=normalizeClientSearch(getClientPhone(client));
+      return name.includes(query)||phone.includes(query);
+    })
+    .sort((a,b)=>String(a.name||a.nome||'').localeCompare(String(b.name||b.nome||''),'pt-BR'))
+    .slice(0,8);
+
+  if(!matches.length){
+    suggestions.classList.remove('show');
+    suggestions.innerHTML='';
+    if(hint)hint.classList.add('show');
+    return;
+  }
+
+  suggestions.innerHTML=matches.map(client=>{
+    const name=client.name||client.nome||'Sem nome';
+    const phone=getClientPhone(client);
+    return `<button type="button" class="client-suggestion" onclick="selectBookingClient('${client.id}')">
+      <div>
+        <strong>${safe(name)}</strong>
+        <span>${phone?safe(phone):'Sem WhatsApp cadastrado'}</span>
+      </div>
+      <em>Selecionar</em>
+    </button>`;
+  }).join('');
+
+  suggestions.classList.add('show');
+  if(hint)hint.classList.remove('show');
+}
+
+function selectBookingClient(id){
+  const client=clients.find(c=>c.id===id);
+  if(!client)return;
+
+  selectedBookingClientId=id;
+  $('bName').value=client.name||client.nome||'';
+  $('bPhone').value=getClientPhone(client);
+
+  if(currentUser?.role!=='admin'){
+    // Colaborador usa os dados cadastrados sem alterar o registro da cliente.
+    $('bName').dataset.existingClient='1';
+    $('bPhone').dataset.existingClient='1';
+  }
+
+  $('clientSuggestions').classList.remove('show');
+  $('clientSuggestions').innerHTML='';
+  $('clientNewHint').classList.remove('show');
+}
+
+function closeClientSuggestions(){
+  const el=$('clientSuggestions');
+  if(el)el.classList.remove('show');
+}
+
+
+function buildBookingFormItem(){
+  const professionalId=$('bProfessional').value;
+  const professional=professionals.find(p=>p.id===professionalId);
+  const service=services.find(s=>s.id===$('bService').value);
+  const time=$('bTime').value;
+  const duration=Number($('bDuration').value||30);
+  const price=Number($('bPrice').value||0);
+  const commission=Number($('bCommission').value||0);
+
+  if(!professional||!service){
+    alert('Selecione a profissional e o serviço.');
+    return null;
+  }
+  if(!time){
+    alert('Selecione o horário.');
+    return null;
+  }
+  if(!Number.isFinite(price)||price<0){
+    alert('Informe um valor válido.');
+    return null;
+  }
+  if(!Number.isFinite(commission)||commission<0||commission>100){
+    alert('Confira a comissão.');
+    return null;
+  }
+
+  return {
+    id:'item_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),
+    professionalId,
+    professionalName:professional.name,
+    serviceId:service.id,
+    serviceName:service.name,
+    time,
+    duration,
+    price,
+    scheduledPrice:price,
+    commission,
+    commissionPaid:false,
+    commissionPaymentId:null,
+    createdAt:new Date().toISOString(),
+    addedBy:currentUser?.name||'',
+    addedById:currentUser?.id||''
+  };
+}
+
+function renderBookingDraftItems(){
+  const box=$('bookingDraftList');
+  const btn=$('saveBookingBtn');
+  if(!box)return;
+
+  if(!bookingDraftItems.length){
+    box.innerHTML='';
+    if(btn)btn.textContent='Agendar';
+    return;
+  }
+
+  const total=bookingDraftItems.reduce((s,item)=>s+Number(item.price||0),0);
+
+  box.innerHTML=`<div class="command-summary" style="margin-top:10px">
+    <div class="command-summary-top">
+      <div><small>SERVIÇOS JÁ ADICIONADOS</small><strong>${brl(total)}</strong></div>
+      <span class="command-badge">🧾 ${bookingDraftItems.length} serviço${bookingDraftItems.length===1?'':'s'}</span>
+    </div>
+    <div class="command-items">
+      ${bookingDraftItems.map((item,index)=>`
+        <div class="command-item">
+          <div class="command-item-head">
+            <div>
+              <div class="command-item-title">${safe(item.serviceName)}</div>
+              <div class="command-item-sub">${safe(item.professionalName)} • ${item.time} • ${item.duration} min</div>
+            </div>
+            <div class="command-item-price">${brl(item.price)}</div>
+          </div>
+          <div class="command-item-footer">
+            <span>Comissão ${item.commission}%</span>
+            <button type="button" class="command-remove" onclick="removeDraftBookingItem(${index})">Remover</button>
+          </div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+
+  if(btn)btn.textContent=`Agendar comanda (${bookingDraftItems.length})`;
+}
+
+function removeDraftBookingItem(index){
+  bookingDraftItems.splice(index,1);
+  renderBookingDraftItems();
+}
+
+function nextTimeAfter(time,duration){
+  const next=minutesToTime(timeToMin(time)+Number(duration||30));
+  return times.includes(next)?next:time;
+}
+
+function addDraftBookingItem(){
+  const item=buildBookingFormItem();
+  if(!item)return;
+
+  if(commandItemConflict(dateKey(),item.professionalId,item.time,item.duration)){
+    alert('Essa profissional já possui outro atendimento nesse horário.');
+    return;
+  }
+
+  if(draftItemConflict(item)){
+    alert('Esse horário conflita com outro serviço desta mesma comanda para essa profissional.');
+    return;
+  }
+
+  bookingDraftItems.push(item);
+  renderBookingDraftItems();
+
+  // Facilita lançar vários serviços seguidos para a mesma profissional.
+  const suggestedTime=nextTimeAfter(item.time,item.duration);
+  $('bProfessional').value=item.professionalId;
+  $('bTime').value=suggestedTime;
+
+  const activeServices=services.filter(s=>s.active!==false);
+  if(activeServices.length){
+    $('bService').value=activeServices[0].id;
+    syncService();
+  }
+  updateObservationHint();
+}
+
+function openBooking(profId,time){
+  if(!salonSettings.openTime||!salonSettings.closeTime||!Array.isArray(salonSettings.workingDays)||!salonSettings.workingDays.length){
+    alert('Configure os dias e horários de funcionamento antes de criar agendamentos.');
+    return;
+  }
+  if(!isWorkingDay(currentDate)){alert('O salão está marcado como fechado neste dia. Altere em Configurações se necessário.');return}
+  const activeServices=services.filter(s=>s.active!==false);
+  if(!activeServices.length){alert('Cadastre ou ative pelo menos um serviço antes de criar um agendamento.');return}
+  const pid=profId||(currentUser.role==='admin'?(selectedProfessional==='todos'?(professionals.find(p=>p.role==='collab'&&p.active!==false)?.id||'admin'):selectedProfessional):currentUser.id);
+  selectedBookingClientId=null;
+  $('bName').value='';
+  $('bPhone').value='';
+  delete $('bName').dataset.existingClient;
+  delete $('bPhone').dataset.existingClient;
+  if($('clientSuggestions')){$('clientSuggestions').classList.remove('show');$('clientSuggestions').innerHTML='';}
+  if($('clientNewHint'))$('clientNewHint').classList.remove('show');
+  bookingDraftItems=[];
+  renderBookingDraftItems();
+  $('bProfessional').value=pid;$('bTime').value=time||times[0]||'08:00';$('bService').value=activeServices[0].id;
+  $('bObservation').value='';
+  syncService();
+  $('bProfessional').disabled=false;
+  updateObservationHint();
+  $('bProfessional').onchange=()=>{updateObservationHint();};
+  $('bookingModal').classList.add('show');
+}
+function updateObservationHint(){
+  const profId=$('bProfessional').value;
+  const adminForOther=currentUser?.role==='admin'&&profId!==currentUser.id;
+  $('observationHint').innerHTML=adminForOther
+    ? '<strong style="color:#be123c">Atenção:</strong> como é uma observação da administração para outra profissional, ela aparecerá em vermelho na agenda.'
+    : 'A observação ficará visível nos detalhes do agendamento.';
+}
+function closeBooking(){bookingDraftItems=[];closeClientSuggestions();$('bookingModal').classList.remove('show')}
+async function saveBooking(){
+  const name=$('bName').value.trim();
+  if(!name){alert('Informe o nome da cliente.');return}
+
+  let items=bookingDraftItems.map(item=>({...item}));
+
+  // Se não usou o botão "Adicionar este serviço", mantém o fluxo simples de um único serviço.
+  if(!items.length){
+    const singleItem=buildBookingFormItem();
+    if(!singleItem)return;
+
+    if(commandItemConflict(dateKey(),singleItem.professionalId,singleItem.time,singleItem.duration)){
+      alert('Essa profissional já possui outro atendimento nesse horário.');
+      return;
+    }
+    items=[singleItem];
+  }
+
+  // Validação final antes de salvar.
+  for(let i=0;i<items.length;i++){
+    const item=items[i];
+    if(commandItemConflict(dateKey(),item.professionalId,item.time,item.duration)){
+      alert(`${item.professionalName} já possui outro atendimento às ${item.time}.`);
+      return;
+    }
+    const a1=timeToMin(item.time),a2=a1+Number(item.duration||30);
+    const internalConflict=items.some((other,j)=>{
+      if(i===j||other.professionalId!==item.professionalId)return false;
+      const b1=timeToMin(other.time),b2=b1+Number(other.duration||30);
+      return a1<b2&&a2>b1;
+    });
+    if(internalConflict){
+      alert(`Existem dois serviços sobrepostos para ${item.professionalName} dentro desta comanda.`);
+      return;
+    }
+  }
+
+  const observation=$('bObservation').value.trim();
+  const observationByAdmin=Boolean(observation)&&currentUser.role==='admin'&&items.some(item=>item.professionalId!==currentUser.id);
+  const firstNote=observation?[{
+    id:'n'+Date.now(),
+    text:observation,
+    byAdmin:observationByAdmin,
+    author:currentUser.name,
+    authorId:currentUser.id,
+    createdAt:new Date().toISOString()
+  }]:[];
+
+  const primary=items[0];
+  const booking={
+    id:String(Date.now()),
+    date:dateKey(),
+    clientId:null,
+    client:name,
+    phone:$('bPhone').value.trim(),
+    professionalId:primary.professionalId,
+    professionalName:primary.professionalName,
+    time:primary.time,
+    serviceId:primary.serviceId,
+    serviceName:items.length>1?`${items.length} serviços`:primary.serviceName,
+    duration:primary.duration,
+    price:0,
+    scheduledPrice:0,
+    commission:0,
+    status:'agendado',
+    items,
+    observation,
+    observationByAdmin,
+    observationAuthor:observation?currentUser.name:'',
+    observations:firstNote,
+    paymentMethod:'',
+    paymentInstallments:1,
+    paymentNote:'',
+    paidAt:null,
+    commissionPaid:false,
+    commissionPaymentId:null,
+    createdAt:new Date().toISOString(),
+    createdBy:currentUser?.name||'',
+    createdById:currentUser?.id||''
+  };
+
+  syncBookingFromItems(booking);
+  bookings.push(booking);
+  const newBooking=booking;
+
+  const typedPhone=$('bPhone').value.trim();
+  let found=selectedBookingClientId
+    ? clients.find(c=>c.id===selectedBookingClientId)
+    : clients.find(c=>{
+        const sameName=normalizeClientSearch(c.name||c.nome)===normalizeClientSearch(name);
+        const existingPhone=getClientPhone(c);
+        const samePhone=Boolean(typedPhone&&existingPhone&&typedPhone===existingPhone);
+        return sameName||samePhone;
+      });
+
+  let clientChanged=false;
+  let clientWasNew=false;
+
+  if(!found){
+    clientWasNew=true;
+    found={
+      id:'c'+Date.now(),
+      name,
+      phone:typedPhone,
+      whatsapp:typedPhone,
+      createdAt:new Date().toISOString(),
+      createdBy:currentUser?.name||'',
+      createdById:currentUser?.id||'',
+      updatedAt:new Date().toISOString()
+    };
+    clients.push(found);
+    clientChanged=true;
+  }else if(currentUser?.role==='admin'){
+    if(name&&(found.name||'')!==name){
+      found.name=name;
+      clientChanged=true;
+    }
+    if(typedPhone&&getClientPhone(found)!==typedPhone){
+      found.phone=typedPhone;
+      found.whatsapp=typedPhone;
+      clientChanged=true;
+    }
+    if(clientChanged){
+      found.updatedAt=new Date().toISOString();
+      found.updatedBy=currentUser?.name||'';
+      found.updatedById=currentUser?.id||'';
+    }
+  }
+
+  newBooking.clientId=found.id;
+  newBooking.client=found.name||name;
+  newBooking.phone=getClientPhone(found)||typedPhone;
+
+  bookingDraftItems=[];
+  closeBooking();
+  renderAll();
+
+  try{
+    await cloudReplace('agendamentos',newBooking.id,newBooking);
+    if(clientChanged)await cloudSet('clientes',found.id,found);
+
+    logAppAction('agendamento_criado',`Criou uma comanda para ${newBooking.client} com ${bookingItems(newBooking).length} serviço(s), total previsto de ${brl(newBooking.price)}.`,{bookingId:newBooking.id,client:newBooking.client,date:newBooking.date,time:newBooking.time,total:Number(newBooking.price||0),services:bookingItems(newBooking).length});
+
+    if(clientWasNew){
+      logAppAction('cliente_criado',`Cadastrou a cliente ${found.name}.`,{client:found.name,clientId:found.id});
+    }else if(clientChanged&&currentUser?.role==='admin'){
+      logAppAction('cliente_editado',`Atualizou dados da cliente ${found.name} durante o agendamento.`,{client:found.name,clientId:found.id});
+    }
+  }catch(err){
+    console.error(err);
+    setSyncStatus('error','Erro ao salvar');
+    alert('Não foi possível enviar a comanda ao Firebase. Confira sua conexão e as regras do Firestore.');
+  }
+}
+
+function renderCommandItems(b){
+  const items=bookingItems(b);
+  return `<div class="command-summary">
+    <div class="command-summary-top">
+      <div><small>TOTAL DA COMANDA</small><strong>${brl(b.price)}</strong></div>
+      <span class="command-badge">🧾 ${items.length} serviço${items.length===1?'':'s'}</span>
+    </div>
+
+    <div class="command-items">
+      ${items.map((item,index)=>`
+        <div class="command-item">
+          <div class="command-item-head">
+            <div>
+              <div class="command-item-title">${safe(item.serviceName)}</div>
+              <div class="command-item-sub">${safe(item.professionalName)} • ${item.time} • ${Number(item.duration||30)} min</div>
+            </div>
+            <div class="command-item-price">${brl(item.price)}</div>
+          </div>
+          <div class="command-item-footer">
+            <span>Comissão ${Number(item.commission||0)}% • ${brl(Number(item.price||0)*Number(item.commission||0)/100)}</span>
+            ${currentUser?.role==='admin'&&b.status==='agendado'&&items.length>1
+              ? `<button class="command-remove" onclick="event.stopPropagation();removeCommandItem('${item.id}')">Remover</button>`
+              : ''}
+          </div>
+        </div>`).join('')}
+    </div>
+
+    ${b.status==='agendado'
+      ? `<button class="command-add-btn" onclick="openCommandItemModal()">＋ Adicionar outro serviço / profissional</button>`
+      : ''}
+  </div>`;
+}
+
+function openDetails(id){
+  const b=bookings.find(x=>x.id===id);if(!b)return;
+  syncBookingFromItems(b);
+  currentBookingId=id;
+
+  const payment=b.status==='finalizado'
+    ? `<div class="detail-cell"><small>Pagamento</small><strong>${safe(b.paymentMethod||'Não informado')}${b.paymentMethod==='Cartão de crédito'?' • '+(b.paymentInstallments||1)+'x':''}</strong></div>
+       <div class="detail-cell"><small>Recebido em</small><strong>${b.paidAt?new Date(b.paidAt).toLocaleString('pt-BR'):'-'}</strong></div>`
+    : `<div class="detail-cell"><small>Pagamento</small><strong>A receber</strong></div>`;
+
+  $('detailsBody').innerHTML=`
+    <div class="panel">
+      <div class="list-top">
+        <div><div class="list-title">${safe(b.client)}</div><div class="list-sub">${safe(b.phone||'Sem telefone')}</div></div>
+        <span class="badge ${b.status}">${statusLabel(b.status)}</span>
+      </div>
+
+      ${renderCommandItems(b)}
+
+      <div class="details-grid">
+        <div class="detail-cell"><small>Início da comanda</small><strong>${b.time}</strong></div>
+        <div class="detail-cell"><small>Profissionais</small><strong>${safe(bookingProfessionalsLabel(b)||'-')}</strong></div>
+        <div class="detail-cell"><small>${b.status==='finalizado'?'Total cobrado':'Total previsto'}</small><strong>${brl(b.price)}</strong>${b.status==='finalizado'&&b.scheduledPrice!==undefined&&Number(b.scheduledPrice)!==Number(b.price)?`<span style="display:block;font-size:8px;color:var(--muted);margin-top:2px">Previsto: ${brl(b.scheduledPrice)}</span>`:''}</div>
+        <div class="detail-cell"><small>Comissões</small><strong>${brl(bookingCommissionAmount(b))}</strong></div>
+        ${payment}
+      </div>
+
+      ${['cancelado','nao_compareceu'].includes(b.status)?`<div class="status-info-box ${b.status}">
+        ${b.status==='cancelado'?'Comanda cancelada.':'Cliente não compareceu ao horário agendado.'}
+        ${b.statusUpdatedAt?`<div style="font-size:8px;margin-top:3px;opacity:.72">${new Date(b.statusUpdatedAt).toLocaleString('pt-BR')}</div>`:''}
+      </div>`:''}
+
+      ${renderObservationHistory(b)}
+      ${b.paymentNote?`<div class="soft-box" style="margin-top:9px"><div class="list-sub">Observação do pagamento</div><div style="font-size:11px;margin-top:3px">${safe(b.paymentNote)}</div></div>`:''}
+    </div>`;
+
+  const deleteBookingButton=currentUser?.role==='admin'
+    ? `<button class="btn btn-danger" onclick="deleteCurrentBooking()">🗑 Excluir agendamento</button>`
+    : '';
+
+  $('detailsActions').innerHTML=b.status==='agendado'
+    ? `<button class="btn btn-note" onclick="openObservationModal()">＋ Adicionar observação</button>
+       <button class="btn btn-danger" onclick="cancelCurrent()">Cancelado</button>
+       <button class="btn btn-noshow" onclick="markNoShow()">Não compareceu</button>
+       <button class="btn btn-pink" onclick="finishCurrent()">Finalizar comanda</button>
+       ${deleteBookingButton}`
+    : `<button class="btn btn-note" onclick="openObservationModal()">＋ Adicionar observação</button>
+       <button class="btn btn-light" onclick="closeDetails()">Fechar</button>
+       ${deleteBookingButton}`;
+
+  $('detailsModal').classList.add('show');
+}
+
+function openCommandItemModal(){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  if(b.status!=='agendado'){
+    alert('Esta comanda já foi encerrada.');
+    return;
+  }
+
+  const activeProfessionals=professionals.filter(p=>p.active!==false);
+  const activeServices=services.filter(s=>s.active!==false);
+  if(!activeProfessionals.length||!activeServices.length){
+    alert('É necessário ter profissionais e serviços ativos.');
+    return;
+  }
+
+  $('cmdProfessional').innerHTML=activeProfessionals.map(p=>`<option value="${p.id}">${safe(p.name)}</option>`).join('');
+  $('cmdTime').innerHTML=times.map(t=>`<option value="${t}">${t}</option>`).join('');
+  $('cmdService').innerHTML=activeServices.map(s=>`<option value="${s.id}">${safe(s.name)}</option>`).join('');
+
+  const preferred=activeProfessionals.find(p=>p.id===currentUser?.id)
+    ||activeProfessionals.find(p=>p.id===b.professionalId)
+    ||activeProfessionals[0];
+  $('cmdProfessional').value=preferred.id;
+
+  const ownItems=bookingItems(b).filter(item=>item.professionalId===preferred.id);
+  let suggested=b.time;
+  if(ownItems.length){
+    const last=ownItems.slice().sort((a,c)=>(timeToMin(a.time)+Number(a.duration||30))-(timeToMin(c.time)+Number(c.duration||30))).pop();
+    suggested=nextTimeAfter(last.time,last.duration);
+  }
+  $('cmdTime').value=times.includes(suggested)?suggested:(b.time||times[0]);
+  $('cmdService').value=activeServices[0].id;
+  syncCommandService();
+
+  $('cmdProfessional').onchange=()=>{
+    const pid=$('cmdProfessional').value;
+    const own=bookingItems(b).filter(item=>item.professionalId===pid);
+    let next=b.time||times[0];
+    if(own.length){
+      const last=own.slice().sort((a,c)=>(timeToMin(a.time)+Number(a.duration||30))-(timeToMin(c.time)+Number(c.duration||30))).pop();
+      next=nextTimeAfter(last.time,last.duration);
+    }
+    if(times.includes(next))$('cmdTime').value=next;
+  };
+
+  $('commandItemClientInfo').querySelector('strong').textContent=b.client;
+  $('commandItemClientInfo').querySelector('span').textContent='Novo serviço dentro da mesma comanda.';
+  $('detailsModal').classList.remove('show');
+  $('commandItemModal').classList.add('show');
+}
+
+function syncCommandService(){
+  const service=services.find(s=>s.id===$('cmdService').value);
+  if(!service)return;
+  $('cmdPrice').value=Number(service.price||0);
+  $('cmdDuration').value=String(service.duration||30);
+  $('cmdCommission').value=Number(service.commission||0);
+}
+
+function closeCommandItemModal(){
+  $('commandItemModal').classList.remove('show');
+  if(currentBookingId)openDetails(currentBookingId);
+}
+
+async function saveCommandItem(){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  const professionalId=$('cmdProfessional').value;
+  const professional=professionals.find(p=>p.id===professionalId);
+  const service=services.find(s=>s.id===$('cmdService').value);
+  const time=$('cmdTime').value;
+  const duration=Number($('cmdDuration').value||30);
+  const price=Number($('cmdPrice').value||0);
+  const commission=Number($('cmdCommission').value||0);
+
+  if(!professional||!service){alert('Selecione profissional e serviço.');return}
+  if(!time){alert('Selecione o horário.');return}
+  if(price<0||commission<0||commission>100){alert('Confira valor e comissão.');return}
+
+  if(commandItemConflict(b.date,professionalId,time,duration)){
+    alert('Essa profissional já possui outro atendimento nesse horário.');
+    return;
+  }
+
+  b.items=bookingItems(b);
+  b.items.push({
+    id:'item_'+Date.now(),
+    professionalId,
+    professionalName:professional.name,
+    serviceId:service.id,
+    serviceName:service.name,
+    time,
+    duration,
+    price,
+    scheduledPrice:price,
+    commission,
+    commissionPaid:false,
+    commissionPaymentId:null,
+    createdAt:new Date().toISOString(),
+    addedBy:currentUser?.name||'',
+    addedById:currentUser?.id||''
+  });
+
+  syncBookingFromItems(b);
+
+  try{
+    await cloudReplace('agendamentos',b.id,b);
+    logAppAction('servico_comanda_adicionado',`Adicionou ${service.name} com ${professional.name} à comanda de ${b.client}.`,{bookingId:b.id,client:b.client,service:service.name,professional:professional.name,price});
+    $('commandItemModal').classList.remove('show');
+    renderAll();
+    openDetails(b.id);
+  }catch(err){
+    console.error(err);
+    setSyncStatus('error','Erro ao salvar');
+    alert('Não foi possível adicionar o serviço à comanda.');
+  }
+}
+
+async function removeCommandItem(itemId){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode remover serviços.');return}
+
+  const items=bookingItems(b);
+  if(items.length<=1){alert('A comanda precisa ter pelo menos um serviço.');return}
+
+  const item=items.find(i=>i.id===itemId);if(!item)return;
+  if(!confirm(`Remover "${item.serviceName}" de ${item.professionalName} desta comanda?`))return;
+
+  b.items=items.filter(i=>i.id!==itemId);
+  syncBookingFromItems(b);
+
+  try{
+    await cloudReplace('agendamentos',b.id,b);
+    logAppAction('servico_comanda_removido',`Removeu ${item.serviceName} de ${item.professionalName} da comanda de ${b.client}.`,{bookingId:b.id,client:b.client,service:item.serviceName,professional:item.professionalName,price:Number(item.price||0)});
+    renderAll();
+    openDetails(b.id);
+  }catch(err){
+    console.error(err);setSyncStatus('error','Erro ao salvar');
+    alert('Não foi possível remover o serviço.');
+  }
+}
+
+function openObservationModal(noteId=null){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  currentObservationId=noteId;
+  const note=noteId?bookingNotes(b).find(n=>n.id===noteId):null;
+  $('observationModalTitle').textContent=note?'Editar observação':'Adicionar observação';
+  $('observationBookingInfo').innerHTML=`<strong>${safe(b.client)} • ${b.time}</strong><span>${bookingItems(b).length} serviço${bookingItems(b).length===1?'':'s'} • ${safe(bookingProfessionalsLabel(b))}</span>`;
+  $('newObservationText').value=note?.text||'';
+  const willBeAdmin=currentUser.role==='admin'&&bookingItems(b).some(item=>item.professionalId!==currentUser.id);
+  $('newObservationWarning').classList.toggle('show',willBeAdmin);
+  $('detailsModal').classList.remove('show');
+  $('observationModal').classList.add('show');
+  setTimeout(()=>$('newObservationText').focus(),120);
+}
+function closeObservationModal(){
+  $('observationModal').classList.remove('show');
+  currentObservationId=null;
+  if(currentBookingId)openDetails(currentBookingId);
+}
+async function saveNewObservation(){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  const wasEditing=Boolean(currentObservationId);
+  const text=$('newObservationText').value.trim();
+  if(!text){alert('Digite a observação.');return}
+  if(!Array.isArray(b.observations))b.observations=[];
+  if(currentObservationId){
+    const note=b.observations.find(n=>n.id===currentObservationId);
+    if(!note)return;
+    if(note.authorId!==currentUser.id){alert('Você só pode editar uma observação criada por você.');return}
+    note.text=text;
+    note.editedAt=new Date().toISOString();
+  }else{
+    const byAdmin=currentUser.role==='admin'&&bookingItems(b).some(item=>item.professionalId!==currentUser.id);
+    b.observations.push({
+      id:'n'+Date.now(),
+      text,
+      byAdmin,
+      author:currentUser.name,
+      authorId:currentUser.id,
+      createdAt:new Date().toISOString()
+    });
+  }
+  const last=latestNote(b);
+  b.observation=last?.text||'';
+  b.observationByAdmin=Boolean(last?.byAdmin);
+  b.observationAuthor=last?.author||'';
+  saveLocal();
+  try{
+    await cloudReplace('agendamentos',b.id,b);
+    logAppAction(wasEditing?'observacao_editada':'observacao_adicionada',`${wasEditing?'Editou':'Adicionou'} uma observação na comanda de ${b.client}.`,{bookingId:b.id,client:b.client});
+  }
+  catch(err){console.error(err);setSyncStatus('error','Erro ao salvar');}
+  $('observationModal').classList.remove('show');
+  currentObservationId=null;
+  renderAll();
+  openDetails(currentBookingId);
+}
+
+function closeDetails(){$('detailsModal').classList.remove('show');currentBookingId=null}
+
+async function deleteCurrentBooking(){
+  if(currentUser?.role!=='admin'){
+    alert('Somente o administrador pode excluir um agendamento.');
+    return;
+  }
+
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  syncBookingFromItems(b);
+
+  const paidCommissionItems=bookingItems(b).filter(item=>item.commissionPaid).length;
+  let message=`Excluir definitivamente o agendamento de ${b.client}?\n\nData: ${shortDate(b.date)} às ${b.time}\nStatus: ${statusLabel(b.status)}\nTotal: ${brl(b.price)}\n\nEssa ação não poderá ser desfeita.`;
+
+  if(paidCommissionItems){
+    message+=`\n\nAtenção: existem ${paidCommissionItems} comissão(ões) já marcadas como pagas. O histórico do pagamento de comissão será preservado.`;
+  }
+
+  if(!confirm(message))return;
+
+  const deletedDetails={
+    bookingId:b.id,
+    client:b.client,
+    date:b.date,
+    time:b.time,
+    status:b.status,
+    total:Number(b.price||0),
+    services:bookingItems(b).map(item=>({
+      service:item.serviceName,
+      professional:item.professionalName,
+      price:Number(item.price||0)
+    }))
+  };
+
+  try{
+    if(firebaseReady)await db.collection('agendamentos').doc(b.id).delete();
+
+    bookings=bookings.filter(x=>x.id!==b.id);
+    $('detailsModal').classList.remove('show');
+    currentBookingId=null;
+    renderAll();
+
+    logAppAction(
+      'agendamento_excluido',
+      `Excluiu o agendamento de ${b.client}, de ${shortDate(b.date)} às ${b.time}, que estava como ${statusLabel(b.status)}.`,
+      deletedDetails
+    );
+  }catch(err){
+    console.error(err);
+    setSyncStatus('error','Erro ao excluir');
+    alert('Não foi possível excluir o agendamento no Firebase.');
+  }
+}
+
+async function cancelCurrent(){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  if(!confirm('Marcar este atendimento como CANCELADO?'))return;
+  b.status='cancelado';
+  b.statusUpdatedAt=new Date().toISOString();
+  b.statusUpdatedBy=currentUser?.name||'';
+  saveLocal();closeDetails();renderAll();
+  try{
+    await cloudReplace('agendamentos',b.id,b);
+    logAppAction('agendamento_cancelado',`Marcou a comanda de ${b.client} como cancelada.`,{bookingId:b.id,client:b.client,date:b.date,time:b.time,total:Number(b.price||0)});
+  }
+  catch(err){console.error(err);setSyncStatus('error','Erro ao salvar');}
+}
+
+async function markNoShow(){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  if(!confirm('Confirmar que a cliente NÃO COMPARECEU ao horário?'))return;
+  b.status='nao_compareceu';
+  b.statusUpdatedAt=new Date().toISOString();
+  b.statusUpdatedBy=currentUser?.name||'';
+  saveLocal();closeDetails();renderAll();
+  try{
+    await cloudReplace('agendamentos',b.id,b);
+    logAppAction('nao_compareceu',`Marcou ${b.client} como não compareceu.`,{bookingId:b.id,client:b.client,date:b.date,time:b.time,total:Number(b.price||0)});
+  }
+  catch(err){console.error(err);setSyncStatus('error','Erro ao salvar');}
+}
+function finishCurrent(){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  syncBookingFromItems(b);
+  const items=bookingItems(b);
+
+  $('clientPaymentInfo').innerHTML=`<small>Fechamento da comanda</small><strong>${brl(b.price)}</strong><small>${safe(b.client)} • ${items.length} serviço${items.length===1?'':'s'}</small>`;
+
+  $('clientPaymentItems').innerHTML=items.map(item=>`
+    <div class="payment-command-item">
+      <div>
+        <strong>${safe(item.serviceName)}</strong>
+        <span>${safe(item.professionalName)} • previsto ${brl(item.scheduledPrice!==undefined?item.scheduledPrice:item.price)}</span>
+      </div>
+      <input class="payment-item-value" data-item-id="${item.id}" type="number" min="0" step="0.01" inputmode="decimal" value="${Number(item.price||0).toFixed(2)}" oninput="recalcCommandPaymentTotal()">
+    </div>`).join('');
+
+  $('clientPaymentMethod').value='Pix';
+  $('clientInstallments').value='1';
+  $('clientPaymentNote').value='';
+  toggleInstallments();
+  recalcCommandPaymentTotal();
+
+  $('detailsModal').classList.remove('show');
+  $('clientPaymentModal').classList.add('show');
+}
+
+function recalcCommandPaymentTotal(){
+  const total=[...document.querySelectorAll('.payment-item-value')]
+    .reduce((sum,input)=>sum+Number(String(input.value||'0').replace(',','.'))||sum,0);
+  $('clientPaymentTotal').textContent=brl(total);
+  return total;
+}
+
+function toggleInstallments(){$('installmentField').classList.toggle('hidden',$('clientPaymentMethod').value!=='Cartão de crédito')}
+function closeClientPayment(){$('clientPaymentModal').classList.remove('show');if(currentBookingId)$('detailsModal').classList.add('show')}
+async function confirmClientPayment(){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  b.items=bookingItems(b);
+
+  const valueInputs=[...document.querySelectorAll('.payment-item-value')];
+  if(valueInputs.length!==b.items.length){
+    alert('Não foi possível conferir os itens da comanda. Feche e abra novamente.');
+    return;
+  }
+
+  for(const input of valueInputs){
+    const item=b.items.find(i=>i.id===input.dataset.itemId);
+    const value=Number(String(input.value||'').replace(',','.'));
+    if(!item||!Number.isFinite(value)||value<0){
+      alert('Confira os valores cobrados nos serviços.');
+      input.focus();
+      return;
+    }
+    if(item.scheduledPrice===undefined||item.scheduledPrice===null)item.scheduledPrice=Number(item.price||0);
+    item.price=value;
+  }
+
+  syncBookingFromItems(b);
+  b.status='finalizado';
+  b.paymentMethod=$('clientPaymentMethod').value;
+  b.paymentInstallments=b.paymentMethod==='Cartão de crédito'?Number($('clientInstallments').value):1;
+  b.paymentNote=$('clientPaymentNote').value.trim();
+  b.paidAt=new Date().toISOString();
+  b.finalizedBy=currentUser?.name||'';
+  b.finalizedById=currentUser?.id||'';
+
+  try{
+    await cloudReplace('agendamentos',b.id,b);
+    logAppAction('agendamento_finalizado',`Finalizou a comanda de ${b.client} no valor de ${brl(b.price)} via ${b.paymentMethod}.`,{bookingId:b.id,client:b.client,total:Number(b.price||0),paymentMethod:b.paymentMethod,services:bookingItems(b).length});
+    $('clientPaymentModal').classList.remove('show');
+    currentBookingId=null;
+    renderAll();
+  }catch(err){
+    console.error(err);setSyncStatus('error','Erro ao salvar');
+    alert('Não foi possível finalizar a comanda.');
+  }
+}
+
+
+function openClientEdit(id){
+  if(currentUser?.role!=='admin'){
+    alert('Somente o administrador pode editar clientes.');
+    return;
+  }
+
+  const client=clients.find(c=>c.id===id);
+  if(!client)return;
+
+  currentEditingClientId=id;
+  $('editClientName').value=client.name||client.nome||'';
+  $('editClientPhone').value=getClientPhone(client);
+  $('clientEditModal').classList.add('show');
+}
+
+function closeClientEdit(){
+  $('clientEditModal').classList.remove('show');
+  currentEditingClientId=null;
+}
+
+async function saveClientEdit(){
+  if(currentUser?.role!=='admin'){
+    alert('Somente o administrador pode editar clientes.');
+    return;
+  }
+
+  const client=clients.find(c=>c.id===currentEditingClientId);
+  if(!client)return;
+
+  const name=$('editClientName').value.trim();
+  const phone=$('editClientPhone').value.trim();
+
+  if(!name){
+    alert('Informe o nome da cliente.');
+    return;
+  }
+
+  client.name=name;
+  client.phone=phone;
+  client.whatsapp=phone;
+  client.updatedAt=new Date().toISOString();
+  client.updatedBy=currentUser?.name||'';
+  client.updatedById=currentUser?.id||'';
+
+  try{
+    await cloudReplace('clientes',client.id,client);
+    logAppAction('cliente_editado',`Editou os dados da cliente ${client.name}.`,{client:client.name,clientId:client.id});
+    closeClientEdit();
+    renderClients();
+    fillSelects();
+    setSyncStatus('online','Online');
+  }catch(err){
+    console.error(err);
+    setSyncStatus('error','Erro ao salvar');
+    alert('Não foi possível salvar as alterações da cliente.');
+  }
+}
+
+function renderClients(){
+  const q=($('clientSearch').value||'').toLowerCase();
+  const arr=clients.filter(c=>c.name.toLowerCase().includes(q)||(c.phone||'').includes(q));
+  $('clientsList').innerHTML=arr.length?arr.map(c=>{
+    const hist=bookings.filter(b=>b.client.toLowerCase()===c.name.toLowerCase()&&b.status==='finalizado');
+    const spent=hist.reduce((s,b)=>s+Number(b.price||0),0);
+    const last=[...hist].sort((a,b)=>(b.paidAt||'').localeCompare(a.paidAt||''))[0];
+    return `<div class="list-card" onclick="openClientHistory('${c.id}')">
+      <div class="list-top"><div><div class="list-title">${safe(c.name)}</div><div class="list-sub">${safe(c.phone||'Sem telefone')}${currentUser?.role==='admin'?`<div style="margin-top:8px"><button class="btn btn-light" onclick="event.stopPropagation();openClientEdit('${c.id}')">✎ Editar cliente</button></div>`:''}</div></div>
+      ${c.phone?`<a class="btn btn-light" onclick="event.stopPropagation()" target="_blank" style="text-decoration:none" href="https://wa.me/55${c.phone.replace(/\D/g,'')}">WhatsApp</a>`:''}</div>
+      <div class="client-kpis"><span class="client-kpi">${hist.length} atendimento${hist.length===1?'':'s'}</span><span class="client-kpi">${brl(spent)} recebido</span>${last?.paymentMethod?`<span class="client-kpi">Último: ${safe(last.paymentMethod)}</span>`:''}</div>
+    </div>`;
+  }).join(''):`<div class="subtle" style="text-align:center;padding:20px">Nenhum cliente cadastrado.</div>`;
+}
+$('clientSearch').oninput=renderClients;
+async function quickClient(){
+  const n=prompt('Nome da cliente:');if(!n)return;
+  const p=prompt('Telefone:')||'';
+  const c={id:'c'+Date.now(),name:n,phone:p};
+  clients.push(c);saveLocal();renderClients();
+  try{await cloudReplace('clientes',c.id,c);}
+  catch(err){console.error(err);setSyncStatus('error','Erro ao salvar');}
+}
+function openClientHistory(id){
+  const c=clients.find(x=>x.id===id);if(!c)return;
+  const hist=bookings.filter(b=>b.client.toLowerCase()===c.name.toLowerCase()&&b.status==='finalizado').sort((a,b)=>(b.paidAt||'').localeCompare(a.paidAt||''));
+  const total=hist.reduce((s,b)=>s+Number(b.price||0),0);
+  $('clientHistoryBody').innerHTML=`<div class="payment-hero"><small>${safe(c.name)}</small><strong>${brl(total)}</strong><small>${hist.length} atendimento${hist.length===1?'':'s'} finalizado${hist.length===1?'':'s'}</small></div>
+    <div class="panel">${hist.length?hist.map(b=>`<div class="payment-row"><div class="payment-left"><div class="payment-icon">♡</div><div><strong>${safe(b.serviceName)}</strong><span>${shortDate(b.date)} • ${safe(b.professionalName)}</span></div></div><div class="payment-value"><strong>${brl(b.price)}</strong><span>${safe(b.paymentMethod||'Não informado')}${b.paymentMethod==='Cartão de crédito'?' • '+b.paymentInstallments+'x':''}</span></div></div>`).join(''):'<div class="subtle" style="text-align:center">Sem atendimentos finalizados.</div>'}</div>`;
+  $('clientHistoryModal').classList.add('show');
+}
+function closeClientHistory(){$('clientHistoryModal').classList.remove('show')}
+
+function pendingCommissionEntries(professionalId=null){
+  const entries=[];
+  bookings.filter(b=>b.status==='finalizado').forEach(b=>{
+    bookingItems(b).forEach(item=>{
+      if((!professionalId||item.professionalId===professionalId)&&!item.commissionPaid){
+        entries.push({
+          booking:b,
+          item,
+          amount:Number(item.price||0)*Number(item.commission||0)/100
+        });
+      }
+    });
+  });
+  return entries;
+}
+
+function renderCommissions(){
+  const isAdmin=currentUser.role==='admin';
+  const relevant=isAdmin?professionals.filter(p=>p.role==='collab'):[currentUser];
+  const pendingEntries=isAdmin?pendingCommissionEntries():pendingCommissionEntries(currentUser.id);
+  const pendingTotal=pendingEntries.reduce((s,e)=>s+e.amount,0);
+  const history=commissionPayments.filter(p=>isAdmin||p.professionalId===currentUser.id).sort((a,b)=>b.paidAt.localeCompare(a.paidAt));
+
+  $('commissionSummary').innerHTML=`<div class="payment-hero"><small>${isAdmin?'Comissões pendentes da equipe':'Minha comissão pendente'}</small><strong>${brl(pendingTotal)}</strong><small>${pendingEntries.length} serviço${pendingEntries.length===1?'':'s'} aguardando pagamento</small></div>`;
+
+  $('commissionList').innerHTML=isAdmin?relevant.map(p=>{
+    const entries=pendingCommissionEntries(p.id);
+    const total=entries.reduce((s,e)=>s+e.amount,0);
+    return `<div class="list-card"><div class="list-top"><div><div class="list-title">${safe(p.name)}</div><div class="list-sub">${entries.length} serviço${entries.length===1?'':'s'} pendente${entries.length===1?'':'s'} • comissão padrão ${p.commission}%</div></div><div class="money">${brl(total)}</div></div>
+      <div class="row-btns"><button class="btn btn-pink btn-grow" ${entries.length?'':'disabled style="opacity:.45"'} onclick="openCommissionPayment('${p.id}')">Pagar comissão</button></div></div>`;
+  }).join(''):'';
+
+  $('commissionHistory').innerHTML=history.length?history.map(p=>`
+    <div class="payment-row">
+      <div class="payment-left"><div class="payment-icon">↗</div><div><strong>${safe(p.professionalName)}</strong><span>${new Date(p.paidAt).toLocaleString('pt-BR')} • ${(p.itemRefs||p.bookingIds||[]).length} serviços</span></div></div>
+      <div class="payment-value"><strong>${brl(p.amount)}</strong><span>${safe(p.method)}</span></div>
+    </div>`).join(''):`<div class="subtle" style="text-align:center;padding:8px">Nenhum pagamento de comissão registrado.</div>`;
+}
+
+function openCommissionPayment(id){
+  const p=professionals.find(x=>x.id===id);if(!p)return;
+  const entries=pendingCommissionEntries(id);
+  if(!entries.length)return alert('Não há comissão pendente para esta profissional.');
+
+  const total=entries.reduce((s,e)=>s+e.amount,0);
+  currentCommissionProfessional=id;
+  $('commissionPaymentInfo').innerHTML=`<small>Pagamento para ${safe(p.name)}</small><strong>${brl(total)}</strong><small>${entries.length} serviço${entries.length===1?'':'s'} incluído${entries.length===1?'':'s'}</small>`;
+  $('commissionPaymentMethod').value='Pix';
+  $('commissionPaymentNote').value='';
+  $('commissionPaymentModal').classList.add('show');
+}
+
+function closeCommissionPayment(){
+  $('commissionPaymentModal').classList.remove('show');
+  currentCommissionProfessional=null;
+}
+
+async function confirmCommissionPayment(){
+  const id=currentCommissionProfessional;
+  const p=professionals.find(x=>x.id===id);if(!p)return;
+  const entries=pendingCommissionEntries(id);
+  if(!entries.length)return closeCommissionPayment();
+
+  const total=entries.reduce((s,e)=>s+e.amount,0);
+  const payment={
+    id:'cp'+Date.now(),
+    professionalId:id,
+    professionalName:p.name,
+    amount:total,
+    method:$('commissionPaymentMethod').value,
+    note:$('commissionPaymentNote').value.trim(),
+    paidAt:new Date().toISOString(),
+    bookingIds:[...new Set(entries.map(e=>e.booking.id))],
+    itemRefs:entries.map(e=>({bookingId:e.booking.id,itemId:e.item.id,serviceName:e.item.serviceName,amount:e.amount}))
+  };
+
+  commissionPayments.push(payment);
+
+  const touched=new Map();
+  entries.forEach(entry=>{
+    entry.item.commissionPaid=true;
+    entry.item.commissionPaymentId=payment.id;
+    syncBookingFromItems(entry.booking);
+    touched.set(entry.booking.id,entry.booking);
+  });
+
+  try{
+    if(firebaseReady){
+      const batch=db.batch();
+      batch.set(db.collection('pagamentosComissao').doc(payment.id),firestoreClean(payment));
+      touched.forEach(b=>batch.set(db.collection('agendamentos').doc(b.id),firestoreClean(b)));
+      await batch.commit();
+    }
+    logAppAction('comissao_paga',`Registrou pagamento de comissão para ${p.name} no valor de ${brl(total)} via ${payment.method}.`,{professional:p.name,professionalId:p.id,amount:total,method:payment.method});
+  }catch(err){
+    console.error(err);setSyncStatus('error','Erro ao salvar');
+    alert('Não foi possível sincronizar o pagamento de comissão.');
+  }
+
+  closeCommissionPayment();
+  renderAll();
+}
+
+async function saveAdminSettings(){
+  if(currentUser?.role!=='admin'){
+    alert('Somente a administradora pode alterar configurações e PINs.');
+    return;
+  }
+
+  const pin=$('adminPinInput').value.trim();
+  if(pin&&!validPin(pin)){
+    alert('O PIN da administradora deve ter exatamente 4 números.');
+    return;
+  }
+
+  const salonName=$('salonNameInput').value.trim()||'Studio Thiago Hair';
+  const openTime=$('openTimeInput').value;
+  const closeTime=$('closeTimeInput').value;
+  const lunchStart=$('lunchStartInput').value;
+  const lunchEnd=$('lunchEndInput').value;
+  const workingDays=[...document.querySelectorAll('.day-btn[data-day].active')].map(b=>Number(b.dataset.day));
+
+  if(!openTime||!closeTime||timeToMin(openTime)>=timeToMin(closeTime)){
+    alert('Confira os horários de abertura e fechamento.');
+    return;
+  }
+  if(lunchStart&&lunchEnd&&timeToMin(lunchStart)>=timeToMin(lunchEnd)){
+    alert('O início do almoço deve ser antes do fim do almoço.');
+    return;
+  }
+  if(!workingDays.length){
+    alert('Selecione pelo menos um dia de funcionamento.');
+    return;
+  }
+
+  salonSettings={
+    id:'geral',
+    salonName,
+    openTime,
+    closeTime,
+    lunchStart,
+    lunchEnd,
+    workingDays,
+    updatedAt:new Date().toISOString()
+  };
+
+  try{
+    await cloudReplace('configuracoes','geral',salonSettings);
+
+    if(pin){
+      const admin=professionals.find(p=>p.role==='admin');
+      if(!admin){alert('Usuário administrador não encontrado.');return}
+      admin.pinHash=await sha256(pin);
+      admin.updatedAt=new Date().toISOString();
+      await cloudSet('profissionais',admin.id,admin);
+      $('adminPinInput').value='';
+    }
+
+    rebuildTimes();
+    applySalonBrand();
+    fillSelects();
+    renderAgenda();
+    setSyncStatus('online','Online');
+    $('configSaved').classList.add('show');
+    setTimeout(()=>$('configSaved')?.classList.remove('show'),2600);
+    logAppAction('configuracao_editada',`Atualizou as configurações do salão${pin?' e alterou o PIN do administrador':''}.`,{openTime,closeTime,lunchStart,lunchEnd,workingDays,pinChanged:Boolean(pin)});
+  }catch(err){
+    console.error(err);
+    setSyncStatus('error','Erro ao salvar');
+    alert('Não foi possível salvar as configurações no Firebase.');
+  }
+}
+
+function renderProfessionals(){
+  const arr=professionals.filter(p=>p.role==='collab');
+  $('professionalsList').innerHTML=arr.length?arr.map(p=>`
+    <div class="list-card">
+      <div class="list-top">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="person-avatar" style="width:34px;height:34px;font-size:13px;background:#8b5cf6">${initials(p.name)}</div>
+          <div>
+            <div class="list-title">${safe(p.name)}</div>
+            <div class="list-sub">${p.phone?safe(p.phone)+' • ':''}Comissão ${Number(p.commission||0)}%</div>
+          </div>
+        </div>
+        <span class="${p.active===false?'inactive-dot':'active-dot'}">${p.active===false?'Inativo':'Ativo'}</span>
+      </div>
+      <div class="row-btns">
+        <button class="btn btn-light btn-grow" onclick="editProfessional('${p.id}')">✎ Editar</button>
+        <button class="btn btn-danger" onclick="removeProfessional('${p.id}')" title="Excluir ou desativar">⌫</button>
+      </div>
+    </div>`).join(''):`<div class="report-placeholder">Nenhum profissional cadastrado.</div>`;
+}
+
+function addProfessional(){
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode cadastrar profissionais.');return}
+  currentEditingProfessionalId=null;
+  $('professionalModalTitle').textContent='Novo profissional';
+  $('professionalFormHeading').textContent='Cadastrar profissional';
+  $('professionalName').value='';
+  $('professionalPhone').value='';
+  $('professionalCommission').value='40';
+  $('professionalPin').value='';
+  $('professionalPinHint').textContent='Obrigatório para novo profissional.';
+  $('professionalActive').checked=true;
+  $('professionalAvatarPreview').textContent='P';
+  $('professionalName').oninput=updateProfessionalAvatar;
+  $('professionalModal').classList.add('show');
+  setTimeout(()=>$('professionalName').focus(),120);
+}
+
+function editProfessional(id){
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode editar profissionais e PINs.');return}
+  const p=professionals.find(x=>x.id===id);if(!p)return;
+  currentEditingProfessionalId=id;
+  $('professionalModalTitle').textContent='Editar profissional';
+  $('professionalFormHeading').textContent='Editar '+p.name;
+  $('professionalName').value=p.name||'';
+  $('professionalPhone').value=p.phone||'';
+  $('professionalCommission').value=Number(p.commission??40);
+  $('professionalPin').value='';
+  $('professionalPinHint').textContent='Deixe em branco para manter o PIN atual.';
+  $('professionalActive').checked=p.active!==false;
+  $('professionalAvatarPreview').textContent=initials(p.name||'P');
+  $('professionalName').oninput=updateProfessionalAvatar;
+  $('professionalModal').classList.add('show');
+  setTimeout(()=>$('professionalName').focus(),120);
+}
+
+function updateProfessionalAvatar(){
+  const name=$('professionalName').value.trim();
+  $('professionalAvatarPreview').textContent=name?initials(name):'P';
+}
+
+function closeProfessionalModal(){
+  $('professionalModal').classList.remove('show');
+  currentEditingProfessionalId=null;
+}
+
+async function saveProfessional(){
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode alterar profissionais e PINs.');return}
+  const name=$('professionalName').value.trim();
+  const phone=$('professionalPhone').value.trim();
+  const commission=Number($('professionalCommission').value);
+  const active=$('professionalActive').checked;
+  const pin=$('professionalPin').value.trim();
+
+  if(!name){alert('Informe o nome do profissional.');return}
+  if(Number.isNaN(commission)||commission<0||commission>100){
+    alert('A comissão deve ficar entre 0% e 100%.');return;
+  }
+
+  const id=currentEditingProfessionalId||('prof_'+Date.now());
+  const old=professionals.find(p=>p.id===id);
+
+  if(!old&&!validPin(pin)){
+    alert('Defina um PIN de acesso com exatamente 4 números para o novo profissional.');
+    return;
+  }
+  if(pin&&!validPin(pin)){
+    alert('O PIN deve ter exatamente 4 números.');
+    return;
+  }
+
+  const pinHash=pin?await sha256(pin):(old?.pinHash||'');
+  if(!pinHash){
+    alert('Este profissional ainda não possui PIN. Defina um PIN de 4 números.');
+    return;
+  }
+  const data={
+    id,
+    name,
+    phone,
+    commission,
+    active,
+    pinHash,
+    role:'collab',
+    createdAt:old?.createdAt||new Date().toISOString(),
+    updatedAt:new Date().toISOString()
+  };
+
+  if(old)Object.assign(old,data);
+  else professionals.push(data);
+
+  buildLogin();
+  fillSelects();
+  renderProfessionals();
+  renderAgenda();
+  closeProfessionalModal();
+
+  try{
+    await cloudReplace('profissionais',id,data);
+    logAppAction(old?'profissional_editado':'profissional_criado',`${old?'Editou':'Cadastrou'} o profissional ${data.name}.`,{professional:data.name,professionalId:id,commission:data.commission,active:data.active});
+    setSyncStatus('online','Online');
+  }catch(err){
+    console.error(err);
+    setSyncStatus('error','Erro ao salvar');
+    alert('Não foi possível salvar o profissional no Firebase. Confira as regras do Firestore.');
+  }
+}
+
+async function removeProfessional(id){
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode excluir ou desativar profissionais.');return}
+  const p=professionals.find(x=>x.id===id);if(!p)return;
+  const related=bookings.filter(b=>bookingHasProfessional(b,id));
+
+  if(related.length){
+    const ok=confirm(`${p.name} possui ${related.length} agendamento(s) no histórico. Para não perder o histórico, o profissional será apenas DESATIVADO. Deseja continuar?`);
+    if(!ok)return;
+    p.active=false;
+    p.updatedAt=new Date().toISOString();
+    renderProfessionals();buildLogin();fillSelects();renderAgenda();
+    try{
+      await cloudReplace('profissionais',id,p);
+      logAppAction('profissional_desativado',`Desativou o profissional ${p.name}.`,{professional:p.name,professionalId:p.id});
+    }
+    catch(err){console.error(err);setSyncStatus('error','Erro ao salvar');}
+    return;
+  }
+
+  if(!confirm(`Excluir ${p.name} definitivamente?`))return;
+  professionals=professionals.filter(x=>x.id!==id);
+  renderProfessionals();buildLogin();fillSelects();renderAgenda();
+
+  try{
+    if(firebaseReady)await db.collection('profissionais').doc(id).delete();
+    logAppAction('profissional_excluido',`Excluiu o profissional ${p.name}.`,{professional:p.name,professionalId:p.id});
+  }catch(err){
+    console.error(err);setSyncStatus('error','Erro ao excluir');
+    alert('Não foi possível excluir no Firebase.');
+  }
+}
+function renderServices(){
+  const arr=[...services].sort((a,b)=>(a.active===false)-(b.active===false)||String(a.name).localeCompare(String(b.name)));
+  $('servicesList').innerHTML=arr.length?arr.map(s=>`
+    <div class="list-card ${s.active===false?'service-inactive':''}">
+      <div class="list-top">
+        <div>
+          <div class="list-title">${safe(s.name)}</div>
+          <div class="money">${brl(s.price)}</div>
+          <div class="list-sub">◷ ${Number(s.duration||30)} minutos · Comissão ${Number(s.commission||0)}%</div>
+        </div>
+        <span class="${s.active===false?'inactive-dot':'active-dot'}">${s.active===false?'Inativo':'Ativo'}</span>
+      </div>
+      <div class="row-btns">
+        <button class="btn btn-light btn-grow" onclick="editService('${s.id}')">✎ Editar</button>
+        <button class="btn btn-danger" onclick="removeService('${s.id}')">⌫</button>
+      </div>
+    </div>`).join(''):`<div class="report-placeholder">Nenhum serviço cadastrado.</div>`;
+}
+
+function addService(){
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode cadastrar serviços.');return}
+  currentEditingServiceId=null;
+  $('serviceModalTitle').textContent='Novo serviço';
+  $('serviceFormHeading').textContent='Cadastrar serviço';
+  $('serviceNameInput').value='';
+  $('servicePriceInput').value='';
+  $('serviceDurationInput').value='30';
+  $('serviceCommissionInput').value='40';
+  $('serviceActiveInput').checked=true;
+  $('serviceModal').classList.add('show');
+  setTimeout(()=>$('serviceNameInput').focus(),120);
+}
+
+function editService(id){
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode editar serviços.');return}
+  const s=services.find(x=>x.id===id);if(!s)return;
+  currentEditingServiceId=id;
+  $('serviceModalTitle').textContent='Editar serviço';
+  $('serviceFormHeading').textContent='Editar '+s.name;
+  $('serviceNameInput').value=s.name||'';
+  $('servicePriceInput').value=Number(s.price||0);
+  $('serviceDurationInput').value=String(s.duration||30);
+  $('serviceCommissionInput').value=Number(s.commission||0);
+  $('serviceActiveInput').checked=s.active!==false;
+  $('serviceModal').classList.add('show');
+}
+
+function closeServiceModal(){
+  $('serviceModal').classList.remove('show');
+  currentEditingServiceId=null;
+}
+
+async function saveService(){
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode alterar serviços.');return}
+  const name=$('serviceNameInput').value.trim();
+  const price=Number($('servicePriceInput').value);
+  const duration=Number($('serviceDurationInput').value);
+  const commission=Number($('serviceCommissionInput').value);
+  const active=$('serviceActiveInput').checked;
+
+  if(!name){alert('Informe o nome do serviço.');return}
+  if(Number.isNaN(price)||price<0){alert('Informe um valor válido.');return}
+  if(!duration||duration<30){alert('Informe uma duração válida.');return}
+  if(Number.isNaN(commission)||commission<0||commission>100){alert('A comissão deve ficar entre 0% e 100%.');return}
+
+  const id=currentEditingServiceId||('serv_'+Date.now());
+  const old=services.find(s=>s.id===id);
+  const data={
+    id,name,price,duration,commission,active,
+    createdAt:old?.createdAt||new Date().toISOString(),
+    updatedAt:new Date().toISOString()
+  };
+
+  if(old)Object.assign(old,data);else services.push(data);
+  renderServices();fillSelects();closeServiceModal();
+
+  try{
+    await cloudReplace('servicos',id,data);
+    logAppAction(old?'servico_editado':'servico_criado',`${old?'Editou':'Cadastrou'} o serviço ${data.name}.`,{service:data.name,serviceId:id,price:data.price,duration:data.duration,commission:data.commission,active:data.active});
+    setSyncStatus('online','Online');
+  }catch(err){
+    console.error(err);setSyncStatus('error','Erro ao salvar');
+    alert('Não foi possível salvar o serviço no Firebase.');
+  }
+}
+
+async function removeService(id){
+  if(currentUser?.role!=='admin'){alert('Somente a administração pode excluir serviços.');return}
+  const s=services.find(x=>x.id===id);if(!s)return;
+  const related=bookings.filter(b=>bookingItems(b).some(item=>item.serviceId===id));
+
+  if(related.length){
+    if(!confirm(`${s.name} já aparece em ${related.length} atendimento(s). Para preservar o histórico, ele será apenas DESATIVADO. Deseja continuar?`))return;
+    s.active=false;s.updatedAt=new Date().toISOString();
+    renderServices();fillSelects();
+    try{
+      await cloudReplace('servicos',id,s);
+      logAppAction('servico_desativado',`Desativou o serviço ${s.name}.`,{service:s.name,serviceId:s.id});
+    }catch(err){console.error(err);setSyncStatus('error','Erro ao salvar')}
+    return;
+  }
+
+  if(!confirm(`Excluir o serviço "${s.name}" definitivamente?`))return;
+  services=services.filter(x=>x.id!==id);
+  renderServices();fillSelects();
+  try{
+    if(firebaseReady)await db.collection('servicos').doc(id).delete();
+    logAppAction('servico_excluido',`Excluiu o serviço ${s.name}.`,{service:s.name,serviceId:s.id});
+  }
+  catch(err){console.error(err);setSyncStatus('error','Erro ao excluir');alert('Não foi possível excluir o serviço no Firebase.')}
+}
+
+function renderBreakdown(containerId,items,total){
+  const el=$(containerId);if(!el)return;
+  if(!items.length){el.innerHTML='<div class="subtle" style="text-align:center">Sem dados no período.</div>';return}
+  el.innerHTML=items.map(([name,value])=>{
+    const pct=total?Math.round(value/total*100):0;
+    return `<div><div class="break-row"><span>${safe(name)}</span><strong>${brl(value)} • ${pct}%</strong></div><div class="break-bar"><i style="width:${pct}%"></i></div></div>`;
+  }).join('');
+}
+
+function localDateKey(d){
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function reportRange(){
+  const now=new Date();
+  let start,end,label;
+  if(reportPeriod==='week'){
+    const day=now.getDay();
+    const diff=day===0?-6:1-day;
+    start=new Date(now);start.setDate(now.getDate()+diff);start.setHours(0,0,0,0);
+    end=new Date(start);end.setDate(start.getDate()+6);end.setHours(23,59,59,999);
+    label=`${start.toLocaleDateString('pt-BR')} até ${end.toLocaleDateString('pt-BR')}`;
+  }else if(reportPeriod==='month'){
+    start=new Date(now.getFullYear(),now.getMonth(),1);
+    end=new Date(now.getFullYear(),now.getMonth()+1,0,23,59,59,999);
+    label=now.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  }else if(reportPeriod==='custom'&&reportCustomStart&&reportCustomEnd){
+    start=parseKey(reportCustomStart);start.setHours(0,0,0,0);
+    end=parseKey(reportCustomEnd);end.setHours(23,59,59,999);
+    label=`${start.toLocaleDateString('pt-BR')} até ${end.toLocaleDateString('pt-BR')}`;
+  }else{
+    start=new Date(now);start.setHours(0,0,0,0);
+    end=new Date(now);end.setHours(23,59,59,999);
+    label=now.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  }
+  return {start,end,startKey:localDateKey(start),endKey:localDateKey(end),label};
+}
+
+function setReportPeriod(period){
+  reportPeriod=period;
+  document.querySelectorAll('.finance-period button[data-period]').forEach(b=>b.classList.toggle('active',b.dataset.period===period));
+  $('customReportRange').classList.toggle('hidden',period!=='custom');
+
+  if(period==='custom'){
+    const now=new Date();
+    const first=new Date(now.getFullYear(),now.getMonth(),1);
+    if(!$('reportStartDate').value)$('reportStartDate').value=localDateKey(first);
+    if(!$('reportEndDate').value)$('reportEndDate').value=localDateKey(now);
+    return;
+  }
+  renderReports();
+}
+
+function applyCustomReport(){
+  const start=$('reportStartDate').value,end=$('reportEndDate').value;
+  if(!start||!end){alert('Selecione a data inicial e final.');return}
+  if(start>end){alert('A data inicial não pode ser maior que a data final.');return}
+  reportCustomStart=start;reportCustomEnd=end;reportPeriod='custom';
+  renderReports();
+}
+
+
+function previousReportRange(range){
+  const duration=Math.max(1,Math.round((range.end-range.start)/86400000)+1);
+  const prevEnd=new Date(range.start);
+  prevEnd.setDate(prevEnd.getDate()-1);
+  prevEnd.setHours(23,59,59,999);
+  const prevStart=new Date(prevEnd);
+  prevStart.setDate(prevStart.getDate()-duration+1);
+  prevStart.setHours(0,0,0,0);
+  return {
+    start:prevStart,
+    end:prevEnd,
+    startKey:localDateKey(prevStart),
+    endKey:localDateKey(prevEnd)
+  };
+}
+
+function pctChange(current,previous){
+  if(previous<=0)return current>0?100:0;
+  return Math.round(((current-previous)/previous)*100);
+}
+
+function setTrend(elId,value,inverse=false){
+  const el=$(elId);if(!el)return;
+  const positive=inverse?value<=0:value>=0;
+  const abs=Math.abs(value);
+  el.className='trend '+(positive?'up':'down');
+  el.textContent=(value>=0?'▲ ':'▼ ')+abs+'% vs. período anterior';
+}
+
+function financeStatusData(startKey,endKey){
+  const arr=bookings.filter(b=>b.date>=startKey&&b.date<=endKey);
+  const scheduled=arr.filter(b=>b.status==='agendado');
+  const canceled=arr.filter(b=>['cancelado','nao_compareceu'].includes(b.status));
+  const finished=arr.filter(b=>b.status==='finalizado');
+
+  const sum=list=>list.reduce((s,b)=>s+Number(b.price||0),0);
+
+  return {
+    arr,scheduled,canceled,finished,
+    scheduledValue:sum(scheduled),
+    canceledValue:sum(canceled),
+    finishedValue:sum(finished)
+  };
+}
+
+function renderSevenDayRevenueBars(){
+  const today=new Date();
+  today.setHours(0,0,0,0);
+  const days=[];
+
+  for(let i=6;i>=0;i--){
+    const d=new Date(today);
+    d.setDate(today.getDate()-i);
+    const key=localDateKey(d);
+    const value=bookings
+      .filter(b=>b.status==='finalizado'&&b.date===key)
+      .reduce((s,b)=>s+Number(b.price||0),0);
+    days.push({d,key,value});
+  }
+
+  const max=Math.max(1,...days.map(x=>x.value));
+  $('finSevenDayBars').innerHTML=days.map(x=>{
+    const pct=Math.max(2,Math.round(x.value/max*100));
+    const valueLabel=x.value>0?brl(x.value).replace('R$ ','R$ ').replace('R$','R$'):'R$ 0';
+    return `<div class="finance-bar-col">
+      <div class="finance-bar-value">${valueLabel}</div>
+      <div class="finance-bar" style="height:${pct}%"></div>
+      <div class="finance-bar-day">${x.d.toLocaleDateString('pt-BR',{day:'2-digit'})}<br>${x.d.toLocaleDateString('pt-BR',{month:'short'}).replace('.','')}</div>
+    </div>`;
+  }).join('');
+}
+function renderReports(){
+  if(!$('finForecast'))return;
+
+  const range=reportRange();
+  const prevRange=previousReportRange(range);
+
+  document.querySelectorAll('.finance-period button[data-period]').forEach(b=>{
+    b.classList.toggle('active',b.dataset.period===reportPeriod);
+  });
+  $('customReportRange').classList.toggle('hidden',reportPeriod!=='custom');
+
+  const titleMap={today:'Hoje',week:'Esta semana',month:'Este mês',custom:'Personalizado'};
+  $('finRangeTitle').textContent=titleMap[reportPeriod]||'Período';
+  $('finRangeLabel').textContent=range.label;
+
+  const cur=financeStatusData(range.startKey,range.endKey);
+  const prev=financeStatusData(prevRange.startKey,prevRange.endKey);
+
+  $('finForecast').textContent=brl(cur.scheduledValue);
+  $('finReceived').textContent=brl(cur.finishedValue);
+  $('finLost').textContent=brl(cur.canceledValue);
+
+  $('finForecastSub').textContent=`${cur.scheduled.length} agendamento${cur.scheduled.length===1?'':'s'}`;
+  $('finReceivedSub').textContent=`${cur.finished.length} finalizado${cur.finished.length===1?'':'s'}`;
+  $('finLostSub').textContent=`${cur.canceled.length} cancelamento${cur.canceled.length===1?'':'s'}`;
+
+  setTrend('finForecastTrend',pctChange(cur.scheduledValue,prev.scheduledValue));
+  setTrend('finReceivedTrend',pctChange(cur.finishedValue,prev.finishedValue));
+  setTrend('finLostTrend',pctChange(cur.canceledValue,prev.canceledValue),true);
+
+  $('finScheduledCount').textContent=cur.scheduled.length;
+  $('finScheduledValue').textContent=brl(cur.scheduledValue);
+  $('finCanceledCount').textContent=cur.canceled.length;
+  $('finCanceledValue').textContent=brl(cur.canceledValue);
+  $('finFinishedCount').textContent=cur.finished.length;
+  $('finFinishedValue').textContent=brl(cur.finishedValue);
+
+  const total=cur.scheduled.length+cur.canceled.length+cur.finished.length;
+  const scheduledPct=total?Math.round(cur.scheduled.length/total*100):0;
+  const canceledPct=total?Math.round(cur.canceled.length/total*100):0;
+  const finishedPct=Math.max(0,100-scheduledPct-canceledPct);
+
+  $('finDonut').style.setProperty('--scheduled-pct',scheduledPct+'%');
+  $('finDonut').style.setProperty('--cancel-pct',canceledPct+'%');
+  $('finDonutTotal').textContent=total;
+  $('finTotalStatusLabel').textContent=`${total} total`;
+  $('finLegendScheduled').textContent=`${cur.scheduled.length} (${scheduledPct}%)`;
+  $('finLegendCanceled').textContent=`${cur.canceled.length} (${canceledPct}%)`;
+  $('finLegendFinished').textContent=`${cur.finished.length} (${finishedPct}%)`;
+
+  renderSevenDayRevenueBars();
+
+  const commissionItems=cur.finished.flatMap(b=>bookingItems(b));
+  const paidItems=commissionItems.filter(item=>item.commissionPaid);
+  const pendingItems=commissionItems.filter(item=>!item.commissionPaid);
+  const paidCommission=paidItems.reduce((s,item)=>s+Number(item.price||0)*Number(item.commission||0)/100,0);
+  const pendingCommission=pendingItems.reduce((s,item)=>s+Number(item.price||0)*Number(item.commission||0)/100,0);
+  const totalCommission=paidCommission+pendingCommission;
+  const paidPct=totalCommission?Math.round(paidCommission/totalCommission*100):0;
+  const pendingPct=totalCommission?100-paidPct:0;
+
+  $('finCommissionPaid').textContent=brl(paidCommission);
+  $('finCommissionPending').textContent=brl(pendingCommission);
+  $('finCommissionPaidCount').textContent=`${paidItems.length} serviço${paidItems.length===1?'':'s'}`;
+  $('finCommissionPendingCount').textContent=`${pendingItems.length} serviço${pendingItems.length===1?'':'s'}`;
+  $('finCommissionPaidPct').textContent=paidPct+'%';
+  $('finCommissionPendingPct').textContent=pendingPct+'%';
+  $('finCommissionPaidBar').style.width=paidPct+'%';
+  $('finCommissionPendingBar').style.width=pendingPct+'%';
+
+  const payments={};
+  cur.finished.forEach(b=>{
+    const k=b.paymentMethod||'Não informado';
+    payments[k]=(payments[k]||0)+Number(b.price||0);
+  });
+  renderBreakdown('repPayments',Object.entries(payments).sort((a,b)=>b[1]-a[1]),cur.finishedValue);
+
+  const prof={};
+  const serv={};
+  cur.finished.forEach(b=>{
+    bookingItems(b).forEach(item=>{
+      prof[item.professionalName||'Sem profissional']=(prof[item.professionalName||'Sem profissional']||0)+Number(item.price||0);
+      serv[item.serviceName||'Sem serviço']=(serv[item.serviceName||'Sem serviço']||0)+Number(item.price||0);
+    });
+  });
+
+  renderBreakdown('repByProfessional',Object.entries(prof).sort((a,b)=>b[1]-a[1]),cur.finishedValue);
+  renderBreakdown('repByService',Object.entries(serv).sort((a,b)=>b[1]-a[1]),cur.finishedValue);
+}
+
+
+rebuildTimes();
+applySalonBrand();
+$('fab').style.display='none';
+
+$('loginPinInput').addEventListener('input',e=>{
+  e.target.value=e.target.value.replace(/\D/g,'').slice(0,4);
+  $('pinError').textContent='';
+  if(e.target.value.length===4)confirmPinLogin();
+});
+$('professionalPin').addEventListener('input',e=>e.target.value=e.target.value.replace(/\D/g,'').slice(0,4));
+$('adminPinInput').addEventListener('input',e=>e.target.value=e.target.value.replace(/\D/g,'').slice(0,4));
+
+$('studioPasswordInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter')loginStudio();
+});
+$('studioEmailInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter')$('studioPasswordInput').focus();
+});
+
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.client-search-wrap'))closeClientSuggestions();
+});
+
+initAuthFlow();
+</script>
+</body>
+</html>
