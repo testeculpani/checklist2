@@ -809,6 +809,319 @@ input,select,textarea{
   border-radius:14px;color:var(--muted);font-size:10px
 }
 
+
+/* ===== DASHBOARD FINANCEIRO — CONCEITO 2 ===== */
+.finance-screen{
+  padding-bottom:26px;
+}
+.finance-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+.finance-header h1{
+  margin:0;
+  font-size:27px;
+  line-height:1.05;
+  letter-spacing:-.6px;
+}
+.finance-header p{
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:10px;
+}
+.finance-date-badge{
+  min-width:122px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#fff;
+  padding:9px 10px;
+  text-align:left;
+  box-shadow:0 5px 16px rgba(57,35,44,.035);
+}
+.finance-date-badge strong{
+  display:block;
+  font-size:9px;
+}
+.finance-date-badge span{
+  display:block;
+  margin-top:2px;
+  color:var(--muted);
+  font-size:8px;
+}
+
+.finance-period{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
+  padding:5px;
+  margin-bottom:12px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#fff;
+}
+.finance-period button{
+  border:0;
+  border-radius:9px;
+  background:transparent;
+  padding:8px 5px;
+  color:#75636a;
+  font-size:9px;
+  font-weight:800;
+}
+.finance-period button.active{
+  background:#fde5ed;
+  color:#c51f58;
+  box-shadow:inset 0 0 0 1px #f5c8d7;
+}
+
+.finance-custom-range{
+  margin-bottom:12px;
+  padding:11px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#fff;
+}
+
+.finance-kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+  margin-bottom:10px;
+}
+.finance-kpi{
+  position:relative;
+  min-width:0;
+  border:1px solid rgba(229,211,217,.9);
+  border-radius:17px;
+  padding:12px;
+  overflow:hidden;
+  box-shadow:0 8px 24px rgba(68,42,52,.045);
+}
+.finance-kpi.forecast{background:linear-gradient(145deg,#fff3f7,#fde7ef)}
+.finance-kpi.received{background:linear-gradient(145deg,#f9fffb,#edf8f0)}
+.finance-kpi.lost{background:linear-gradient(145deg,#fff5f7,#fde9ec)}
+.finance-kpi .kpi-icon{
+  width:31px;height:31px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:9px;font-size:15px;font-weight:900
+}
+.finance-kpi.forecast .kpi-icon{background:#f8dce6;color:#bc2458}
+.finance-kpi.received .kpi-icon{background:#dff1e5;color:#278149}
+.finance-kpi.lost .kpi-icon{background:#f8dadd;color:#c0394e}
+.finance-kpi small{
+  display:block;
+  color:#78656d;
+  font-size:8px;
+  line-height:1.25
+}
+.finance-kpi strong{
+  display:block;
+  margin:4px 0 3px;
+  font-size:17px;
+  line-height:1.05;
+  overflow-wrap:anywhere
+}
+.finance-kpi .trend{
+  display:flex;align-items:center;gap:4px;
+  margin-top:9px;
+  font-size:8px;font-weight:800
+}
+.finance-kpi .trend.up{color:#238b4d}
+.finance-kpi .trend.down{color:#d43b55}
+.finance-kpi .spark{
+  position:absolute;right:8px;bottom:8px;
+  width:42px;height:18px;opacity:.45
+}
+
+.finance-status-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+  margin-bottom:12px;
+}
+.finance-status{
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:#fff;
+  padding:11px;
+  box-shadow:0 6px 18px rgba(68,42,52,.035)
+}
+.finance-status-top{
+  display:flex;align-items:center;gap:7px
+}
+.finance-status-icon{
+  width:29px;height:29px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  flex:none;font-size:13px;font-weight:900
+}
+.finance-status.scheduled .finance-status-icon{background:#fce8ef;color:#cb2d64}
+.finance-status.canceled .finance-status-icon{background:#fff0f2;color:#db4057}
+.finance-status.finished .finance-status-icon{background:#e9f6ed;color:#268b4d}
+.finance-status label{
+  font-size:9px;font-weight:800;color:#54434a
+}
+.finance-status strong{
+  display:block;margin-top:8px;font-size:20px
+}
+.finance-status .status-sub{
+  margin-top:2px;color:var(--muted);font-size:8px
+}
+
+.finance-charts{
+  display:grid;
+  grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+  gap:10px;
+  margin-bottom:11px;
+}
+.finance-card{
+  border:1px solid var(--line);
+  border-radius:17px;
+  background:#fff;
+  padding:13px;
+  box-shadow:0 8px 24px rgba(68,42,52,.04)
+}
+.finance-card-title{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  margin-bottom:11px
+}
+.finance-card-title h3{
+  margin:0;font-size:12px
+}
+.finance-card-title span{
+  color:var(--muted);font-size:8px
+}
+
+.finance-donut-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:3px 0 8px
+}
+.finance-donut{
+  position:relative;
+  width:142px;height:142px;
+  border-radius:50%;
+  background:conic-gradient(
+    #a45b70 0 var(--scheduled-pct),
+    #f1c7d1 var(--scheduled-pct) calc(var(--scheduled-pct) + var(--cancel-pct)),
+    #db7789 calc(var(--scheduled-pct) + var(--cancel-pct)) 100%
+  );
+}
+.finance-donut:after{
+  content:"";
+  position:absolute;inset:31px;
+  background:#fff;border-radius:50%;
+  box-shadow:0 0 0 1px #f2e5ea
+}
+.finance-donut-center{
+  position:absolute;inset:0;
+  z-index:2;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center
+}
+.finance-donut-center strong{font-size:24px;line-height:1}
+.finance-donut-center span{font-size:8px;color:var(--muted);margin-top:3px}
+.finance-legend{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:4px
+}
+.finance-legend-item{text-align:center}
+.finance-legend-dot{
+  width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:3px
+}
+.finance-legend-item div{font-size:8px;color:#66525a}
+.finance-legend-item strong{display:block;font-size:9px;margin-top:2px}
+
+.finance-bars{
+  height:164px;
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  padding:15px 3px 0;
+  border-bottom:1px solid #eadde2;
+  background:
+    linear-gradient(to top, transparent 24%, #f4ecef 25%, transparent 26%),
+    linear-gradient(to top, transparent 49%, #f4ecef 50%, transparent 51%),
+    linear-gradient(to top, transparent 74%, #f4ecef 75%, transparent 76%);
+}
+.finance-bar-col{
+  flex:1;min-width:0;
+  height:100%;
+  display:flex;flex-direction:column;
+  justify-content:flex-end;align-items:center
+}
+.finance-bar-value{
+  font-size:7px;font-weight:800;color:#765b65;
+  margin-bottom:4px;white-space:nowrap
+}
+.finance-bar{
+  width:64%;
+  min-width:12px;
+  border-radius:5px 5px 0 0;
+  background:linear-gradient(180deg,#e59aac,#d67c91);
+  min-height:2px
+}
+.finance-bar-day{
+  font-size:7px;color:#8c7780;margin-top:5px
+}
+
+.finance-commission-card{
+  margin-bottom:11px
+}
+.finance-commission-title{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px
+}
+.finance-commission-title h3{font-size:13px;margin:0}
+.finance-link{
+  border:0;background:#fdeaf0;color:#c4285d;border-radius:9px;
+  padding:7px 9px;font-size:8px;font-weight:900
+}
+.finance-commission-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:9px
+}
+.finance-commission-box{
+  padding:12px;border:1px solid var(--line);border-radius:13px;background:#fff
+}
+.finance-commission-box small{display:block;font-size:9px;color:#78666d}
+.finance-commission-box strong{display:block;font-size:18px;margin:3px 0 8px}
+.finance-progress{
+  height:6px;border-radius:999px;background:#f0ebed;overflow:hidden
+}
+.finance-progress i{display:block;height:100%;border-radius:999px;background:#d77c92}
+.finance-progress.green i{background:#69a77b}
+.finance-progress-row{
+  display:flex;justify-content:space-between;align-items:center;margin-top:5px;
+  color:var(--muted);font-size:8px
+}
+
+.finance-detail-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px
+}
+.finance-mini-section{margin-top:10px}
+.finance-mini-section .section-head h3{font-size:11px}
+
+@media(max-width:520px){
+  .finance-header{align-items:flex-start}
+  .finance-header h1{font-size:24px}
+  .finance-date-badge{min-width:108px;padding:8px}
+  .finance-kpi-grid,.finance-status-grid{grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .finance-kpi{padding:9px}
+  .finance-kpi strong{font-size:14px}
+  .finance-kpi .kpi-icon{width:27px;height:27px;font-size:13px}
+  .finance-status{padding:9px}
+  .finance-status strong{font-size:17px}
+  .finance-status label{font-size:8px}
+  .finance-charts{grid-template-columns:1fr}
+  .finance-card{padding:11px}
+}
+@media(max-width:360px){
+  .finance-kpi-grid,.finance-status-grid{grid-template-columns:1fr}
+  .finance-kpi strong{font-size:19px}
+  .finance-commission-grid,.finance-detail-grid{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
@@ -915,7 +1228,7 @@ input,select,textarea{
 <h1 class="more-title">Mais</h1>
 <div class="more-item" onclick="goScreen('profissionais')"><div class="more-left"><div class="more-ico" style="background:#8b42ef">▣</div><div class="more-text"><strong>Profissionais</strong><span>Cadastro e comissões da equipe</span></div></div><span>›</span></div>
 <div class="more-item" onclick="goScreen('servicos')"><div class="more-left"><div class="more-ico" style="background:#ef3367">✂</div><div class="more-text"><strong>Serviços</strong><span>Valores, durações e comissões</span></div></div><span>›</span></div>
-<div class="more-item" onclick="goScreen('relatorios')"><div class="more-left"><div class="more-ico" style="background:#228cdf">▥</div><div class="more-text"><strong>Relatórios</strong><span>Faturamento e desempenho</span></div></div><span>›</span></div>
+<div class="more-item" onclick="goScreen('relatorios')"><div class="more-left"><div class="more-ico" style="background:#d64e7c">▥</div><div class="more-text"><strong>Financeiro</strong><span>Faturamento, status e desempenho</span></div></div><span>›</span></div>
 <div class="more-item" onclick="goScreen('config')"><div class="more-left"><div class="more-ico" style="background:#f47b00">⚙</div><div class="more-text"><strong>Configurações</strong><span>Horários e funcionamento</span></div></div><span>›</span></div>
 <div class="more-item" onclick="goScreen('historico')"><div class="more-left"><div class="more-ico" style="background:#374151">≡</div><div class="more-text"><strong>Histórico do app</strong><span>Movimentações realizadas pela equipe</span></div></div><span>›</span></div>
 </section>
@@ -943,28 +1256,152 @@ input,select,textarea{
 
 <section id="screen-servicos" class="screen"><div class="title-row"><div style="display:flex;align-items:center;gap:8px"><button class="back" onclick="goScreen('mais')">‹</button><h1>Serviços</h1></div><button class="new-btn" onclick="addService()">+ Novo</button></div><div id="servicesList"></div></section>
 
-<section id="screen-relatorios" class="screen">
-<div class="title-row"><div style="display:flex;align-items:center;gap:8px"><button class="back" onclick="goScreen('mais')">‹</button><h1>Relatórios</h1></div></div>
-<div class="period">
-  <button class="active" data-period="today" onclick="setReportPeriod('today')">Hoje</button>
-  <button data-period="week" onclick="setReportPeriod('week')">Semana</button>
-  <button data-period="month" onclick="setReportPeriod('month')">Mês</button>
-  <button data-period="custom" onclick="setReportPeriod('custom')">Personalizado</button>
-</div>
-<div id="customReportRange" class="custom-report hidden">
-  <div class="grid2">
-    <div class="field"><label>DATA INICIAL</label><input id="reportStartDate" type="date"></div>
-    <div class="field"><label>DATA FINAL</label><input id="reportEndDate" type="date"></div>
+<section id="screen-relatorios" class="screen finance-screen">
+  <div class="finance-header">
+    <div>
+      <h1>Dashboard Financeiro</h1>
+      <p>Acompanhe os resultados do salão em tempo real.</p>
+    </div>
+    <div class="finance-date-badge">
+      <strong id="finRangeTitle">Hoje</strong>
+      <span id="finRangeLabel">—</span>
+    </div>
   </div>
-  <button class="btn btn-pink" onclick="applyCustomReport()">Aplicar período</button>
-</div>
-<div class="report-hero"><small>↗ Faturamento do período</small><strong id="repRevenue">R$ 0,00</strong><small id="repDate" class="report-period-label"></small></div>
-<div class="grid3"><div class="card-stat" style="text-align:center"><small>Clientes</small><strong id="repClients">0</strong></div><div class="card-stat" style="text-align:center"><small>Atendimentos</small><strong id="repAppointments">0</strong></div><div class="card-stat" style="text-align:center"><small>Comissão</small><strong id="repCommission">R$ 0,00</strong></div></div>
-<div class="grid2" style="margin-top:10px"><div class="card-stat"><small style="color:var(--green)">Comissão paga</small><strong id="repPaid">R$ 0,00</strong></div><div class="card-stat"><small style="color:var(--orange)">Comissão pendente</small><strong id="repPending">R$ 0,00</strong></div></div>
-<div class="section"><div class="section-head"><h3>Formas de pagamento dos clientes</h3></div><div id="repPayments" class="panel payment-breakdown"></div></div>
-<div class="section"><div class="section-head"><h3>Pagamentos de comissão</h3></div><div id="repCommissionPayments" class="panel payment-breakdown"></div></div>
-<div class="section"><div class="section-head"><h3>Faturamento por profissional</h3></div><div id="repByProfessional" class="panel payment-breakdown"></div></div>
-<div class="section"><div class="section-head"><h3>Faturamento por serviço</h3></div><div id="repByService" class="panel payment-breakdown"></div></div>
+
+  <div class="finance-period">
+    <button class="active" data-period="today" onclick="setReportPeriod('today')">Hoje</button>
+    <button data-period="week" onclick="setReportPeriod('week')">Semana</button>
+    <button data-period="month" onclick="setReportPeriod('month')">Mês</button>
+    <button data-period="custom" onclick="setReportPeriod('custom')">Personalizado</button>
+  </div>
+
+  <div id="customReportRange" class="finance-custom-range hidden">
+    <div class="grid2">
+      <div class="field"><label>DATA INICIAL</label><input id="reportStartDate" type="date"></div>
+      <div class="field"><label>DATA FINAL</label><input id="reportEndDate" type="date"></div>
+    </div>
+    <button class="btn btn-pink" style="width:100%" onclick="applyCustomReport()">Aplicar período</button>
+  </div>
+
+  <div class="finance-kpi-grid">
+    <div class="finance-kpi forecast">
+      <div class="kpi-icon">▦</div>
+      <small>Receita prevista</small>
+      <strong id="finForecast">R$ 0,00</strong>
+      <small id="finForecastSub">0 agendamentos</small>
+      <div id="finForecastTrend" class="trend up">▲ 0%</div>
+    </div>
+
+    <div class="finance-kpi received">
+      <div class="kpi-icon">▣</div>
+      <small>Receita recebida</small>
+      <strong id="finReceived">R$ 0,00</strong>
+      <small id="finReceivedSub">0 finalizados</small>
+      <div id="finReceivedTrend" class="trend up">▲ 0%</div>
+    </div>
+
+    <div class="finance-kpi lost">
+      <div class="kpi-icon">×</div>
+      <small>Perdas por cancelamento</small>
+      <strong id="finLost">R$ 0,00</strong>
+      <small id="finLostSub">0 cancelamentos</small>
+      <div id="finLostTrend" class="trend down">▲ 0%</div>
+    </div>
+  </div>
+
+  <div class="finance-status-grid">
+    <div class="finance-status scheduled">
+      <div class="finance-status-top"><div class="finance-status-icon">▦</div><label>Agendados</label></div>
+      <strong id="finScheduledCount">0</strong>
+      <div id="finScheduledValue" class="status-sub">R$ 0,00</div>
+    </div>
+    <div class="finance-status canceled">
+      <div class="finance-status-top"><div class="finance-status-icon">×</div><label>Cancelados</label></div>
+      <strong id="finCanceledCount">0</strong>
+      <div id="finCanceledValue" class="status-sub">R$ 0,00</div>
+    </div>
+    <div class="finance-status finished">
+      <div class="finance-status-top"><div class="finance-status-icon">✓</div><label>Finalizados</label></div>
+      <strong id="finFinishedCount">0</strong>
+      <div id="finFinishedValue" class="status-sub">R$ 0,00</div>
+    </div>
+  </div>
+
+  <div class="finance-charts">
+    <div class="finance-card">
+      <div class="finance-card-title">
+        <h3>Distribuição de atendimentos</h3>
+        <span id="finTotalStatusLabel">0 total</span>
+      </div>
+      <div class="finance-donut-wrap">
+        <div id="finDonut" class="finance-donut" style="--scheduled-pct:0%;--cancel-pct:0%">
+          <div class="finance-donut-center">
+            <strong id="finDonutTotal">0</strong>
+            <span>total</span>
+          </div>
+        </div>
+      </div>
+      <div class="finance-legend">
+        <div class="finance-legend-item">
+          <div><i class="finance-legend-dot" style="background:#a45b70"></i>Agendados</div>
+          <strong id="finLegendScheduled">0 (0%)</strong>
+        </div>
+        <div class="finance-legend-item">
+          <div><i class="finance-legend-dot" style="background:#f1c7d1"></i>Cancelados</div>
+          <strong id="finLegendCanceled">0 (0%)</strong>
+        </div>
+        <div class="finance-legend-item">
+          <div><i class="finance-legend-dot" style="background:#db7789"></i>Finalizados</div>
+          <strong id="finLegendFinished">0 (0%)</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="finance-card">
+      <div class="finance-card-title">
+        <h3>Receita dos últimos 7 dias</h3>
+        <span>Finalizados</span>
+      </div>
+      <div id="finSevenDayBars" class="finance-bars"></div>
+    </div>
+  </div>
+
+  <div class="finance-card finance-commission-card">
+    <div class="finance-commission-title">
+      <h3>Comissão da equipe</h3>
+      <button class="finance-link" onclick="goScreen('comissoes')">Ver detalhes →</button>
+    </div>
+    <div class="finance-commission-grid">
+      <div class="finance-commission-box">
+        <small>Paga</small>
+        <strong id="finCommissionPaid">R$ 0,00</strong>
+        <div class="finance-progress green"><i id="finCommissionPaidBar" style="width:0%"></i></div>
+        <div class="finance-progress-row"><span id="finCommissionPaidCount">0 serviços</span><b id="finCommissionPaidPct">0%</b></div>
+      </div>
+      <div class="finance-commission-box">
+        <small>Pendente</small>
+        <strong id="finCommissionPending">R$ 0,00</strong>
+        <div class="finance-progress"><i id="finCommissionPendingBar" style="width:0%"></i></div>
+        <div class="finance-progress-row"><span id="finCommissionPendingCount">0 serviços</span><b id="finCommissionPendingPct">0%</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="finance-detail-grid">
+    <div class="finance-card">
+      <div class="finance-card-title"><h3>Formas de pagamento</h3><span>Finalizados</span></div>
+      <div id="repPayments" class="payment-breakdown"></div>
+    </div>
+    <div class="finance-card">
+      <div class="finance-card-title"><h3>Faturamento por profissional</h3><span>Período</span></div>
+      <div id="repByProfessional" class="payment-breakdown"></div>
+    </div>
+  </div>
+
+  <div class="finance-card finance-mini-section">
+    <div class="finance-card-title"><h3>Faturamento por serviço</h3><span>Período</span></div>
+    <div id="repByService" class="payment-breakdown"></div>
+  </div>
 </section>
 
 <section id="screen-config" class="screen">
@@ -2035,8 +2472,8 @@ function buildNav(){
     $('bottom').innerHTML=`<button class="nav active" data-screen="home"><span>⌂</span>Início</button>
     <button class="nav" data-screen="agenda"><span>▦</span>Agenda</button>
     <button class="nav" data-screen="clientes"><span>♙</span>Clientes</button>
-    <button class="nav" data-screen="comissoes"><span>▣</span>Comissões</button>
-    <button class="nav" data-screen="mais"><span>▦</span>Mais</button>`;
+    <button class="nav" data-screen="relatorios"><span>▥</span>Financeiro</button>
+    <button class="nav" data-screen="mais"><span>•••</span>Mais</button>`;
   }else{
     $('bottom').className='bottom collab';
     $('bottom').innerHTML=`<button class="nav active" data-screen="home"><span>⌂</span>Início</button>
@@ -3728,7 +4165,7 @@ function reportRange(){
 
 function setReportPeriod(period){
   reportPeriod=period;
-  document.querySelectorAll('.period button[data-period]').forEach(b=>b.classList.toggle('active',b.dataset.period===period));
+  document.querySelectorAll('.finance-period button[data-period]').forEach(b=>b.classList.toggle('active',b.dataset.period===period));
   $('customReportRange').classList.toggle('hidden',period!=='custom');
 
   if(period==='custom'){
@@ -3749,65 +4186,166 @@ function applyCustomReport(){
   renderReports();
 }
 
+
+function previousReportRange(range){
+  const duration=Math.max(1,Math.round((range.end-range.start)/86400000)+1);
+  const prevEnd=new Date(range.start);
+  prevEnd.setDate(prevEnd.getDate()-1);
+  prevEnd.setHours(23,59,59,999);
+  const prevStart=new Date(prevEnd);
+  prevStart.setDate(prevStart.getDate()-duration+1);
+  prevStart.setHours(0,0,0,0);
+  return {
+    start:prevStart,
+    end:prevEnd,
+    startKey:localDateKey(prevStart),
+    endKey:localDateKey(prevEnd)
+  };
+}
+
+function pctChange(current,previous){
+  if(previous<=0)return current>0?100:0;
+  return Math.round(((current-previous)/previous)*100);
+}
+
+function setTrend(elId,value,inverse=false){
+  const el=$(elId);if(!el)return;
+  const positive=inverse?value<=0:value>=0;
+  const abs=Math.abs(value);
+  el.className='trend '+(positive?'up':'down');
+  el.textContent=(value>=0?'▲ ':'▼ ')+abs+'% vs. período anterior';
+}
+
+function financeStatusData(startKey,endKey){
+  const arr=bookings.filter(b=>b.date>=startKey&&b.date<=endKey);
+  const scheduled=arr.filter(b=>b.status==='agendado');
+  const canceled=arr.filter(b=>['cancelado','nao_compareceu'].includes(b.status));
+  const finished=arr.filter(b=>b.status==='finalizado');
+
+  const sum=list=>list.reduce((s,b)=>s+Number(b.price||0),0);
+
+  return {
+    arr,scheduled,canceled,finished,
+    scheduledValue:sum(scheduled),
+    canceledValue:sum(canceled),
+    finishedValue:sum(finished)
+  };
+}
+
+function renderSevenDayRevenueBars(){
+  const today=new Date();
+  today.setHours(0,0,0,0);
+  const days=[];
+
+  for(let i=6;i>=0;i--){
+    const d=new Date(today);
+    d.setDate(today.getDate()-i);
+    const key=localDateKey(d);
+    const value=bookings
+      .filter(b=>b.status==='finalizado'&&b.date===key)
+      .reduce((s,b)=>s+Number(b.price||0),0);
+    days.push({d,key,value});
+  }
+
+  const max=Math.max(1,...days.map(x=>x.value));
+  $('finSevenDayBars').innerHTML=days.map(x=>{
+    const pct=Math.max(2,Math.round(x.value/max*100));
+    const valueLabel=x.value>0?brl(x.value).replace('R$ ','R$ ').replace('R$','R$'):'R$ 0';
+    return `<div class="finance-bar-col">
+      <div class="finance-bar-value">${valueLabel}</div>
+      <div class="finance-bar" style="height:${pct}%"></div>
+      <div class="finance-bar-day">${x.d.toLocaleDateString('pt-BR',{day:'2-digit'})}<br>${x.d.toLocaleDateString('pt-BR',{month:'short'}).replace('.','')}</div>
+    </div>`;
+  }).join('');
+}
 function renderReports(){
-  if(!$('repRevenue'))return;
+  if(!$('finForecast'))return;
+
   const range=reportRange();
-  document.querySelectorAll('.period button[data-period]').forEach(b=>b.classList.toggle('active',b.dataset.period===reportPeriod));
+  const prevRange=previousReportRange(range);
+
+  document.querySelectorAll('.finance-period button[data-period]').forEach(b=>{
+    b.classList.toggle('active',b.dataset.period===reportPeriod);
+  });
   $('customReportRange').classList.toggle('hidden',reportPeriod!=='custom');
 
-  const arr=bookings.filter(b=>b.status==='finalizado'&&b.date>=range.startKey&&b.date<=range.endKey);
-  const rev=arr.reduce((s,b)=>s+Number(b.price||0),0);
-  const com=arr.reduce((s,b)=>s+bookingCommissionAmount(b),0);
+  const titleMap={today:'Hoje',week:'Esta semana',month:'Este mês',custom:'Personalizado'};
+  $('finRangeTitle').textContent=titleMap[reportPeriod]||'Período';
+  $('finRangeLabel').textContent=range.label;
 
-  $('repRevenue').textContent=brl(rev);
-  $('repDate').textContent=cap(range.label);
-  $('repClients').textContent=new Set(arr.map(b=>b.client)).size;
-  $('repAppointments').textContent=arr.length;
-  $('repCommission').textContent=brl(com);
+  const cur=financeStatusData(range.startKey,range.endKey);
+  const prev=financeStatusData(prevRange.startKey,prevRange.endKey);
 
-  const paidCommission=arr.reduce((sum,b)=>sum+bookingItems(b)
-    .filter(item=>item.commissionPaid)
-    .reduce((s,item)=>s+Number(item.price||0)*Number(item.commission||0)/100,0),0);
+  $('finForecast').textContent=brl(cur.scheduledValue);
+  $('finReceived').textContent=brl(cur.finishedValue);
+  $('finLost').textContent=brl(cur.canceledValue);
 
-  const pendingCommission=arr.reduce((sum,b)=>sum+bookingItems(b)
-    .filter(item=>!item.commissionPaid)
-    .reduce((s,item)=>s+Number(item.price||0)*Number(item.commission||0)/100,0),0);
+  $('finForecastSub').textContent=`${cur.scheduled.length} agendamento${cur.scheduled.length===1?'':'s'}`;
+  $('finReceivedSub').textContent=`${cur.finished.length} finalizado${cur.finished.length===1?'':'s'}`;
+  $('finLostSub').textContent=`${cur.canceled.length} cancelamento${cur.canceled.length===1?'':'s'}`;
 
-  $('repPaid').textContent=brl(paidCommission);
-  $('repPending').textContent=brl(pendingCommission);
+  setTrend('finForecastTrend',pctChange(cur.scheduledValue,prev.scheduledValue));
+  setTrend('finReceivedTrend',pctChange(cur.finishedValue,prev.finishedValue));
+  setTrend('finLostTrend',pctChange(cur.canceledValue,prev.canceledValue),true);
 
-  const pm={};
-  arr.forEach(b=>{
+  $('finScheduledCount').textContent=cur.scheduled.length;
+  $('finScheduledValue').textContent=brl(cur.scheduledValue);
+  $('finCanceledCount').textContent=cur.canceled.length;
+  $('finCanceledValue').textContent=brl(cur.canceledValue);
+  $('finFinishedCount').textContent=cur.finished.length;
+  $('finFinishedValue').textContent=brl(cur.finishedValue);
+
+  const total=cur.scheduled.length+cur.canceled.length+cur.finished.length;
+  const scheduledPct=total?Math.round(cur.scheduled.length/total*100):0;
+  const canceledPct=total?Math.round(cur.canceled.length/total*100):0;
+  const finishedPct=Math.max(0,100-scheduledPct-canceledPct);
+
+  $('finDonut').style.setProperty('--scheduled-pct',scheduledPct+'%');
+  $('finDonut').style.setProperty('--cancel-pct',canceledPct+'%');
+  $('finDonutTotal').textContent=total;
+  $('finTotalStatusLabel').textContent=`${total} total`;
+  $('finLegendScheduled').textContent=`${cur.scheduled.length} (${scheduledPct}%)`;
+  $('finLegendCanceled').textContent=`${cur.canceled.length} (${canceledPct}%)`;
+  $('finLegendFinished').textContent=`${cur.finished.length} (${finishedPct}%)`;
+
+  renderSevenDayRevenueBars();
+
+  const commissionItems=cur.finished.flatMap(b=>bookingItems(b));
+  const paidItems=commissionItems.filter(item=>item.commissionPaid);
+  const pendingItems=commissionItems.filter(item=>!item.commissionPaid);
+  const paidCommission=paidItems.reduce((s,item)=>s+Number(item.price||0)*Number(item.commission||0)/100,0);
+  const pendingCommission=pendingItems.reduce((s,item)=>s+Number(item.price||0)*Number(item.commission||0)/100,0);
+  const totalCommission=paidCommission+pendingCommission;
+  const paidPct=totalCommission?Math.round(paidCommission/totalCommission*100):0;
+  const pendingPct=totalCommission?100-paidPct:0;
+
+  $('finCommissionPaid').textContent=brl(paidCommission);
+  $('finCommissionPending').textContent=brl(pendingCommission);
+  $('finCommissionPaidCount').textContent=`${paidItems.length} serviço${paidItems.length===1?'':'s'}`;
+  $('finCommissionPendingCount').textContent=`${pendingItems.length} serviço${pendingItems.length===1?'':'s'}`;
+  $('finCommissionPaidPct').textContent=paidPct+'%';
+  $('finCommissionPendingPct').textContent=pendingPct+'%';
+  $('finCommissionPaidBar').style.width=paidPct+'%';
+  $('finCommissionPendingBar').style.width=pendingPct+'%';
+
+  const payments={};
+  cur.finished.forEach(b=>{
     const k=b.paymentMethod||'Não informado';
-    pm[k]=(pm[k]||0)+Number(b.price||0);
+    payments[k]=(payments[k]||0)+Number(b.price||0);
   });
-  renderBreakdown('repPayments',Object.entries(pm).sort((a,b)=>b[1]-a[1]),rev);
-
-  const periodCommissionPayments=commissionPayments.filter(p=>{
-    if(!p.paidAt)return false;
-    const d=new Date(p.paidAt);if(Number.isNaN(d.getTime()))return false;
-    const k=localDateKey(d);return k>=range.startKey&&k<=range.endKey;
-  });
-
-  const cm={};
-  periodCommissionPayments.forEach(p=>{
-    cm[p.method||'Não informado']=(cm[p.method||'Não informado']||0)+Number(p.amount||0);
-  });
-  const ctotal=periodCommissionPayments.reduce((s,p)=>s+Number(p.amount||0),0);
-  renderBreakdown('repCommissionPayments',Object.entries(cm).sort((a,b)=>b[1]-a[1]),ctotal);
+  renderBreakdown('repPayments',Object.entries(payments).sort((a,b)=>b[1]-a[1]),cur.finishedValue);
 
   const prof={};
   const serv={};
-
-  arr.forEach(b=>{
+  cur.finished.forEach(b=>{
     bookingItems(b).forEach(item=>{
       prof[item.professionalName||'Sem profissional']=(prof[item.professionalName||'Sem profissional']||0)+Number(item.price||0);
       serv[item.serviceName||'Sem serviço']=(serv[item.serviceName||'Sem serviço']||0)+Number(item.price||0);
     });
   });
 
-  renderBreakdown('repByProfessional',Object.entries(prof).sort((a,b)=>b[1]-a[1]),rev);
-  renderBreakdown('repByService',Object.entries(serv).sort((a,b)=>b[1]-a[1]),rev);
+  renderBreakdown('repByProfessional',Object.entries(prof).sort((a,b)=>b[1]-a[1]),cur.finishedValue);
+  renderBreakdown('repByService',Object.entries(serv).sort((a,b)=>b[1]-a[1]),cur.finishedValue);
 }
 
 
