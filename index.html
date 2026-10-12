@@ -2788,7 +2788,7 @@ function renderCalendarSummary(){
       ${arr.some(b=>b.status==='nao_compareceu')?`<span class="summary-chip">⚠ ${arr.filter(b=>b.status==='nao_compareceu').length} não compareceu</span>`:''}
       ${arr.some(b=>b.status==='cancelado')?`<span class="summary-chip">✕ ${arr.filter(b=>b.status==='cancelado').length} cancelado</span>`:''}
       <span class="summary-chip">💰 ${brl(revenue)}</span>
-      ${profs.slice(0,3).map(p=>`<span class="summary-chip">👤 ${safe(p)}</span>`).join('')}
+      ${profs.map(p=>`<span class="summary-chip">👤 ${safe(p)}</span>`).join('')}
     </div>`;
 }
 
