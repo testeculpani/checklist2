@@ -4186,10 +4186,16 @@ function reportRange(){
   const now=new Date();
   let start,end,label;
   if(reportPeriod==='week'){
-    const day=now.getDay();
-    const diff=day===0?-6:1-day;
-    start=new Date(now);start.setDate(now.getDate()+diff);start.setHours(0,0,0,0);
-    end=new Date(start);end.setDate(start.getDate()+6);end.setHours(23,59,59,999);
+    // Semana sempre de domingo até sábado
+    const day=now.getDay(); // 0 = domingo
+    start=new Date(now);
+    start.setDate(now.getDate()-day);
+    start.setHours(0,0,0,0);
+
+    end=new Date(start);
+    end.setDate(start.getDate()+6);
+    end.setHours(23,59,59,999);
+
     label=`${start.toLocaleDateString('pt-BR')} até ${end.toLocaleDateString('pt-BR')}`;
   }else if(reportPeriod==='month'){
     start=new Date(now.getFullYear(),now.getMonth(),1);
