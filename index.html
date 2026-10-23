@@ -1154,6 +1154,19 @@ input,select,textarea{
   .login-logo .brand-logo-img{width:62px;height:62px}
 }
 
+
+/* ===== EDITAR COMANDA COMPLETA ===== */
+.edit-command-note{margin:8px 0 12px;padding:9px 10px;border-radius:10px;background:#fff8fb;border:1px solid #f1dbe3;color:#80656f;font-size:9px;line-height:1.4}
+.edit-command-warning{margin:8px 0 12px;padding:9px 10px;border-radius:10px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:9px;line-height:1.4}
+.edit-command-list{display:grid;gap:10px;margin-top:10px}
+.edit-command-item{border:1px solid var(--line);border-radius:14px;background:#fff;padding:11px}
+.edit-command-item-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+.edit-command-item-head strong{font-size:11px}
+.edit-command-remove{border:0;background:#fff1f2;color:#be123c;border-radius:8px;padding:6px 8px;font-size:8px;font-weight:900}
+.edit-command-add{width:100%;margin-top:10px;border:1px dashed #e4a3ba;background:#fff7fa;color:#c4285d;border-radius:11px;padding:10px;font-size:9px;font-weight:900}
+.edit-command-total{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:11px;padding:10px 11px;border-radius:12px;background:#fff7fa;border:1px solid #f0dce4}
+.edit-command-total span{font-size:9px;color:#7f6670}.edit-command-total strong{font-size:17px}
+
 </style>
 
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -1518,6 +1531,23 @@ input,select,textarea{
 </div>
 <div class="actions"><button class="btn btn-light" onclick="closeBooking()">Cancelar</button><button id="saveBookingBtn" class="btn btn-pink" onclick="saveBooking()">Agendar</button></div></div></div>
 
+<div id="editCommandModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2>Editar comanda</h2><button class="close" onclick="closeEditCommand()">✕</button></div>
+<div class="edit-command-note">Você pode corrigir data, profissional, serviço realizado, horário, duração, valor e comissão. O total da comanda será recalculado automaticamente.</div>
+<div class="grid2">
+  <div class="field"><label>CLIENTE</label><input id="editCommandClient" placeholder="Nome da cliente"></div>
+  <div class="field"><label>WHATSAPP</label><input id="editCommandPhone" inputmode="tel" placeholder="Telefone"></div>
+  <div class="field"><label>DATA</label><input id="editCommandDate" type="date"></div>
+</div>
+<div id="editCommandClientHint" class="pin-field-note"></div>
+<div id="editCommandWarning" class="edit-command-warning hidden"></div>
+<div class="section-head" style="margin-top:12px"><h3>Serviços da comanda</h3><small id="editCommandItemCount">0</small></div>
+<div id="editCommandItems" class="edit-command-list"></div>
+<button type="button" class="edit-command-add" onclick="addEditCommandItem()">＋ Adicionar outro serviço</button>
+<div class="edit-command-total"><span>Total da comanda</span><strong id="editCommandTotal">R$ 0,00</strong></div>
+<div class="actions" style="margin-top:14px"><button class="btn btn-light" onclick="closeEditCommand()">Cancelar</button><button class="btn btn-pink" onclick="saveEditCommand()">Salvar alterações</button></div>
+</div></div>
+
 <div id="editItemValueModal" class="modal"><div class="sheet">
 <div class="sheet-head"><h2>Editar valor</h2><button class="close" onclick="closeEditItemValue()">✕</button></div>
 <div id="editItemValueInfo" class="service-form-head">
@@ -1800,6 +1830,7 @@ let bookingDraftItems=[];
 let appHistory=[];
 let historyLoading=false;
 let currentEditingValueItemId=null;
+let editCommandDraftItems=[];
 
 let salonSettings={
   id:'geral',
@@ -1858,6 +1889,7 @@ function historyLabel(type){
     servico_comanda_adicionado:'Serviço adicionado',
     servico_comanda_removido:'Serviço removido',
     valor_servico_editado:'Valor do serviço alterado',
+    comanda_editada:'Comanda editada',
     observacao_adicionada:'Observação adicionada',
     observacao_editada:'Observação editada',
     cliente_criado:'Cliente cadastrado',
@@ -3282,17 +3314,20 @@ function openDetails(id){
       ${b.paymentNote?`<div class="soft-box" style="margin-top:9px"><div class="list-sub">Observação do pagamento</div><div style="font-size:11px;margin-top:3px">${safe(b.paymentNote)}</div></div>`:''}
     </div>`;
 
-  const editValueButton=`<button class="btn btn-light" onclick="editBookingValue()">✎ Editar valor</button>`;
+  const editCommandButton=`<button class="btn btn-light" onclick="openEditCommand()">✎ Editar comanda</button>`;
+  const editValueButton=`<button class="btn btn-light" onclick="editBookingValue()">R$ Editar valor</button>`;
   const deleteBookingButton=`<button class="btn btn-danger" onclick="deleteCurrentBooking()">🗑 Excluir agendamento</button>`;
 
   $('detailsActions').innerHTML=b.status==='agendado'
     ? `<button class="btn btn-note" onclick="openObservationModal()">＋ Adicionar observação</button>
+       ${editCommandButton}
        ${editValueButton}
        <button class="btn btn-danger" onclick="cancelCurrent()">Cancelado</button>
        <button class="btn btn-noshow" onclick="markNoShow()">Não compareceu</button>
        <button class="btn btn-pink" onclick="finishCurrent()">Finalizar comanda</button>
        ${deleteBookingButton}`
     : `<button class="btn btn-note" onclick="openObservationModal()">＋ Adicionar observação</button>
+       ${editCommandButton}
        ${editValueButton}
        <button class="btn btn-light" onclick="closeDetails()">Fechar</button>
        ${deleteBookingButton}`;
@@ -3417,6 +3452,115 @@ async function saveCommandItem(){
 }
 
 
+
+
+function editCommandProfessionalOptions(selectedId=''){
+  return professionals.filter(p=>p.active!==false||p.id===selectedId)
+    .map(p=>`<option value="${p.id}" ${p.id===selectedId?'selected':''}>${safe(p.name)}</option>`).join('');
+}
+function editCommandServiceOptions(selectedId=''){
+  return services.filter(s=>s.active!==false||s.id===selectedId)
+    .map(s=>`<option value="${s.id}" ${s.id===selectedId?'selected':''}>${safe(s.name)}</option>`).join('');
+}
+function editCommandDurationOptions(selected){
+  return [30,60,90,120,150,180,210,240].map(d=>`<option value="${d}" ${Number(selected||30)===d?'selected':''}>${d===30?'30 min':d===60?'1 hora':d===90?'1h30':d===120?'2 horas':d===150?'2h30':d===180?'3 horas':d===210?'3h30':'4 horas'}</option>`).join('');
+}
+function updateEditCommandTotal(){
+  const total=editCommandDraftItems.reduce((s,item)=>s+Number(item.price||0),0);
+  if($('editCommandTotal'))$('editCommandTotal').textContent=brl(total);
+  if($('editCommandItemCount'))$('editCommandItemCount').textContent=`${editCommandDraftItems.length} serviço${editCommandDraftItems.length===1?'':'s'}`;
+}
+function readEditCommandRow(index){
+  const row=document.querySelector(`.edit-command-item[data-index="${index}"]`);
+  const item=editCommandDraftItems[index];
+  if(!row||!item)return;
+  const pid=row.querySelector('.ec-prof').value;
+  const sid=row.querySelector('.ec-service').value;
+  const p=professionals.find(x=>x.id===pid);
+  const s=services.find(x=>x.id===sid);
+  item.professionalId=pid; item.professionalName=p?.name||item.professionalName||'';
+  item.serviceId=sid; item.serviceName=s?.name||item.serviceName||'';
+  item.time=row.querySelector('.ec-time').value;
+  item.duration=Number(row.querySelector('.ec-duration').value||30);
+  item.price=Number(row.querySelector('.ec-price').value||0);
+  item.commission=Number(row.querySelector('.ec-commission').value||0);
+  updateEditCommandTotal();
+}
+function renderEditCommandItems(){
+  const box=$('editCommandItems'); if(!box)return;
+  box.innerHTML=editCommandDraftItems.map((item,index)=>`<div class="edit-command-item" data-index="${index}">
+    <div class="edit-command-item-head"><strong>Serviço ${index+1}</strong>${editCommandDraftItems.length>1?`<button type="button" class="edit-command-remove" onclick="removeEditCommandItem(${index})">Remover</button>`:''}</div>
+    <div class="grid2">
+      <div class="field"><label>PROFISSIONAL</label><select class="ec-prof" onchange="readEditCommandRow(${index})">${editCommandProfessionalOptions(item.professionalId)}</select></div>
+      <div class="field"><label>SERVIÇO</label><select class="ec-service" onchange="syncEditCommandService(${index})">${editCommandServiceOptions(item.serviceId)}</select></div>
+      <div class="field"><label>HORÁRIO</label><select class="ec-time" onchange="readEditCommandRow(${index})">${times.map(t=>`<option value="${t}" ${t===item.time?'selected':''}>${t}</option>`).join('')}</select></div>
+      <div class="field"><label>DURAÇÃO</label><select class="ec-duration" onchange="readEditCommandRow(${index})">${editCommandDurationOptions(item.duration)}</select></div>
+      <div class="field"><label>VALOR (R$)</label><input class="ec-price" type="number" min="0" step="0.01" value="${Number(item.price||0).toFixed(2)}" oninput="readEditCommandRow(${index})"></div>
+      <div class="field"><label>COMISSÃO %</label><input class="ec-commission" type="number" min="0" max="100" step="1" value="${Number(item.commission||0)}" oninput="readEditCommandRow(${index})"></div>
+    </div>
+  </div>`).join('');
+  updateEditCommandTotal();
+}
+function syncEditCommandService(index){
+  const row=document.querySelector(`.edit-command-item[data-index="${index}"]`); if(!row)return;
+  const service=services.find(s=>s.id===row.querySelector('.ec-service').value); if(!service)return;
+  const item=editCommandDraftItems[index];
+  item.serviceId=service.id; item.serviceName=service.name; item.duration=Number(service.duration||30); item.price=Number(service.price||0); item.commission=Number(service.commission||0);
+  renderEditCommandItems();
+}
+function addEditCommandItem(){
+  const p=professionals.find(x=>x.active!==false), s=services.find(x=>x.active!==false);
+  if(!p||!s){alert('É necessário ter profissional e serviço ativos.');return}
+  let time=times[0]||'08:00';
+  if(editCommandDraftItems.length){const last=editCommandDraftItems[editCommandDraftItems.length-1];time=nextTimeAfter(last.time,last.duration)}
+  editCommandDraftItems.push({id:'item_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),professionalId:p.id,professionalName:p.name,serviceId:s.id,serviceName:s.name,time,duration:Number(s.duration||30),price:Number(s.price||0),scheduledPrice:Number(s.price||0),commission:Number(s.commission||0),commissionPaid:false,commissionPaymentId:null,createdAt:new Date().toISOString(),addedBy:currentUser?.name||'',addedById:currentUser?.id||''});
+  renderEditCommandItems();
+}
+function removeEditCommandItem(index){
+  if(editCommandDraftItems.length<=1){alert('A comanda precisa ter pelo menos um serviço.');return}
+  editCommandDraftItems.splice(index,1); renderEditCommandItems();
+}
+function openEditCommand(){
+  const b=bookings.find(x=>x.id===currentBookingId); if(!b)return;
+  if(bookingItems(b).some(i=>i.commissionPaid)){alert('Esta comanda possui comissão já paga. Para não gerar diferença no financeiro, ela não pode ser editada.');return}
+  $('editCommandClient').value=b.client||''; $('editCommandPhone').value=b.phone||''; $('editCommandDate').value=b.date||dateKey();
+  const admin=currentUser?.role==='admin';
+  $('editCommandClient').disabled=!admin; $('editCommandPhone').disabled=!admin;
+  $('editCommandClientHint').textContent=admin?'Como administrador, você também pode corrigir nome e WhatsApp da cliente.':'Nome e WhatsApp ficam bloqueados para colaboradores; os demais dados da comanda podem ser editados normalmente.';
+  const warn=$('editCommandWarning'); warn.classList.add('hidden'); warn.textContent='';
+  if(b.status==='finalizado'){warn.textContent='Comanda finalizada: alterações de serviço, profissional, valor ou comissão atualizarão faturamento e relatórios.'; warn.classList.remove('hidden')}
+  editCommandDraftItems=bookingItems(b).map(i=>({...i,scheduledPrice:i.scheduledPrice!==undefined?Number(i.scheduledPrice):Number(i.price||0)}));
+  renderEditCommandItems(); $('detailsModal').classList.remove('show'); $('editCommandModal').classList.add('show');
+}
+function closeEditCommand(){ $('editCommandModal').classList.remove('show'); editCommandDraftItems=[]; if(currentBookingId)openDetails(currentBookingId) }
+async function saveEditCommand(){
+  const b=bookings.find(x=>x.id===currentBookingId); if(!b)return;
+  if(bookingItems(b).some(i=>i.commissionPaid)){alert('Esta comanda possui comissão já paga e não pode ser editada.');return}
+  document.querySelectorAll('.edit-command-item').forEach((_,i)=>readEditCommandRow(i));
+  const date=$('editCommandDate').value; if(!date){alert('Informe a data.');return}
+  if(!editCommandDraftItems.length){alert('Adicione pelo menos um serviço.');return}
+  for(const item of editCommandDraftItems){
+    const p=professionals.find(x=>x.id===item.professionalId), s=services.find(x=>x.id===item.serviceId);
+    if(!p||!s){alert('Confira profissional e serviço.');return}
+    item.professionalName=p.name; item.serviceName=s.name;
+    if(!item.time||Number(item.duration)<=0||Number(item.price)<0||Number(item.commission)<0||Number(item.commission)>100){alert(`Confira os dados de ${item.serviceName}.`);return}
+  }
+  for(let i=0;i<editCommandDraftItems.length;i++){
+    const a=editCommandDraftItems[i], a1=timeToMin(a.time), a2=a1+Number(a.duration||30);
+    for(let j=i+1;j<editCommandDraftItems.length;j++){
+      const c=editCommandDraftItems[j]; if(a.professionalId!==c.professionalId)continue;
+      const b1=timeToMin(c.time), b2=b1+Number(c.duration||30);
+      if(a1<b2&&a2>b1){alert(`${a.professionalName} possui dois serviços sobrepostos nesta comanda.`);return}
+    }
+    const conflict=bookings.some(other=>{if(other.id===b.id||other.date!==date||['cancelado','nao_compareceu'].includes(other.status))return false;return bookingItems(other).some(oi=>{if(oi.professionalId!==a.professionalId)return false;const b1=timeToMin(oi.time),b2=b1+Number(oi.duration||30);return a1<b2&&a2>b1})});
+    if(conflict){alert(`${a.professionalName} já possui outro atendimento às ${a.time}.`);return}
+  }
+  const oldTotal=Number(b.price||0), oldItems=bookingItems(b).map(i=>({service:i.serviceName,professional:i.professionalName,time:i.time,price:Number(i.price||0)}));
+  if(currentUser?.role==='admin'){b.client=$('editCommandClient').value.trim()||b.client; b.phone=$('editCommandPhone').value.trim(); if(b.clientId){const c=clients.find(x=>x.id===b.clientId); if(c){c.name=b.client;c.phone=b.phone;c.whatsapp=b.phone;c.updatedAt=new Date().toISOString();c.updatedBy=currentUser?.name||'';c.updatedById=currentUser?.id||'';try{await cloudReplace('clientes',c.id,c)}catch(e){console.warn(e)}}}}
+  b.date=date; b.items=editCommandDraftItems.map(i=>({...i,price:Number(i.price||0),duration:Number(i.duration||30),commission:Number(i.commission||0),updatedAt:new Date().toISOString(),updatedBy:currentUser?.name||'',updatedById:currentUser?.id||''}));
+  syncBookingFromItems(b); b.updatedAt=new Date().toISOString(); b.updatedBy=currentUser?.name||''; b.updatedById=currentUser?.id||'';
+  try{await cloudReplace('agendamentos',b.id,b);logAppAction('comanda_editada',`Editou a comanda de ${b.client}. Total: ${brl(oldTotal)} → ${brl(b.price)}.`,{bookingId:b.id,client:b.client,oldTotal,newTotal:Number(b.price||0),oldItems,newItems:b.items.map(i=>({service:i.serviceName,professional:i.professionalName,time:i.time,price:Number(i.price||0)}))});$('editCommandModal').classList.remove('show');editCommandDraftItems=[];renderAll();openDetails(b.id)}catch(err){console.error(err);setSyncStatus('error','Erro ao salvar');alert('Não foi possível salvar a comanda no Firebase.')}
+}
 
 function editBookingValue(){
   const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
