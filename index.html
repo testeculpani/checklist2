@@ -1518,6 +1518,22 @@ input,select,textarea{
 </div>
 <div class="actions"><button class="btn btn-light" onclick="closeBooking()">Cancelar</button><button id="saveBookingBtn" class="btn btn-pink" onclick="saveBooking()">Agendar</button></div></div></div>
 
+<div id="editItemValueModal" class="modal"><div class="sheet">
+<div class="sheet-head"><h2>Editar valor</h2><button class="close" onclick="closeEditItemValue()">✕</button></div>
+<div id="editItemValueInfo" class="service-form-head">
+  <div class="service-form-icon">R$</div>
+  <div><strong>Serviço</strong><span>O total da comanda e a comissão serão recalculados automaticamente.</span></div>
+</div>
+<div class="field">
+  <label>NOVO VALOR (R$)</label>
+  <input id="editItemValueInput" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00">
+</div>
+<div class="actions" style="margin-top:14px">
+  <button class="btn btn-light" onclick="closeEditItemValue()">Cancelar</button>
+  <button class="btn btn-pink" onclick="saveEditItemValue()">Salvar valor</button>
+</div>
+</div></div>
+
 <div id="commandItemModal" class="modal"><div class="sheet">
 <div class="sheet-head"><h2>Adicionar serviço à comanda</h2><button class="close" onclick="closeCommandItemModal()">✕</button></div>
 
@@ -1783,6 +1799,7 @@ let currentEditingClientId=null;
 let bookingDraftItems=[];
 let appHistory=[];
 let historyLoading=false;
+let currentEditingValueItemId=null;
 
 let salonSettings={
   id:'geral',
@@ -1840,6 +1857,7 @@ function historyLabel(type){
     agendamento_excluido:'Agendamento excluído',
     servico_comanda_adicionado:'Serviço adicionado',
     servico_comanda_removido:'Serviço removido',
+    valor_servico_editado:'Valor do serviço alterado',
     observacao_adicionada:'Observação adicionada',
     observacao_editada:'Observação editada',
     cliente_criado:'Cliente cadastrado',
@@ -3212,9 +3230,12 @@ function renderCommandItems(b){
           </div>
           <div class="command-item-footer">
             <span>Comissão ${Number(item.commission||0)}% • ${brl(Number(item.price||0)*Number(item.commission||0)/100)}</span>
-            ${currentUser?.role==='admin'&&b.status==='agendado'&&items.length>1
-              ? `<button class="command-remove" onclick="event.stopPropagation();removeCommandItem('${item.id}')">Remover</button>`
-              : ''}
+            <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+              <button class="command-remove" style="background:#fff7fa;color:#c4285d;border:1px solid #f5c8d7" onclick="event.stopPropagation();openEditItemValue('${item.id}')">R$ Editar valor</button>
+              ${b.status==='agendado'&&items.length>1
+                ? `<button class="command-remove" onclick="event.stopPropagation();removeCommandItem('${item.id}')">Remover</button>`
+                : ''}
+            </div>
           </div>
         </div>`).join('')}
     </div>
@@ -3261,17 +3282,18 @@ function openDetails(id){
       ${b.paymentNote?`<div class="soft-box" style="margin-top:9px"><div class="list-sub">Observação do pagamento</div><div style="font-size:11px;margin-top:3px">${safe(b.paymentNote)}</div></div>`:''}
     </div>`;
 
-  const deleteBookingButton=currentUser?.role==='admin'
-    ? `<button class="btn btn-danger" onclick="deleteCurrentBooking()">🗑 Excluir agendamento</button>`
-    : '';
+  const editValueButton=`<button class="btn btn-light" onclick="editBookingValue()">✎ Editar valor</button>`;
+  const deleteBookingButton=`<button class="btn btn-danger" onclick="deleteCurrentBooking()">🗑 Excluir agendamento</button>`;
 
   $('detailsActions').innerHTML=b.status==='agendado'
     ? `<button class="btn btn-note" onclick="openObservationModal()">＋ Adicionar observação</button>
+       ${editValueButton}
        <button class="btn btn-danger" onclick="cancelCurrent()">Cancelado</button>
        <button class="btn btn-noshow" onclick="markNoShow()">Não compareceu</button>
        <button class="btn btn-pink" onclick="finishCurrent()">Finalizar comanda</button>
        ${deleteBookingButton}`
     : `<button class="btn btn-note" onclick="openObservationModal()">＋ Adicionar observação</button>
+       ${editValueButton}
        <button class="btn btn-light" onclick="closeDetails()">Fechar</button>
        ${deleteBookingButton}`;
 
@@ -3394,9 +3416,97 @@ async function saveCommandItem(){
   }
 }
 
+
+
+function editBookingValue(){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  const items=bookingItems(b);
+
+  if(items.length===1){
+    openEditItemValue(items[0].id);
+    return;
+  }
+
+  // Em comandas com vários serviços, cada valor é individual.
+  const names=items.map((item,index)=>`${index+1}. ${item.serviceName} — ${item.professionalName} — ${brl(item.price)}`).join('\n');
+  alert(`Esta comanda possui vários serviços.\n\nEdite o valor pelo botão "R$ Editar valor" de cada serviço:\n\n${names}`);
+}
+
+function openEditItemValue(itemId){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  const item=itemById(b,itemId);if(!item)return;
+
+  currentEditingValueItemId=itemId;
+  $('editItemValueInfo').querySelector('strong').textContent=item.serviceName||'Serviço';
+  $('editItemValueInfo').querySelector('span').textContent=`${item.professionalName||''} • Valor atual ${brl(item.price)}`;
+  $('editItemValueInput').value=Number(item.price||0).toFixed(2);
+
+  $('detailsModal').classList.remove('show');
+  $('editItemValueModal').classList.add('show');
+
+  setTimeout(()=>{
+    $('editItemValueInput')?.focus();
+    $('editItemValueInput')?.select();
+  },100);
+}
+
+function closeEditItemValue(){
+  $('editItemValueModal').classList.remove('show');
+  currentEditingValueItemId=null;
+  if(currentBookingId)openDetails(currentBookingId);
+}
+
+async function saveEditItemValue(){
+  const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
+  const item=itemById(b,currentEditingValueItemId);if(!item)return;
+
+  const newValue=Number(String($('editItemValueInput').value||'').replace(',','.'));
+  if(!Number.isFinite(newValue)||newValue<0){
+    alert('Informe um valor válido.');
+    return;
+  }
+
+  const oldValue=Number(item.price||0);
+  if(item.scheduledPrice===undefined||item.scheduledPrice===null){
+    item.scheduledPrice=oldValue;
+  }
+
+  item.price=newValue;
+  item.updatedAt=new Date().toISOString();
+  item.updatedBy=currentUser?.name||'';
+  item.updatedById=currentUser?.id||'';
+
+  syncBookingFromItems(b);
+
+  try{
+    await cloudReplace('agendamentos',b.id,b);
+
+    logAppAction(
+      'valor_servico_editado',
+      `Alterou o valor de ${item.serviceName} da comanda de ${b.client} de ${brl(oldValue)} para ${brl(newValue)}.`,
+      {
+        bookingId:b.id,
+        client:b.client,
+        service:item.serviceName,
+        professional:item.professionalName,
+        oldValue,
+        newValue
+      }
+    );
+
+    $('editItemValueModal').classList.remove('show');
+    currentEditingValueItemId=null;
+    renderAll();
+    openDetails(b.id);
+  }catch(err){
+    console.error(err);
+    setSyncStatus('error','Erro ao salvar');
+    alert('Não foi possível alterar o valor no Firebase.');
+  }
+}
+
 async function removeCommandItem(itemId){
   const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
-  if(currentUser?.role!=='admin'){alert('Somente a administração pode remover serviços.');return}
 
   const items=bookingItems(b);
   if(items.length<=1){alert('A comanda precisa ter pelo menos um serviço.');return}
@@ -3478,16 +3588,11 @@ async function saveNewObservation(){
 function closeDetails(){$('detailsModal').classList.remove('show');currentBookingId=null}
 
 async function deleteCurrentBooking(){
-  if(currentUser?.role!=='admin'){
-    alert('Somente o administrador pode excluir um agendamento.');
-    return;
-  }
-
   const b=bookings.find(x=>x.id===currentBookingId);if(!b)return;
   syncBookingFromItems(b);
 
   const paidCommissionItems=bookingItems(b).filter(item=>item.commissionPaid).length;
-  let message=`Excluir definitivamente o agendamento de ${b.client}?\n\nData: ${shortDate(b.date)} às ${b.time}\nStatus: ${statusLabel(b.status)}\nTotal: ${brl(b.price)}\n\nEssa ação não poderá ser desfeita.`;
+  let message=`Excluir definitivamente o agendamento de ${b.client}?\n\nData: ${shortDate(b.date)} às ${b.time}\nStatus: ${statusLabel(b.status)}\nTotal: ${brl(b.price)}\n\nEsta ação será registrada no histórico em nome de ${currentUser?.name||'usuário'} e não poderá ser desfeita.`;
 
   if(paidCommissionItems){
     message+=`\n\nAtenção: existem ${paidCommissionItems} comissão(ões) já marcadas como pagas. O histórico do pagamento de comissão será preservado.`;
